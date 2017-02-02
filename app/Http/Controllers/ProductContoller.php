@@ -17,7 +17,7 @@ use App\Productprice;
 use Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-use test;
+
 
 class ProductContoller extends Controller
 {
