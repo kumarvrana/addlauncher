@@ -20,20 +20,24 @@
                 <p>{{Session::get('message')}}</p>
             </div>
         @endif
-        <form action="{{route('dashboard.addCategory')}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('dashboard.addCategory')}}" method="post" enctype="multipart/form-data" id="post-category">
             <div class="form-group">
                 <label for="title">Category Name:</label>
-                <input type="text" id="category-name" name="title"class="form-control" required>
+                <input type="text" id="category-name" name="title" class="form-control" value="{{old('title')}}" onkeyup="makeSlug()" required>
+            </div>
+            <div class="form-group">
+                <label for="slug">Category Slug:</label>
+                <input type="text" id="category-slug" name="slug" class="form-control" value="{{old('slug')}}" required>
             </div>
             <div class="form-group">
                 <label for="description">Category Description:</label>
-                <textarea name="description" class="form-control"></textarea>
+                <textarea name="description" class="form-control">{{old('description')}}</textarea>
             </div>
             <div class="form-group">
                 <label for="image">Category Image:</label>
                 <input name="image" type="file" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary">Post Category</button>
+            <button type="submit" class="btn btn-primary pull-right">Post Category</button>
             {{ csrf_field() }}
         </form>
     </div>

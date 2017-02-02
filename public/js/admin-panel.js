@@ -20,7 +20,7 @@ $(function(){
 	$('#update-cat-modal').on('click', function(){
 		
 		var token = $("input[name=_token]").val();
-		alert(tinyMCE.get('description'));
+		
 		$.ajax({
 			method: 'POST',
 			url: updateCatUrl,
@@ -93,12 +93,102 @@ $(function(){
 					data: {mediaCat: mediaCat}
 				})
 				.done(function (msg){
-					/*console.log(JSON.stringify(msg));
-					descriptionTD.text(msg['description']);
-					$('#edit-ad-category').modal('hide');
-					*/
 					$('.results').html(msg['response']);
 				});
 			}
 	});
 });
+
+	// making category slug
+	var Slug = '';
+	function makeSlug(){
+		
+		var title_val = document.getElementById("category-name");
+		var Slug = title_val.value.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'');
+		Slug = Slug.toLowerCase();
+		
+		document.getElementById('category-slug').value = Slug;
+	}
+	$("#category-slug").focus(function() {
+		var title_val = document.getElementById("category-name");
+		var Slug = title_val.value.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'');
+		Slug = Slug.toLowerCase();
+		
+		document.getElementById('category-slug').value = Slug;
+	});
+	//ends
+
+	// products options start
+
+	fieldData = [];
+	var chkElm = '';
+	var mediaCat = document.getElementById('mediatype');
+	mediaCat.onchange = function(){
+		var selectedString = mediaCat.options[mediaCat.selectedIndex].value;
+		var priceElementContent = document.getElementById('pricing-options-step');
+		priceElementContent.innerHTML = '';
+		fieldData = [];
+		
+	}
+	function addDomToPriceOptions(name){
+			var checkCondition = $(this).is( ':checked' );
+        	
+			var chkExist = fieldData.indexOf(name);
+    						
+            var labeltext = "Price for "+name+" Ad:";
+			var iname = name.toLowerCase();
+			var res = iname.replace(" ", "");
+            var inputname = "price"+res;
+
+            var priceElement = document.getElementById('pricing-options-step');
+            
+             var divrow = document.createElement('div');
+             divrow.className = 'form-group';
+			 divrow.id = 'p'+inputname;
+            
+             var labelhtm = document.createElement('label');
+             labelhtm.setAttribute("for", inputname);
+             labelhtm.innerText = labeltext;
+
+             var inputhtm = document.createElement("input"); //input element, text
+             inputhtm.setAttribute('type',"text");
+             inputhtm.setAttribute('name',inputname);
+             inputhtm.setAttribute('class', "form-control");
+             inputhtm.setAttribute('id', inputname);
+			 inputhtm.setAttribute('required', 'required');
+
+			 
+			if(chkExist == -1){
+				fieldData.push(name);
+				divrow.appendChild(labelhtm);
+            	divrow.appendChild(inputhtm);
+
+            priceElement.appendChild(divrow);
+			}else{
+				removeItem(name);
+			}
+
+        }
+
+		function removeItem(name) {
+			var iname = name.toLowerCase();
+			var res = iname.replace(" ", "");
+            var inputname = "price"+res;
+			var divId = 'p'+inputname;
+
+			fieldData.splice(fieldData.indexOf(name), 1);
+			
+			var deleteNode = document.getElementById(divId);
+			deleteNode.remove();
+
+		}
+
+
+		function addDomToPriceOptionsWithLight(value){
+			var text = document.getElementById('light-content');
+			if(value == 'Yes'){
+				text.innerHTML = 'You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!';
+			}
+		}
+
+	// products options ends

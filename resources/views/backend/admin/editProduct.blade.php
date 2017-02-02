@@ -92,33 +92,55 @@
                 switch($switch){
                     case 'newspapers':
                         $html .= '<div class="panel-heading "><h3 class="panel-title">'.$catname1.' Options</h3></div><div class="panel-body"><div class="form-group">';
-                            
-                        $html .= '<label for="circulation">Circulations:</label><input type="hidden" id="circulationkey" name="circulationkey" value="circulation" class="form-control"><input type="text" id="circulation" name="circulation" class="form-control" required></div>';              
-                        $html .= '<div class="form-group"><label for="language">Languages:</label><input type="hidden" id="languagekey" name="languagekey" value="language" class="form-control"><select class="form-control" name="language" id="language" required>';
+                         foreach ($productmetadata as $title) {
+                                       $re_key[] = $title->meta_key;
+                                      $re_value[]  = $title->meta_value;
+                            }   
+                        $html .= '<label for="'.$re_key[0].'">Circulations:</label><input type="hidden" id="'.$re_key[0].'" name="'.$re_key[0].'key" value="circulation" class="form-control"><input type="text" id="'.$re_key[0].'" name="'.$re_key[0].'" value="'.$re_value[0].'" class="form-control" required></div>';              
+                        $html .= '<div class="form-group"><label for="'.$re_key[1].'">Languages:</label><input type="hidden" id="'.$re_key[1].'key" name="'.$re_key[1].'key" value="'.$re_key[1].'" class="form-control"><select class="form-control" name="'.$re_key[1].'" id="'.$re_key[1].'" required>';
                         foreach($languages as $key => $value){
-                            $html .= '<option value="'.$key.'">'.$value.'</option>';
+                            $html .= '<option ';
+                            if($key == $re_value[1]){$html .= " selected "; }
+                            $html .= 'value="'.$key.'">'.$value.'</option>';
                         }
-                        $html .= '</select></div><div class="form-group"><label for="regulardisplay">Newspaper Display Options: </label><input type="hidden" id="regulardisplaykey" name="regulardisplaykey" value="regulardisplay" class="form-control">';         
+                        $html .= '</select></div><div class="form-group"><label for="'.$re_key[2].'">Newspaper Display Options: </label><input type="hidden" id="'.$re_key[2].'key" name="'.$re_key[2].'key" value="'.$re_key[2].'" class="form-control">';
+                        $rregulardisplay = unserialize($re_value[2]);         
                         foreach($regular_options as $key => $value){
-                            $html .= '<label class="checkbox-inline"><input name="displayoptions[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                            $html .= '<label class="checkbox-inline"><input name="'.$re_key[2].'[]" type="checkbox"';
+                            if(in_array($key, $rregulardisplay)){ $html .= " checked"; }
+                             $html .= ' value="'.$key.'">'.$value.'</label>';
                         }           
-                        $html .= '</div><div class="form-group"><label for="otherregulardisplay">Other Display Options: </label><input type="hidden" id="otherregulardisplaykey" name="otherregulardisplaykey" value="otherregulardisplay" class="form-control">';
+                        $html .= '</div><div class="form-group"><label for="'.$re_key[3].'">Other Display Options: </label><input type="hidden" id="'.$re_key[3].'key" name="'.$re_key[3].'" value="'.$re_key[3].'" class="form-control">';
+                        $rotherdisplayoptions = unserialize($re_value[3]); 
                         foreach($other_display_options as $key => $value){
-                            $html .= '<label class="checkbox-inline"><input name="otherdisplayoptions[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                            $html .= '<label class="checkbox-inline"><input name="'.$re_key[3].'[]" type="checkbox"';
+                            if(in_array($key, $rotherdisplayoptions)){ $html .= " checked"; }
+                             $html .= ' value="'.$key.'">'.$value.'</label>';
                         }
-                        $html .= '</div><div class="form-group"><label for="classifiedoptions">Classified Options: </label><input type="hidden" id="classifiedoptionskey" name="classifiedoptionskey" value="classifiedoptions" class="form-control">';
+                        $html .= '</div><div class="form-group"><label for="'.$re_key[4].'">Classified Options: </label><input type="hidden" id="'.$re_key[4].'key" name="'.$re_key[4].'key" value="'.$re_key[4].'" class="form-control">';
+                        $rclassifiedoptions = unserialize($re_value[4]);
                         foreach($classified_options as $key => $value){
-                            $html .= '<label class="checkbox-inline"><input name="classifiedoptions[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                            $html .= '<label class="checkbox-inline"><input name="'.$re_key[4].'[]" type="checkbox"';
+                            if(in_array($key, $rclassifiedoptions)){ $html .= " checked"; }
+                            $html .= ' value="'.$key.'">'.$value.'</label>';
                         }
-                        $html .= '</div> <div class="form-group"><label for="priceoptions">Pricing Options: </label><input type="hidden" id="priceoptionskey" name="priceoptionskey" value="priceoptions" class="form-control">';           
+                        $html .= '</div> <div class="form-group"><label for="'.$re_key[5].'">Pricing Options: </label><input type="hidden" id="'.$re_key[5].'key" name="'.$re_key[5].'key" value="'.$re_key[5].'" class="form-control">';
+                        $rpriceoptions = unserialize($re_value[5]);           
                         foreach($pricepage_time as $key => $value){
-                            $html .= '<label class="checkbox-inline"><input name="priceoptions[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                            $html .= '<label class="checkbox-inline"><input name="'.$re_key[5].'[]" type="checkbox"';
+                            if(in_array($key, $rpriceoptions)){ $html .= " checked"; }
+                             $html .= ' value="'.$key.'">'.$value.'</label>';
                         }
-                        $html .= '</div><div class="form-group"><label for="inserts">If Inserts Checked Than Provide, number of Inserts:</label>';
-                        $html .= '<input class="form-control" type="hidden" id="insertskey" name="insertskey" value="inserts"><input type="text" id="inserts" name="inserts" class="form-control"></div></div>';
+                        $html .= '</div><div class="form-group"><label for="'.$re_key[6].'">If Inserts Checked Than Provide, number of Inserts:</label>';
+                        $html .= '<input class="form-control" type="hidden" id="'.$re_key[6].'key" name="'.$re_key[6].'key" value="'.$re_key[6].'"><input type="text" id="inserts" name="inserts" value="'.$re_value[6].'"  class="form-control"></div></div>';
 
                     break;
                 case 'cars':
+                           
+                            foreach ($productmetadata as $title) {
+                                $re_key[] = $title->meta_key;
+                                $re_value[]  = $title->meta_value;
+                            }
                             $html .= '<div class="panel-heading "><h3 class="panel-title">'.$catname1.' Options</h3></div><div class="panel-body"><div class="form-group">';
                             $html .= '<label for="fullcardisplay">Do you want Full Ad Display On Car?: </label><input class="form-control" type="hidden" id="fullcardisplayskey" name="fullcardisplaykey" value="fullcardisplay">';         
                             foreach($full_car as $key => $value){
@@ -146,8 +168,8 @@
                     case 'bus-stops':
                             $html .= '<div class="panel-heading "><h3 class="panel-title">'.$catname1.' Options</h3></div><div class="panel-body"><div class="form-group">';
                                 foreach ($productmetadata as $title) {
-                                       echo $re_key[] = $title->meta_key;
-                                      echo $re_value[]  = $title->meta_value;
+                                       $re_key[] = $title->meta_key;
+                                      $re_value[]  = $title->meta_value;
                                  }
                                 $html .= '<label for="'.$re_key[0].'">Bus Shelter Ad Display Options: </label><input class="form-control" type="hidden" id="'.$re_key[0].'key" name="'.$re_key[0].'key" value="'.$re_key[0].'">'; 
                                
@@ -171,7 +193,7 @@
                     break;
                     case 'buses':
                        
-                        if(!empty($productmetadata)){
+                        
                             foreach ($productmetadata as $title) {
                                 $re_key[] = $title->meta_key;
                                 $re_value[]  = $title->meta_value;
@@ -186,9 +208,14 @@
                             }
                                             
                             $html .= '</div><div class="form-group"><label for="'. $re_key[1].'">Numbers Of Buses Display this Ad? : </label><input class="form-control" type="hidden" id="'. $re_key[1].'key" name="'. $re_key[1].'key" value="'. $re_key[1].'"><input class="form-control" type="text" name="'. $re_key[1].'"  value="'. $re_value[1].'" required></div></div>';
-                        }
+                        
                     break;
                     case 'auto':
+                           
+                            foreach ($productmetadata as $title) {
+                                $re_key[] = $title->meta_key;
+                                $re_value[]  = $title->meta_value;
+                            }
                             $html .= '<div class="panel-heading "><h3 class="panel-title">'.$catname1.' Options</h3></div><div class="panel-body">';
                             $html .= '<div class="form-group"><label for="autodisplay">Auto Display Options: </label><input class="form-control" type="hidden" id="autodisplaykey" name="autodisplaykey" value="autodisplay">';         
                             foreach($ad_cover_type as $key => $value){
@@ -229,43 +256,35 @@
                             $html .= '</div>';
                     break;
                     case 'shopping-malls':
+                            
+                            foreach ($productmetadata as $title) {
+                                $re_key[] = $title->meta_key;
+                                $re_value[]  = $title->meta_value;
+                            }
                             $html .= '<div class="panel-heading "><h3 class="panel-title">'.$catname1.' Options</h3></div><div class="panel-body">';
-                            $html .= '<div class="form-group"><label for="autodisplay">Auto Display Options: </label>';         
-                            foreach($ad_cover_type as $key => $value){
-                                $html .= '<label class="checkbox-inline"><input name="autodisplay[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                            $html .= '<div class="form-group"><label for="smlargead">Large ad Options: </label>';         
+                            foreach($smlargead_options as $key => $value){
+                                $html .= '<label class="checkbox-inline"><input name="smlargead[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
                             }
                             $html .= '</div>';
-                            $html .= '<div class="form-group"><label for="autofrontprdisplay">Auto Front Pamphlets/Reactanguler Options: </label>';         
-                            foreach($pamphlets as $key => $value){
-                                $html .= '<label class="checkbox-inline"><input name="autofrontprdisplay[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                            $html .= '<div class="form-group"><label for="smotheradoptions">Other ad Options: </label>';         
+                            foreach($smother_options as $key => $value){
+                                $html .= '<label class="checkbox-inline"><input name="smotheradoptions[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
                             }
                             $html .= '</div>';
-                            $html .= '<div class="form-group"><label for="autofrontprdisplay">Auto Front Pamphlets/Reactanguler Options: </label>';         
-                            foreach($pamphlets as $key => $value){
-                                $html .= '<label class="checkbox-inline"><input name="autofrontprdisplay[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                        
+                            $html .= '<div class="form-group"><label for="smduration">Time Duration Options: </label>';         
+                            foreach($smduration as $key => $value){
+                                $html .= '<label class="checkbox-inline"><input name="smduration[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
                             }
                             $html .= '</div>';
-                            $html .= '<div class="form-group"><label for="autostickerdisplay">Auto Front Stickers Options: </label>';         
-                            foreach($sticker as $key => $value){
-                                $html .= '<label class="checkbox-inline"><input name="autostickerdisplay[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
+                            $html .= '<div class="form-group"><label for="signagelit">Signage Light Options: </label>';         
+                            foreach($signage_lit as $key => $value){
+                                $html .= '<label class="checkbox-inline"><input name="signagelit[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
                             }
                             $html .= '</div>';
-                            $html .= '<div class="form-group"><label for="autohooddisplay">Auto Hood Options: </label>';         
-                            foreach($hood_size as $key => $value){
-                                $html .= '<label class="checkbox-inline"><input name="autohooddisplay[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
-                            }
-                            $html .= '</div>';
-                            $html .= '<div class="form-group"><label for="autointeriordisplay">Auto Interior Options: </label>';         
-                            foreach($interior_panels as $key => $value){
-                                $html .= '<label class="checkbox-inline"><input name="autointeriordisplay[]" type="checkbox" value="'.$key.'">'.$value.'</label>';
-                            }
-                            $html .= '</div>';
-                            $html .= '<div class="form-group"><label for="autolightdisplay">Lighting Options For Auto Panels: </label>';         
-                            foreach($lighting_options as $key => $value){
-                                $html .= '<label class="checkbox-inline"><input name="autolightdisplay[]" type="radio" value="'.$key.'">'.$value.'</label>';
-                            }
-                            $html .= '</div>';
-                            $html .= '<div class="form-group"><label for="autonumber">Numbers Of Autos Display this Ad? : </label><input class="form-control" type="text" name="autonumber" required></div>';
+                            
+                            $html .= '<div class="form-group"><label for="durationnumber">Numbers Of Duration You want to show ad in Shopping malls? : </label><input class="form-control" type="text" name="durationnumber" required></div>';
                             $html .= '</div>';
                         break;
 

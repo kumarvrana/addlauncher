@@ -1,15 +1,15 @@
 @extends('layouts.master')
 
 @section('title')
-    Signin | Ad Launcher
+    Forget Password | Ad Launcher
 @endsection
 
 @section('content')
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <h1>Sign In</h1>
+        <h1>Forget Password</h1>
        
-        <form action="{{ route('user.signin') }}" method="post">
+        <form action="{{ route('user.postforgetpassword') }}" method="post">
             @if(count($errors) > 0 )
                 <div class="alert alert-danger">
                     @foreach($errors->all() as $error)
@@ -32,21 +32,14 @@
                 </div>
             @endif
             <div class="form-group">
-            <div class="input-group">
+                <div class="input-group">
                     <label class="input-group-addon" for="email"><i class="fa fa-envelope"></i></label>
                     <input type="email" id="email" name="email" placeholder="example@exp.com" value="{{old('email')}}" class="form-control" required>
                 </div>
-               </div> 
-             <div class="form-group">
-                 <div class="input-group">
-                    <label class="input-group-addon" for="password"><i class="fa fa-lock" aria-hidden="true"></i>
-</label>
-                    <input type="password" id="password" name="password" class="form-control" value="{{old('password')}}" placeholder="password" required>
-                </div>
-            </div>
+              </div> 
+             
             {{ csrf_field() }}
-            <a href="{{ route('user.forgetpassword') }}">Forget Your Password?</a>
-            <button type="submit" class="btn btn-primary pull-right">Sign In</button>
+              <button type="submit" class="btn btn-primary pull-right">Send Password</button>
             
         </form>
     </div>

@@ -30,7 +30,7 @@ class UserController extends Controller
 
         $user->save();
 
-        Auth::login();
+       // Auth::login();
 
         return redirect()->route('user.profile');
 

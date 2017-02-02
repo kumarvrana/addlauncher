@@ -1,3 +1,68 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+body {
+    font-size: 16px;
+    font-weight: 300;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+a {
+    text-decoration: none;
+    -webkit-transition: all 0.4s;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+img {
+    width: 100%;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:focus {
+    outline: none;
+    text-decoration: none;
+}
+
+
+.section-padding {
+    padding: 70px 0px;
+}
+
+.section-title {
+    margin-bottom: 30px;
+}
+
+.section-title p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 26px;
+    padding-right: 600px;
+}
+
+.section-title h2 {
+    font-size: 40px;
+    text-transform: capitalize;
+    margin-bottom: 35px;
+    font-weight: 600;
+    position: relative;
+    margin-top: 0;
+}
+
+.section-title h2:before {
+    position: absolute;
+    left: 0;
+    top: 56px;
+    height: 10px;
+    width: 74px;
+    background: #ffc600;
+    content: "";
+    z-index: 1;
+}
+
+
 .thumbnail img{
     max-width: 253px;
 }
@@ -14,3 +79,683 @@
   font-weight: 600;
   text-align: center;
 }
+
+.row-repeater{
+    display: flex;
+}
+
+
+.product-module:link, .product-module:visited {
+  color: #444;
+}
+
+.product-module:hover, .product-module:active, .product-module:focus {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  color: #d54d4d;
+}
+
+
+
+.product-module {
+  border: 1px solid;
+  background-color: #fff;
+  display: block;
+  margin-bottom: 2em;
+  padding: 30px;
+  position: relative;
+  text-align: center;
+  transition: all 0.15s ease-in-out 0s;
+}
+
+.product-module h3 {
+  font-size: 14px;
+  margin-top: 2em;
+  text-transform: uppercase;
+}
+
+  /*Top Bar style*/
+
+  .topbar {
+    background: #FFC600;
+    width: 100%;
+    color: #222222;
+}
+
+.topbar ul {
+    padding-top: 10px;
+}
+
+.topbar ul li a {
+    color: #222222;
+    text-decoration: none;
+}
+
+/*Main Menu Style*/
+
+.menu-bg {
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    background: #fff;
+    /*box-shadow: 0 2px 10px -1px rgba(87, 97, 100, 0.35);*/
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+    background: #000;
+    border: none;
+    border-radius: 0px;
+    margin-bottom: 0px;
+}
+
+ul.nav.navbar-nav.navbar-right.main-right-menu li a {
+    color: #fff;
+    padding-top: 22px;
+    -webkit-transition: .3s;
+    transition: .3s;
+    padding-bottom: 22px;
+}
+
+ul.nav.navbar-nav.navbar-right.main-right-menu li a:hover {
+    color: #ffc600;
+}
+
+.navbar-default .navbar-brand {
+    padding-top: 22px;
+    -webkit-transition: .3s;
+    transition: .3s;
+    padding-bottom: 22px;
+}
+
+.navbar-default .navbar-brand {
+    color: #fff;
+}
+
+span.logo-sub {
+    color: #ffc600;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    color: #555;
+    background-color: transparent;
+}
+
+.main-right-menu ul.dropdown-menu {
+    background: #ffc600;
+}
+
+ul.dropdown-menu {
+    background: #ffc600;
+}
+
+ul.dropdown-menu {
+    background: #ffc600;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+}
+
+.dropdown-menu>li>a {
+    display: block;
+    padding: 12px 15px!important;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #333!important;
+    white-space: nowrap;
+}
+
+.dropdown-menu>li>a:hover {
+    background: black;
+    color: #ffc600!important;
+}
+
+/*main container style*/
+
+.main-con{
+
+  padding: 0px;
+  margin-top: 0px;
+}
+
+
+/*
+* ----------------------------------------------------------------------------------------
+* 01.CALL TO ACTION CSS STYLE
+* ----------------------------------------------------------------------------------------
+*/
+
+.call-to-area {
+    background: url(http://192.168.0.39/myshop/public/images/call.jpg);
+    background-size: cover;
+    padding: 150px 0px;
+    position: relative;
+    z-index: 1;
+}
+
+.call-to-area:after {
+    position: absolute;
+    background: rgba(0, 0, 0, .6);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    content: "";
+    z-index: -1;
+}
+
+.call-to-area-text h2 {
+    color: #fff;
+    font-size: 40px;
+    text-transform: capitalize;
+    font-weight: 400;
+}
+
+.call-to-area-text p {
+    text-transform: capitalize;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.call-to-area-text a {
+    display: inline-block;
+    color: #fff;
+    padding: 12px 25px;
+    text-transform: capitalize;
+    font-size: 14px;
+    border: 1px solid #ffc600;
+    background-color: #ffc600;
+    border-radius: 5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.call-to-area-text a:hover {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #ffc600;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+/*
+* ----------------------------------------------------------------------------------------
+* 02.SEC CAT BOX CSS STYLE
+* ----------------------------------------------------------------------------------------
+*/
+
+section.sec-cat-box {
+    padding: 100px 150px;
+}
+
+.box-first-cat {
+    margin-bottom: 15px;
+    margin-bottom: 15px;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    background-color: #f7f7f7;
+    border: 1px solid #eeeeee;
+    text-align: center;
+}
+
+
+
+.box-first-cat:hover {
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.73);
+    border-color: #ffffff;
+    background-color: #ffffff;
+    transform: scale(1.01);
+}
+
+.box-first-cat:hover .cat-box-1 h2 {
+    color: #ffc600;
+}
+
+.cat-box-1 {
+    background: #000000;
+    padding: 10px;
+}
+
+.box-first-cat:hover .cat-box-1 h2 {
+    color: #ffc600;
+}
+
+.cat-box-1 h2 {
+    margin: 2px;
+    font-size: 19px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.cat-box-1 h3 {
+    margin: 0px;
+    font-size: 15px;
+    color: rgb(26, 162, 231);
+    text-transform: uppercase;
+}
+
+.more-item {
+    background: #ffc600;
+    padding: 6px;
+    color: black;
+    font-weight: 600;
+}
+
+
+.package-tabs-section .package-box {
+    float: left;
+    position: relative;
+    overflow: hidden;
+    padding-left: 0;
+    padding-right: 0;
+    transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    width: 100% !important;
+    margin-bottom: 30px;
+    box-shadow: 1px 1px 3px rgb(101, 101, 101);
+}
+
+.package-tabs-section .package-box:hover {
+    box-shadow: 4px 4px 5px rgb(255, 198, 0);
+    -moz-box-shadow: 4px 4px 5px rgb(255, 198, 0);
+    -ms-box-shadow: 4px 4px 5px rgb(255, 198, 0);
+    -webkit-box-shadow: 4px 4px 5px rgb(255, 198, 0);
+    -o-box-shadow: 4px 4px 5px rgb(255, 198, 0);
+}
+
+.package-tabs-section .package-box .destination-box {
+    /*position: absolute;*/
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.package-tabs-section .package-box:hover img {
+    transform: scale(1.15);
+    -moz-transform: scale(1.15);
+    -ms-transform: scale(1.15);
+    -o-transform: scale(1.15);
+    -webkit-transform: scale(1.15);
+    -ms-transform: scale(1.15);
+}
+.package-tabs-section .package-box img {
+    transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+}
+.package-tabs-section .package-box img {
+    width: 100%;
+    height: 100%;
+}
+
+.package-tabs-section .package-box:hover .description {
+    bottom: 0;
+    padding-bottom: 20px;
+}
+
+
+.package-tabs-section .package-box .description {
+    position: absolute;
+    background: rgba(0,0,0,0.6);
+    width: 100%;
+    bottom: -40px;
+    padding: 15px 10px 10px;
+    color: #fff;
+    transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+}
+
+.package-tabs-section .package-box .description h2 {
+        font-size: 22px;
+    line-height: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
+    height: 24px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.package-tabs-section .package-box:hover .description h2 {
+    color: #ffc600;
+}
+
+.package-tabs-section .package-box .description p {
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.package-tabs-section .package-box .description .view-more {
+    border: 1px solid #fff;
+    padding: 4px 30px;
+    margin-top: 5px;
+}
+.view-more {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+
+
+/*
+* ----------------------------------------------------------------------------------------
+* 12.CONTACT CSS STYLE
+* ----------------------------------------------------------------------------------------
+*/
+
+.contact-area {
+    background: #F7F7F7;
+}
+
+.contact-details-list {
+    background: #fff;
+    margin-top: 30px;
+    padding: 30px;
+}
+
+.contact-icon {
+    float: left;
+    margin-bottom: 30px;
+    margin-right: 15px;
+}
+
+.contact-icon i {
+    font-size: 20px;
+    color: #FFC600;
+}
+
+.single-contact {
+    margin-bottom: 22px;
+}
+
+.single-contact h2 {
+    font-size: 18px;
+    margin-top: 20px;
+    text-transform: capitalize;
+    font-weight: 600;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+.contact-form {
+    margin-top: 30px;
+}
+
+.form-control {
+    display: block;
+    border: 0px;
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+    line-height: 1.42857143;
+    color: #000;
+    background-color: transparent;
+    background-image: none;
+    border-radius: 0px;
+    box-shadow: none;
+    margin-bottom: 10px;
+    padding: 17px 7px 14px 15px;
+    border: 1px solid #f2f2f2;
+    background: #fff;
+    border-radius: 5px;
+    -webkit-transition: .3s;
+    transition: .3s
+}
+
+.form-control:focus {
+    border-color: #FFC600;
+    outline: 0;
+    box-shadow: none;
+}
+
+.contact-form input[type='submit'] {
+    display: inline-block;
+    color: #fff;
+    padding: 12px 25px;
+    text-transform: capitalize;
+    font-size: 14px;
+    border: 1px solid #FFC600;
+    background-color: #FFC600;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.contact-form input[type='submit']:hover {
+    background: transparent;
+    color: #000;
+    border: 1px solid #FFC600;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+.btn.active.focus,
+.btn.active:focus,
+.btn.focus,
+.btn.focus:active,
+.btn:active:focus,
+.btn:focus {
+    outline: none;
+}
+
+.success {
+    background: #50B948 none repeat scroll 0 0;
+    color: #fff;
+    font-weight: 700;
+    padding: 20px;
+    text-align: center;
+}
+
+
+/*
+* ----------------------------------------------------------------------------------------
+* 13.MAP CSS STYLE
+* ----------------------------------------------------------------------------------------
+*/
+
+#map {
+    height: 400px;
+}
+
+
+/*
+* ----------------------------------------------------------------------------------------
+* 14.FOOTER CSS STYLE
+* ----------------------------------------------------------------------------------------
+*/
+
+.footer-area {
+    background: #000;
+    padding: 80px 0px;
+}
+
+.footer-text h6 {
+    text-transform: capitalize;
+    color: #fff;
+    line-height: 25px;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.footer-social-link {
+    margin-top: 20px;
+}
+
+.footer-social-link ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.footer-social-link ul li {
+    display: inline-block;
+    margin: 0px 10px;
+}
+
+.footer-social-link ul li a {
+    display: block;
+    color: #FFC600;
+    margin-bottom: 10px;
+}
+
+
+
+
+/*------------------------------------------------------------------
+13. Mt Contact Banner / .mt-contact-banner
+-------------------------------------------------------------------*/
+.mt-contact-banner {
+  min-height: 207px;
+  padding: 82px 0 40px;
+  background-size: cover;
+  text-transform: capitalize;
+  background-position: 50% 50%; }
+  .mt-contact-banner.style4 {
+    padding: 65px 0 14px;
+    margin: 0 0 4px; }
+    .mt-contact-banner.style4 .breadcrumbs {
+      margin: 0 0 20px; }
+  .mt-contact-banner.mt-banner-22 {
+    min-height: 326px;
+    position: relative;
+    padding: 218px 0 20px; }
+    .mt-contact-banner.mt-banner-22 h1 {
+      color: #fff;
+      margin: 0 0 16px; }
+    .mt-contact-banner.mt-banner-22 .breadcrumbs ul {
+      color: #fff;
+      opacity: 0.5; }
+      .mt-contact-banner.mt-banner-22 .breadcrumbs ul a {
+        color: #fff; }
+  .mt-contact-banner h1 {
+    font-size: 44px;
+    line-height: 46px;
+    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
+    margin: 0 0 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #383838; }
+  .mt-contact-banner .breadcrumbs {
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 200;
+    overflow: hidden;
+    color: #383838; }
+    .mt-contact-banner .breadcrumbs ul {
+      overflow: hidden; }
+      .mt-contact-banner .breadcrumbs ul li {
+        margin: 0 10px 0 0;
+        display: inline-block;
+        vertical-align: middle; }
+      .mt-contact-banner .breadcrumbs ul a {
+        -webkit-transition: all 0.25s linear;
+                transition: all 0.25s linear;
+        color: #383838; }
+        .mt-contact-banner .breadcrumbs ul a:hover {
+          color: #ff6060; }
+      .mt-contact-banner .breadcrumbs ul .fa-angle-right {
+        margin: 0 0 0 5px; }
+  .mt-contact-banner .search {
+    display: inline-block;
+    vertical-align: top; }
+    .mt-contact-banner .search .fa-search {
+      margin: 0 0 0 5px; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Medium Layout: 1280px. */
+
+@media only screen and (min-width: 992px) and (max-width: 1280px) {}
+
+
+/* Tablet Layout: 768px. */
+
+@media only screen and (min-width: 767px) and (max-width: 991px) {
+    
+    .section-title p {
+        padding: 0;
+    }
+    
+}
+
+
+/* Mobile Layout: 320px. */
+
+@media only screen and (max-width: 767px) {
+    a.slide-btn {
+        font-size: 12px;
+        padding: 10px;
+        margin-bottom: 5px;
+    }
+    .section-title h2 {
+        font-size: 22px;
+        margin-bottom: 30px;
+    }
+    .section-padding {
+        padding: 40px 0px;
+    }
+    
+    .section-title p {
+        padding: 0;
+    }
+    .section-title h2::before {
+        top: 40px;
+    }
+    
+    
+}
+
+
+/* Wide Mobile Layout: 480px. */
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {}
+

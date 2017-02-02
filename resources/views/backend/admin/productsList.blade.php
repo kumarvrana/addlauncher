@@ -53,7 +53,7 @@
                 <td>{{$loop->iteration}}</td>
                 <td>{{$product->title}}</td>
                 <td>{{$product->price}}</td>
-                <td>{{$product->mediatype_id}}</td>
+                <td>{{$product->mainaddtype->title}}</td>
                 <td>{{$product->location}}</td>
                 <td>{{$product->state}}</td>
                 <td>{{$product->rank}}</td>

@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Cartalyst\Sentinel\Users\EloquentUser;
 
-class User extends Authenticatable
+class User extends EloquentUser
 {
     use Notifiable;
 
@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'email', 'password',
+        'email', 'first_name', 'last_name', 'password', 'permissions'
     ];
 
     /**
@@ -27,7 +27,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public static function byEmail($email)
+    {
+        return static::whereEmail($email)->first();
+
+    }
+
     public function orders(){
         return $this->hasMany('App\Order');
     }
+
 }

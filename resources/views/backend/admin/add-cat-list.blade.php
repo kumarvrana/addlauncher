@@ -36,6 +36,7 @@
                 <th>S.NO</th>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Slug</th>
                 <th>Image</th>
                 <th>Actions</th>
             </tr>
@@ -46,6 +47,7 @@
                 <td>{{$loop->iteration}}</td>
                 <td>{{$category->title}}</td>
                 <td>{{substr(strip_tags($category->description), 0, 100)}}</td>
+                <td>{{$category->slug}}</td>
                 <td>
                
                     <img src="{{asset('images/'.$category->image)}}" alt="$category->title" width="50px" height="50px" class="img-responsive">

@@ -28,12 +28,16 @@
                 <input type="text" id="category-name" name="title"class="form-control" value="{{$categorycontent->title}}" required>
             </div>
             <div class="form-group">
+                <label for="slug">Category Slug:</label>
+                <input type="text" id="category-slug" name="slug" class="form-control" value="{{$categorycontent->slug}}" required>
+            </div>
+            <div class="form-group">
                 <label for="description">Category Description:</label>
                 <textarea name="description" class="form-control">{{$categorycontent->description}}</textarea>
             </div>
             <div class="form-group">
                 <label for="image">Category Image:</label>
-                <input name="image" type="file" class="form-control" required>
+                <input name="image" type="file" class="form-control">
             </div>
             <button type="submit" class="btn btn-primary">Edit Category</button>
             {{ csrf_field() }}
