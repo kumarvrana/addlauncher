@@ -122,6 +122,18 @@
         var loginURL = "{{ route('user.postsignin') }}";*/
     </script>
     <script src="{{ URL::to( 'js/shop.js' ) }}"></script>
+      <script type="text/javascript">
+    
+      $(function(){
+$("#addClass").click(function () {
+          $('#qnimate').addClass('popup-box-on');
+            });
+          
+            $("#removeClass").click(function () {
+          $('#qnimate').removeClass('popup-box-on');
+            });
+  });
+  </script>  
 @yield('scripts')
 </body>
 </html>

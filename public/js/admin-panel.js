@@ -1,4 +1,6 @@
+
 $(function(){
+	$("#light-content").hide();
 	var category_id = 0;
 	var descriptionTD;
 	$('.edit-category').on('click', function(event){
@@ -33,6 +35,7 @@ $(function(){
 
 		});
 	});
+	// kjkk
 
 });
  function htmlbodyHeightUpdate(){
@@ -118,52 +121,89 @@ $(function(){
 	});
 	//ends
 
-	// products options start
-
+	
 	fieldData = [];
+	var fieldisi = document.getElementById("priceData");
+	if(fieldisi){
+		var editfieldData = fieldisi.value;
+		editfieldData = JSON.parse(editfieldData);
+		fieldData = fieldData.concat(editfieldData);
+	}	
+	
 	var chkElm = '';
-	var mediaCat = document.getElementById('mediatype');
-	mediaCat.onchange = function(){
-		var selectedString = mediaCat.options[mediaCat.selectedIndex].value;
-		var priceElementContent = document.getElementById('pricing-options-step');
-		priceElementContent.innerHTML = '';
-		fieldData = [];
-		
-	}
+	
 	function addDomToPriceOptions(name){
-			var checkCondition = $(this).is( ':checked' );
-        	
+			
+			var click = 1;
+			         	
 			var chkExist = fieldData.indexOf(name);
-    						
-            var labeltext = "Price for "+name+" Ad:";
-			var iname = name.toLowerCase();
-			var res = iname.replace(" ", "");
-            var inputname = "price"+res;
-
-            var priceElement = document.getElementById('pricing-options-step');
-            
-             var divrow = document.createElement('div');
-             divrow.className = 'form-group';
-			 divrow.id = 'p'+inputname;
-            
-             var labelhtm = document.createElement('label');
-             labelhtm.setAttribute("for", inputname);
-             labelhtm.innerText = labeltext;
-
-             var inputhtm = document.createElement("input"); //input element, text
-             inputhtm.setAttribute('type',"text");
-             inputhtm.setAttribute('name',inputname);
-             inputhtm.setAttribute('class', "form-control");
-             inputhtm.setAttribute('id', inputname);
-			 inputhtm.setAttribute('required', 'required');
-
-			 
+    				 
 			if(chkExist == -1){
-				fieldData.push(name);
-				divrow.appendChild(labelhtm);
-            	divrow.appendChild(inputhtm);
+				var model = document.getElementById("modelname").value;
+				var labeltext = "Price for "+name+" "+model+" Ad Per unit:";
+				var labelnumbertext = "Number of "+model+" for "+name+" Ad:";
+				var labeldurationtext = "Ad Duration of "+model+" for "+name+" Ad:";
+				var iname = name.toLowerCase();
+				var res = iname.replace(" ", "_");
+				var inputname = "price_"+res;
+				var numberbuses = "number_"+res;
+				var durationbuses = "duration_"+res;
 
-            priceElement.appendChild(divrow);
+				var priceElement = document.getElementById('pricing-options-step');
+				
+				var divrow = document.createElement('div');
+				divrow.className = 'form-group';
+				divrow.id = 'p'+inputname;
+				//iput field
+				var labelhtm = document.createElement('label');
+				labelhtm.setAttribute("for", inputname);
+				labelhtm.innerText = labeltext;
+
+				var inputhtm = document.createElement("input"); //input element, text
+				inputhtm.setAttribute('type',"text");
+				inputhtm.setAttribute('name',inputname);
+				inputhtm.setAttribute('class', "form-control");
+				inputhtm.setAttribute('id', inputname);
+				inputhtm.setAttribute('required', 'required');
+				inputhtm.setAttribute('placeholder', 'put value as number eg: 35345');
+
+				//number of buses
+				var labelnumhtm = document.createElement('label');
+				labelnumhtm.setAttribute("for", numberbuses);
+				labelnumhtm.innerText = labelnumbertext;
+
+				var inputnumhtm = document.createElement("input"); //input element, text
+				inputnumhtm.setAttribute('type',"text");
+				inputnumhtm.setAttribute('name',numberbuses);
+				inputnumhtm.setAttribute('class', "form-control");
+				inputnumhtm.setAttribute('id', numberbuses);
+				inputnumhtm.setAttribute('required', 'required');
+				inputnumhtm.setAttribute('placeholder', 'put number of buses as number');
+
+				//Duration of buses
+				var labeldurationhtm = document.createElement('label');
+				labeldurationhtm.setAttribute("for", durationbuses);
+				labeldurationhtm.innerText = labeldurationtext;
+
+				var inputdurationhtm = document.createElement("input"); //input element, text
+				inputdurationhtm.setAttribute('type',"text");
+				inputdurationhtm.setAttribute('name',durationbuses);
+				inputdurationhtm.setAttribute('class', "form-control");
+				inputdurationhtm.setAttribute('id', durationbuses);
+				inputdurationhtm.setAttribute('required', 'required');
+				inputdurationhtm.setAttribute('placeholder', 'put duration of ad for buses');
+
+				fieldData.push(name);
+				if(fieldisi){
+					fieldisi.value = JSON.stringify(fieldData);
+				}
+				divrow.appendChild(labelhtm);
+				divrow.appendChild(inputhtm);
+				divrow.appendChild(labelnumhtm);
+				divrow.appendChild(inputnumhtm);
+				divrow.appendChild(labeldurationhtm);
+				divrow.appendChild(inputdurationhtm);
+				priceElement.appendChild(divrow);
 			}else{
 				removeItem(name);
 			}
@@ -171,24 +211,44 @@ $(function(){
         }
 
 		function removeItem(name) {
+						
 			var iname = name.toLowerCase();
-			var res = iname.replace(" ", "");
-            var inputname = "price"+res;
+			var res = iname.replace(" ", "_");
+            var inputname = "price_"+res;
 			var divId = 'p'+inputname;
-
 			fieldData.splice(fieldData.indexOf(name), 1);
-			
+			if(fieldisi){
+				editfieldData.splice(editfieldData.indexOf(name), 1);
+				var id = document.getElementById("uncheckID").value;
+			var tableName = document.getElementById("tablename").value;
+				fieldisi.value = JSON.stringify(fieldData);
+				$.ajax({
+						method: 'GET',
+						url: uncheckDeleteURL,
+						data: {id: id, price_key: inputname, table:tableName, displayoptions: JSON.stringify(fieldData) }
+					})
+					.done(function (msg){
+						console.log(msg);
+					});
+			}
 			var deleteNode = document.getElementById(divId);
 			deleteNode.remove();
-
+			
 		}
 
 
 		function addDomToPriceOptionsWithLight(value){
-			var text = document.getElementById('light-content');
+			
 			if(value == 'Yes'){
-				text.innerHTML = 'You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!';
+				$("#light-content").show();
+			}else if(value == 'No'){
+				$("#light-content").hide();
 			}
 		}
 
 	// products options ends
+
+	function inertFunct(){
+
+		
+	}

@@ -17,7 +17,10 @@
       </div>
   </div>  <!-- Top Bar ends here -->
 
+@PHP
+$printsession = (array) Session::get('cart');
 
+@ENDPHP
 
 
 <nav class="navbar navbar-default menu-bg">
@@ -31,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{route('product.index')}}">ADD <span class="logo-sub">LAUNCHER</span></a>
+          <a class="navbar-brand" href="{{env('APP_URL')}}"><img src="{{asset('images/logo/addlogo2.png')}}" class="img-responsive logo"></a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -43,7 +46,12 @@
               @endif
             @endif
            
-            <li><a href="{{ route('product.shoppingCart') }}">Shop Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="badge">{{ Session::has('cart') ? Session::get('cart')->totalQty : '' }}</span>
+            <li><a href="{{ route('cart.shoppingCart') }}">Shop Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            @if(count($printsession) > 0)
+              @if( $printsession['totalQty'] != 0 )
+              <span class="badge">{{$printsession['totalQty']}}</span>
+              @endif
+            @endif
             </a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i>@if(Sentinel::check()) Hi {{ Sentinel::getUser()->first_name }} @else User @endif <span class="caret"></span></a>
@@ -64,9 +72,25 @@ SignIn</a></li>
                 
               </ul>
             </li>
+            <!-- search form -->
+            <li class="s-icon">
+              <a href="#" id="addClass"><span class="glyphicon glyphicon-search"></span></a>
+            </li>
+
           </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- main-head close -->
     
   </div><!-- /.container-fluid -->
 </nav>
+
+<div id="qnimate" class="off">
+            <div id="search" class="open">
+            <button data-widget="remove" id="removeClass" class="close" type="button">×</button>
+            <form action="" method="" autocomplete="off">
+                    <input type="text" placeholder="Type search keywords here" value="" name="term" id="term">
+                    <button class="btn btn-lg btn-site" type="submit"><span class="glyphicon glyphicon-search"></span> Search</button>
+            </form>
+           
+            </div>
+        </div>

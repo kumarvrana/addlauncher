@@ -30,33 +30,33 @@
             <div class="step-header">General Options</div>
             <div class="form-group">
                     <label for="title">Ad Name:</label>
-                    <input type="text" id="title" name="title" class="form-control" value="{{old('title')}}" required>
+                    <input type="text" id="title" name="title" class="form-control" placeholder="Name of the product" value="{{old('title')}}" required>
                 </div>
                 <div class="form-group">
                     <label for="price">Ad Price:</label>
-                    <input type="text" id="price" name="price" class="form-control" value="{{old('price')}}" placeholder="Put Base price here" required>
+                    <input type="text" id="price" name="price" class="form-control" value="{{old('price')}}" placeholder="Put Base price here eg: 1213" required>
                 </div>
                 <div class="form-group">
                     <label for="location">Location:</label>
-                    <input type="text" id="location" name="location" value="{{old('location')}}" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="ad-state">State:</label>
-                    <input type="text" id="state" name="state" value="{{old('state')}}" class="form-control" required>
+                    <input type="text" id="location" name="location" placeholder="example: saket metro/ IGI Airport" value="{{old('location')}}" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="city">City:</label>
-                    <input type="text" id="city" name="city" value="{{old('city')}}" class="form-control" required>
+                    <input type="text" id="city" name="city" placeholder="example: Mumbai" value="{{old('city')}}" class="form-control" required>
                 </div>
-                
-                                
+
+                <div class="form-group">
+                    <label for="ad-state">State:</label>
+                    <input type="text" id="state" name="state" placeholder="example: Maharashtra" value="{{old('state')}}" class="form-control" required>
+                </div>
+                             
                 <div class="form-group">
                     <label for="rank">City Rank:</label>
-                    <input type="text" id="rank" name="rank" value="{{old('rank')}}" class="form-control" required>
+                    <input type="text" id="rank" name="rank" placeholder="example: (432) rank according to location" value="{{old('rank')}}" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="landmark">Landmark:</label>
-                    <input type="text" id="landmark" name="landmark" value="{{old('landmark')}}" class="form-control" required>
+                    <input type="text" id="landmark" name="landmark" placeholder="example: near children park or opposite to city post office" value="{{old('landmark')}}" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
@@ -95,15 +95,16 @@
                     
                 </div>
 
-        </div>
-		<div class="step">
-            <div class="step-header">Pricing Options</div>
-            <div id="pricing-options-step">
-                <div id="light-content" class="form-group">
-                </div>
+                <div class="step-header">Pricing Options</div>
+                    <div id="light-content" class="alert alert-info">
+                                You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
+                        </div>
+                    <div id="pricing-options-step">
+                        
+                    </div>
+
             </div>
-        
-        </div>
+		
         <div class="step">
             <div class="step-header">Image and References Options</div>
             <div class="form-group">
@@ -128,80 +129,7 @@
 @section('scripts')
 <script>
     var CathtmlUrl = "{{route('dashboard.getproductvariationshtmlbycat')}}";
-         
-
-  $(document).ready(function(){
-	var current = 1;
-	
-	widget      = $(".step");
-	btnnext     = $(".next");
-	btnback     = $(".back"); 
-	btnsubmit   = $(".submit");
-
-	// Init buttons and UI
-	widget.not(':eq(0)').hide();
-	hideButtons(current);
-	setProgress(current);
-
-	// Next button click action
-	btnnext.click(function(){
-		if(current < widget.length){
-			// Check validation
-			if($(".form").valid()){
-				widget.show();
-				widget.not(':eq('+(current++)+')').hide();
-				setProgress(current);
-			}
-		}
-		hideButtons(current);
-	})
-
-	// Back button click action
-	btnback.click(function(){
-		if(current > 1){
-			current = current - 2;
-			if(current < widget.length){
-				widget.show();
-				widget.not(':eq('+(current++)+')').hide();
-				setProgress(current);
-			}
-		}
-		hideButtons(current);
-	})
-
-	// Submit button click
-	/*btnsubmit.click(function(){
-		alert("Submit button clicked");
-	});*/
-
-    $('.form').validate({ // initialize plugin
-		ignore:":not(:visible)",			
-		rules: {
-			name : "required"
-		},
-    });
-
-});
-
-// Change progress bar action
-setProgress = function(currstep){
-	var percent = parseFloat(100 / widget.length) * currstep;
-	percent = percent.toFixed();
-	$(".progress-bar").css("width",percent+"%").html(percent+"%");		
-}
-
-// Hide buttons according to the current step
-hideButtons = function(current){
-	var limit = parseInt(widget.length); 
-
-	$(".action").hide();
-
-	if(current < limit) btnnext.show();
-	if(current > 1) btnback.show();
-	if (current == limit) { 
-		btnnext.hide(); 
-		btnsubmit.show();
-	}
-}
+ 
 </script>
+<script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

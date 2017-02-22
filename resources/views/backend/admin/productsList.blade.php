@@ -35,11 +35,10 @@
             <tr>
                 <th>S.NO</th>
                 <th>Name</th>
-                <th>Price</th>
                 <th>Category</th>
                 <th>Location</th>
-                <th>State</th>   
-                <th>Rank</th>
+                <th>City</th>
+                <th>State</th>
                 <th>Image</th>
                 <th>Status</th>
                 
@@ -52,14 +51,13 @@
             
                 <td>{{$loop->iteration}}</td>
                 <td>{{$product->title}}</td>
-                <td>{{$product->price}}</td>
-                <td>{{$product->mainaddtype->title}}</td>
+                <td>{{ucfirst($product->type_name)}}</td>
                 <td>{{$product->location}}</td>
+                <td>{{$product->city}}</td>
                 <td>{{$product->state}}</td>
-                <td>{{$product->rank}}</td>
                 <td>
                
-                    <img src="{{asset('images/'.$product->imagepath)}}" alt="{{$product->title}}" width="50px" height="50px" class="img-responsive">
+                    <img src="{{asset('images/'.$product->type_name.'/'.$product->image)}}" alt="{{$product->title}}" width="50px" height="50px" class="img-responsive">
                 
                 </td>
                 @PHP

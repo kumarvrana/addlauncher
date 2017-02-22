@@ -6,6 +6,7 @@ use App\Product;
 use App\Mainaddtype;
 use App\Cart;
 use App\Order;
+use App\Buses;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Session;
@@ -37,448 +38,7 @@ class ProductContoller extends Controller
         return view( 'backend.admin.add-product', ['categories' => $ad_cats]);
     }
 
-    public function postProduct(Request $request){
-        
-        $this->validate( $request, [
-           'title' => 'required',
-           'price' => 'required|numeric',
-           'imagepath' => 'required|image',
-           'location' => 'required',
-           'state' => 'required',
-           'city' => 'required',
-           'mediatype_id' => 'required|numeric',
-           'rank' => 'required|numeric',
-           'landmark' => 'required',
-           'description' => 'required',
-           'status' => 'required'
-        ]);
-
-       
-        if($request->hasFile('imagepath')){
-            $file = $request->file('imagepath');
-            $filename = time() .'.'. $file->getClientOriginalExtension();
-            $location = public_path("images\\" . $filename);
-            Image::make($file)->resize(800, 400)->save($location);
-        }
-
-        $cat =  Mainaddtype::find($request->input('mediatype_id'));
-
-        $cat_check = $cat->title;
-        
-        $product = New Product([
-                    'imagepath' => $filename,
-                    'title' => $request->input('title'),
-                    'description' => $request->input('description'),
-                    'price' => $request->input('price'),
-                    'location' => $request->input('location'),
-                    'state' => $request->input('state'),
-                    'city' => $request->input('city'),
-                    'mediatype_id' => $request->input('mediatype_id'),
-                    'rank' => $request->input('rank'),
-                    'landmark' => $request->input('landmark'),
-                    'reference' => $request->input('reference'),
-                    'status' => $request->input('status')
-                    ]);
-        $product->save();
-
-        //dd($product->id);
-
-        /*** adding Post Meta ***/
-            switch($cat_check){
-                case 'Newspapers':
-                    if($request->has('circulation')){
-                        $this->AddProductMeta($product->id, 'circulation', $request->input('circulation'));
-                    }
-                    if($request->has('language')){
-                        $this->AddProductMeta($product->id, 'language', $request->input('language'));
-                    }
-                    if($request->has('displayoptions')){
-                        $this->AddProductMeta($product->id, 'displayoptions', serialize($request->input('displayoptions')));
-                        // pricing options
-                        if($request->has('pricepage1')){
-                             $this->addProductPrice($product->id, 'pricepage1', $request->input('pricepage1'));
-                        }
-                        if($request->has('pricepage3')){
-                             $this->addProductPrice($product->id, 'pricepage3', $request->input('pricepage3'));
-                        }
-                        if($request->has('pricelastpage')){
-                             $this->addProductPrice($product->id, 'pricelastpage', $request->input('pricelastpage'));
-                        }
-                        if($request->has('priceanypage')){
-                             $this->addProductPrice($product->id, 'priceanypage', $request->input('priceanypage'));
-                        }
-                        
-                     
-                    }
-                    if($request->has('otherdisplayoptions')){
-                        
-                        $productmeta_id = $this->AddProductMeta($product->id, 'otherdisplayoptions', serialize($request->input('otherdisplayoptions')));
-                        //price options
-                        if($request->has('pricejacketfront_page')){
-                             $this->addProductPrice($product->id, 'pricejacketfront_page', $request->input('pricejacketfront_page'));
-                        }
-                        if($request->has('pricejacketfront_inside')){
-                             $this->addProductPrice($product->id, 'pricejacketfront_inside', $request->input('pricejacketfront_inside'));
-                        }
-                        if($request->has('pricepointerad')){
-                             $this->addProductPrice($product->id, 'pricepointerad', $request->input('pricepointerad'));
-                        }
-                        if($request->has('priceskybus')){
-                             $this->addProductPrice($product->id, 'priceskybus', $request->input('priceskybus'));
-                        }
-                        if($request->has('priceearpanel')){
-                             $this->addProductPrice($product->id, 'priceearpanel', $request->input('priceearpanel'));
-                        }
-                        if($request->has('pricehalfpage')){
-                             $this->addProductPrice($product->id, 'pricehalfpage', $request->input('pricehalfpage'));
-                        }
-                        if($request->has('pricequarterpage')){
-                             $this->addProductPrice($product->id, 'pricequarterpage', $request->input('pricequarterpage'));
-                        }
-                        if($request->has('pricepamphlets')){
-                             $this->addProductPrice($product->id, 'pricepamphlets', $request->input('pricepamphlets'));
-                        }
-                        if($request->has('priceflyers')){
-                             $this->addProductPrice($product->id, 'priceflyers', $request->input('priceflyers'));
-                        }
-                          
-
-                    }
-                    if($request->has('classifiedoptions')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'classifiedoptions', serialize($request->input('classifiedoptions')));
-                        //price options
-                         if($request->has('pricematrimonial')){
-                             $this->addProductPrice($product->id, 'pricematrimonial', $request->input('pricematrimonial'));
-                        }
-                         if($request->has('pricerecruitment')){
-                             $this->addProductPrice($product->id, 'pricerecruitment', $request->input('pricerecruitment'));
-                        }
-                         if($request->has('pricebusiness')){
-                             $this->addProductPrice($product->id, 'pricebusiness', $request->input('pricebusiness'));
-                        }
-                         if($request->has('priceproperty')){
-                             $this->addProductPrice($product->id, 'priceproperty', $request->input('priceproperty'));
-                        }
-                         if($request->has('priceeducation')){
-                             $this->addProductPrice($product->id, 'priceeducation', $request->input('priceeducation'));
-                        }
-                         if($request->has('priceastrology')){
-                             $this->addProductPrice($product->id, 'priceastrology', $request->input('priceastrology'));
-                        }
-                         if($request->has('pricepublicnotices')){
-                             $this->addProductPrice($product->id, 'pricepublicnotices', $request->input('pricepublicnotices'));
-                        }
-                         if($request->has('priceservices')){
-                             $this->addProductPrice($product->id, 'priceservices', $request->input('priceservices'));
-                        }
-                         if($request->has('priceautomobile')){
-                             $this->addProductPrice($product->id, 'priceautomobile', $request->input('priceautomobile'));
-                        }
-                         if($request->has('priceshopping')){
-                             $this->addProductPrice($product->id, 'priceshopping', $request->input('priceshopping'));
-                        }
-                         
-     
-
-                    }
-                    if($request->has('priceoptions')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'priceoptions', serialize($request->input('priceoptions')));
-
-                        //priceing options
-
-                         if($request->has('pricepersq_cm')){
-                             $this->addProductPrice($product->id, 'pricepersq_cm', $request->input('pricepersq_cm'));
-                        }
-                         if($request->has('priceperday')){
-                             $this->addProductPrice($product->id, 'priceperday', $request->input('priceperday'));
-                        }
-                         if($request->has('priceperinerts')){
-                             $this->addProductPrice($product->id, 'priceperinerts', $request->input('priceperinerts'));
-                        }
-                 
-                    }
-                    if($request->has('inserts')){
-                        $this->AddProductMeta($product->id, 'inserts', $request->input('inserts'));
-                    }
-                  
-                break;
-                case 'Bus Stops':
-                    if($request->has('bsdisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'bsdisplay', serialize($request->input('bsdisplay')));
-
-                        //price options
-
-                         if($request->has('pricefull')){
-                             $this->addProductPrice($product->id, 'pricefull', $request->input('pricefull'));
-                        }
-                         if($request->has('pricerooffront')){
-                             $this->addProductPrice($product->id, 'pricerooffront', $request->input('pricerooffront'));
-                        }
-                         if($request->has('priceseatbacks')){
-                             $this->addProductPrice($product->id, 'priceseatbacks', $request->input('priceseatbacks'));
-                        }
-
-                         if($request->has('pricesideboards')){
-                             $this->addProductPrice($product->id, 'pricesideboards', $request->input('pricesideboards'));
-                        }
-
-                    }
-                    if($request->has('bslighting')){
-                        $this->AddProductMeta($product->id, 'bslighting', $request->input('bslighting'));
-                    }
-                    if($request->has('bsnumber')){
-                        $this->AddProductMeta($product->id, 'bsnumber', $request->input('bsnumber'));
-                    }
-                break;
-                case 'Buses':
-                    if($request->has('busdisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'busdisplay', serialize($request->input('busdisplay')));
-                        
-                        //priceing  options
-                         if($request->has('pricefull')){
-                             $this->addProductPrice($product->id, 'pricefull', $request->input('pricefull'));
-                        }
-                         if($request->has('priceleftside')){
-                             $this->addProductPrice($product->id, 'priceleftside', $request->input('priceleftside'));
-                        }
-                         if($request->has('pricebothside')){
-                             $this->addProductPrice($product->id, 'pricebothside', $request->input('pricebothside'));
-                        }
-                         if($request->has('pricerightside')){
-                             $this->addProductPrice($product->id, 'pricerightside', $request->input('pricerightside'));
-                        }
-                         if($request->has('pricebackside')){
-                             $this->addProductPrice($product->id, 'pricebackside', $request->input('pricebackside'));
-                        }
-                         if($request->has('pricebackglass')){
-                             $this->addProductPrice($product->id, 'pricebackglass', $request->input('pricebackglass'));
-                        }
-                         if($request->has('priceinternalceiling')){
-                             $this->addProductPrice($product->id, 'priceinternalceiling', $request->input('priceinternalceiling'));
-                        }
-                         if($request->has('pricebusgrab_handles')){
-                             $this->addProductPrice($product->id, 'pricebusgrab_handles', $request->input('pricebusgrab_handles'));
-                        }
-                        if($request->has('priceinsidebillboards')){
-                             $this->addProductPrice($product->id, 'priceinsidebillboards', $request->input('priceinsidebillboards'));
-                        }
-                       
-                    }
-                    if($request->has('busesnumber')){
-                        $this->AddProductMeta($product->id, 'busesnumber', $request->input('bsdisplay'));
-                    }
-                    
-                break;
-                case 'Cars':
-                    if($request->has('fullcardisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'fullcardisplay', serialize($request->input('fullcardisplay')));
-
-                        //priceing options
-                         if($request->has('pricefull')){
-                             $this->addProductPrice($product->id, 'pricefull', $request->input('pricefull'));
-                        }
-                         if($request->has('pricefulloutside_only')){
-                             $this->addProductPrice($product->id, 'pricefulloutside_only', $request->input('pricefulloutside_only'));
-                        }
-
-                    }
-                    if($request->has('carextdisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'carextdisplay', serialize($request->input('carextdisplay')));
-                        //price options
-                        if($request->has('priceside')){
-                             $this->addProductPrice($product->id, 'priceside', $request->input('priceside'));
-                        }
-                        if($request->has('pricebonnet')){
-                             $this->addProductPrice($product->id, 'pricebonnet', $request->input('pricebonnet'));
-                        }
-                        if($request->has('pricetailgate')){
-                             $this->addProductPrice($product->id, 'pricetailgate', $request->input('pricetailgate'));
-                        }
-
-                   
-                    }
-                    if($request->has('carintdisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'carintdisplay', serialize($request->input('carintdisplay')));
-
-                        //price options
-                         if($request->has('pricefrontseat')){
-                             $this->addProductPrice($product->id, 'pricefrontseat', $request->input('pricefrontseat'));
-                        }
-                        if($request->has('pricebackcovers')){
-                             $this->addProductPrice($product->id, 'pricebackcovers', $request->input('pricebackcovers'));
-                        }
-                        if($request->has('pricepamphlets')){
-                             $this->addProductPrice($product->id, 'pricepamphlets', $request->input('pricepamphlets'));
-                        }
-                        if($request->has('pricestickers')){
-                             $this->addProductPrice($product->id, 'pricestickers', $request->input('pricestickers'));
-                        }
-                          
-                    }
-                    if($request->has('carlighting')){
-                        $this->AddProductMeta($product->id, 'carlighting', $request->input('carlighting'));
-                    }
-                    if($request->has('carnumber')){
-                        $this->AddProductMeta($product->id, 'carnumber', $request->input('carnumber'));
-                    }
-                    
-                break;
-                case 'Shopping malls':
-                    if($request->has('smlargead')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'smlargead', serialize($request->input('smlargead')));
-
-                        //price options
-                         if($request->has('pricedropdown_banners')){
-                             $this->addProductPrice($product->id, 'pricedropdown_banners', $request->input('pricedropdown_banners'));
-                        }
-                        if($request->has('pricefreestand_display')){
-                             $this->addProductPrice($product->id, 'pricefreestand_display', $request->input('pricefreestand_display'));
-                        }
-                        if($request->has('pricewalls')){
-                             $this->addProductPrice($product->id, 'pricewalls', $request->input('pricewalls'));
-                        }
-                        if($request->has('pricepoles/pillars')){
-                             $this->addProductPrice($product->id, 'pricepoles/pillars', $request->input('pricepoles/pillars'));
-                        }
-                        if($request->has('pricesignage')){
-                             $this->addProductPrice($product->id, 'pricesignage', $request->input('pricesignage'));
-                        }    
-     
-                    }
-                    if($request->has('smotheradoptions')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'smotheradoptions', serialize($request->input('smotheradoptions')));
-
-                        //price options
-                         if($request->has('pricevideoad_display')){
-                             $this->addProductPrice($product->id, 'pricevideoad_display', $request->input('pricevideoad_display'));
-                        }
-                        if($request->has('priceelevatorwrap')){
-                             $this->addProductPrice($product->id, 'priceelevatorwrap', $request->input('priceelevatorwrap'));
-                        }
-                        if($request->has('priceelevatordoors')){
-                             $this->addProductPrice($product->id, 'priceelevatordoors', $request->input('priceelevatordoors'));
-                        }
-                        if($request->has('pricefloor')){
-                             $this->addProductPrice($product->id, 'pricefloor', $request->input('pricefloor'));
-                        }
-                        if($request->has('priceescalatorside_ads')){
-                             $this->addProductPrice($product->id, 'priceescalatorside_ads', $request->input('priceescalatorside_ads'));
-                        }    
-                                           
-                        
-                    }
-                    if($request->has('smduration')){
-                       $productmeta_id = $this->AddProductMeta($product->id, 'smduration', serialize($request->input('smduration')));
-
-                         //price options
-                         if($request->has('priceprday')){
-                             $this->addProductPrice($product->id, 'priceprday', $request->input('priceprday'));
-                        }
-                        if($request->has('priceprmonth')){
-                             $this->addProductPrice($product->id, 'priceprmonth', $request->input('priceprmonth'));
-                        }
-              
-                    }
-                    if($request->has('signagelit')){
-                        $this->AddProductMeta($product->id, 'signagelit', serialize($request->input('signagelit')));
-                    }
-                    if($request->has('durationnumber')){
-                        $this->AddProductMeta($product->id, 'durationnumber', $request->input('durationnumber'));
-                    }
-                   
-                        
-                break;
-                case 'Auto':
-                    if($request->has('autodisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'autodisplay', serialize($request->input('autodisplay')));
-
-                        //price options
-                         if($request->has('pricefront')){
-                             $this->addProductPrice($product->id, 'pricefront', $request->input('pricefront'));
-                        }
-                        if($request->has('priceback')){
-                             $this->addProductPrice($product->id, 'priceback', $request->input('priceback'));
-                        }
-                        if($request->has('pricehood')){
-                             $this->addProductPrice($product->id, 'pricehood', $request->input('pricehood'));
-                        }
-                        if($request->has('priceinterior')){
-                             $this->addProductPrice($product->id, 'priceinterior', $request->input('priceinterior'));
-                        }
-                       
-                    }
-                    if($request->has('autofrontprdisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'autofrontprdisplay', serialize($request->input('autofrontprdisplay')));
-
-                         //price options
-                         if($request->has('pricelargepamphlets')){
-                             $this->addProductPrice($product->id, 'pricelargepamphlets', $request->input('pricelargepamphlets'));
-                        }
-                        if($request->has('pricemedium_pamphlets')){
-                             $this->addProductPrice($product->id, 'pricemedium_pamphlets', $request->input('pricemedium_pamphlets'));
-                        }
-                        if($request->has('pricesmall_pamphlets')){
-                             $this->addProductPrice($product->id, 'pricesmall_pamphlets', $request->input('pricesmall_pamphlets'));
-                        }
-                        
-                    }
-                    if($request->has('autostickerdisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'autostickerdisplay', serialize($request->input('autostickerdisplay')));
-                         //price options
-                        if($request->has('pricelargesticker')){
-                             $this->addProductPrice($product->id, 'pricelargesticker', $request->input('pricelargesticker'));
-                        }
-                        if($request->has('pricemediumsticker')){
-                             $this->addProductPrice($product->id, 'pricemediumsticker', $request->input('pricemediumsticker'));
-                        }
-                        if($request->has('pricesmallsticker')){
-                             $this->addProductPrice($product->id, 'pricesmallsticker', $request->input('pricesmallsticker'));
-                        }
-                     
-                    }
-                   
-                    if($request->has('autohooddisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'autohooddisplay', serialize($request->input('autohooddisplay')));
-                         //price options
-                        if($request->has('pricefull')){
-                             $this->addProductPrice($product->id, 'pricefull', $request->input('pricefull'));
-                        }
-                        if($request->has('priceleft')){
-                             $this->addProductPrice($product->id, 'priceleft', $request->input('priceleft'));
-                        }
-                        if($request->has('priceright')){
-                             $this->addProductPrice($product->id, 'priceright', $request->input('priceright'));
-                        }
-      
-                    }
-                    if($request->has('autointeriordisplay')){
-                        $productmeta_id = $this->AddProductMeta($product->id, 'autointeriordisplay', serialize($request->input('autointeriordisplay')));
-                         //price options
-                        if($request->has('priceroof')){
-                             $this->addProductPrice($product->id, 'priceroof', $request->input('priceroof'));
-                        }
-                        if($request->has('pricedriverseat')){
-                             $this->addProductPrice($product->id, 'pricedriverseat', $request->input('pricedriverseat'));
-                        }
-     
-                    }
-                     if($request->has('autolightdisplay')){
-                        $this->AddProductMeta($product->id, 'autolightdisplay', serialize($request->input('autolightdisplay')));
-                    }
-                    if($request->has('autonumber')){
-                        $this->AddProductMeta($product->id, 'autonumber', $request->input('autonumber'));
-                    }
-                    
-                break;
-
-            }
-
-        /*** End ***/
-
-        return redirect()->route('dashboard.postproductform')->with('message', 'Successfully Added!');
-
-        
-    }
+    
 
     public function AddProductMeta( $id, $meta_key, $meta_value){
 
@@ -492,12 +52,13 @@ class ProductContoller extends Controller
         return $insert->id;
     }
 
-    public function addProductPrice( $id, $meta_key, $meta_value){
+    public function addProductPrice( $id, $meta_key, $meta_value, $productmeta_id){
 
         $insert = new Productprice();
         $insert->product_id = $id;
         $insert->price_key = $meta_key;
         $insert->price_value = $meta_value;
+        $insert->productmeta_id = $productmeta_id;
 
         $insert->save();
     }
@@ -507,6 +68,8 @@ class ProductContoller extends Controller
         $delele_product->delete();
         $delete_productmeta = Productmeta::where('product_id', $productID);
         $delete_productmeta->delete();
+        $delete_productprice = Productprice::where('product_id', $productID);
+        $delete_productprice->delete();
         return redirect()->route('dashboard.getproductlist')->with(['message' => "Successfully Deleted From the List!"]);
     }
     
@@ -517,167 +80,13 @@ class ProductContoller extends Controller
          $cat = Mainaddtype::find($cat_id);
          $cat_name = $cat->title;
          $edit_productmeta = Productmeta::where('product_id', $productID)->get();
+         $edit_productprice = Productprice::where('product_id', $productID)->get();
          $ad_cats = Mainaddtype::all();
          return view('backend.admin.editProduct', ['categories' => $ad_cats, 'catname' => $cat_name, 'productdata' => $edit_product, 'productmetadata' => $edit_productmeta]);
     }
 
 
-    public function updateProduct(Request $request, $editProductID){
-        $this->validate( $request, [
-           'title' => 'required',
-           'price' => 'required|numeric',
-           //'imagepath' => 'required|image',
-           'location' => 'required',
-           'state' => 'required',
-           'city' => 'required',
-           'mediatype_id' => 'required|numeric',
-           'rank' => 'required',
-           'landmark' => 'required',
-           'description' => 'required',
-           'status' => 'required'
-        ]);
-        $editproduct = Product::find($editProductID);
-
-         
-        $editproduct->title = $request->input('title');
-        $editproduct->description = $request->input('description');
-        $editproduct->price = $request->input('price');
-        $editproduct->location = $request->input('location');
-        $editproduct->state = $request->input('state');
-        $editproduct->city = $request->input('city');
-        $editproduct->mediatype_id = $request->input('mediatype_id');
-        $editproduct->rank = $request->input('rank');
-        $editproduct->landmark = $request->input('landmark');
-        $editproduct->reference = $request->input('reference');
-        $editproduct->status = $request->input('status');
-       
-        if($request->hasFile('imagepath')){
-            $file = $request->file('imagepath');
-            $filename = time() .'.'. $file->getClientOriginalExtension();
-            $location = public_path("images\\" . $filename);
-            Image::make($file)->resize(800, 400)->save($location);
-            $oldimage = $editproduct->imagepath;
-            $editproduct->imagepath = $filename;
-        }
-
-        $editproduct->update();
-
-        $cat =  Mainaddtype::find($request->input('mediatype_id'));
-
-        $cat_check = $cat->title;
-                       
-        /*** adding Post Meta ***/
-            switch($cat_check){
-                case 'Newspapers':
-                    if($request->has('circulation')){
-                        $this->updateProductMeta($editproduct->id, 'circulation', $request->input('circulation'));
-                    }
-                    if($request->has('language')){
-                        $this->updateProductMeta($editproduct->id, 'language', $request->input('language'));
-                    }
-                    if($request->has('displayoptions')){
-                        $this->updateProductMeta($editproduct->id, 'displayoptions', serialize($request->input('displayoptions')));
-                    }
-                    if($request->has('otherdisplayoptions')){
-                        $this->updateProductMeta($editproduct->id, 'otherdisplayoptions', serialize($request->input('otherdisplayoptions')));
-                    }
-                    if($request->has('classifiedoptions')){
-                        $this->updateProductMeta($editproduct->id, 'classifiedoptions', serialize($request->input('classifiedoptions')));
-                    }
-                    if($request->has('priceoptions')){
-                        $this->updateProductMeta($editproduct->id, 'priceoptions', serialize($request->input('priceoptions')));
-                    }
-                    if($request->has('inserts')){
-                        $this->updateProductMeta($editproduct->id, 'inserts', $request->input('inserts'));
-                    }
-                  
-                break;
-                case 'Bus Stops':
-                    if($request->has('bsdisplay')){
-                        $this->updateProductMeta($editproduct->id, 'bsdisplay', serialize($request->input('bsdisplay')));
-                    }
-                    if($request->has('bslighting')){
-                        $this->updateProductMeta($editproduct->id, 'bslighting', $request->input('bslighting'));
-                    }
-                    if($request->has('bsnumber')){
-                        $this->updateProductMeta($editproduct->id, 'bsnumber', $request->input('bsnumber'));
-                    }
-                break;
-                case 'Buses':
-                     if($request->has('busdisplay')){
-                        $this->updateProductMeta($editproduct->id, 'busdisplay', serialize($request->input('busdisplay')));
-                    }
-                    if($request->has('busesnumber')){
-                        $this->updateProductMeta($editproduct->id, 'busesnumber', $request->input('bsdisplay'));
-                    }
-                break;
-                case 'Cars':
-                     if($request->has('fullcardisplay')){
-                        $this->updateProductMeta($editproduct->id, 'fullcardisplay', serialize($request->input('fullcardisplay')));
-                    }
-                    if($request->has('carextdisplay')){
-                        $this->updateProductMeta($editproduct->id, 'carextdisplay', serialize($request->input('carextdisplay')));
-                    }
-                    if($request->has('carintdisplay')){
-                        $this->updateProductMeta($editproduct->id, 'carintdisplay', serialize($request->input('carintdisplay')));
-                    }
-                    if($request->has('carlighting')){
-                        $this->updateProductMeta($editproduct->id, 'carlighting', serialize($request->input('carlighting')));
-                    }
-                    if($request->has('carnumber')){
-                        $this->updateProductMeta($editproduct->id, 'carnumber', $request->input('carnumber'));
-                    }
-                break;
-                case 'Shopping malls':
-                    if($request->has('smlargead')){
-                        $this->updateProductMeta($editproduct->id, 'smlargead', serialize($request->input('smlargead')));
-                    }
-                    if($request->has('smotheradoptions')){
-                        $this->updateProductMeta($editproduct->id, 'smotheradoptions', serialize($request->input('smotheradoptions')));
-                    }
-                    if($request->has('smduration')){
-                        $this->updateProductMeta($editproduct->id, 'smduration', serialize($request->input('smduration')));
-                    }
-                    if($request->has('signagelit')){
-                        $this->updateProductMeta($editproduct->id, 'signagelit', serialize($request->input('signagelit')));
-                    }
-                    if($request->has('durationnumber')){
-                        $this->updateProductMeta($editproduct->id, 'durationnumber', $request->input('durationnumber'));
-                    }
-                break;
-                case 'Auto':
-                    if($request->has('autodisplay')){
-                        $this->updateProductMeta($editproduct->id, 'autodisplay', serialize($request->input('autodisplay')));
-                    }
-                    if($request->has('autofrontprdisplay')){
-                        $this->updateProductMeta($editproduct->id, 'autofrontprdisplay', serialize($request->input('autofrontprdisplay')));
-                    }
-                    if($request->has('autostickerdisplay')){
-                        $this->updateProductMeta($editproduct->id, 'autostickerdisplay', serialize($request->input('autostickerdisplay')));
-                    }
-                   
-                    if($request->has('autohooddisplay')){
-                        $this->updateProductMeta($editproduct->id, 'autohooddisplay', serialize($request->input('autohooddisplay')));
-                    }
-                    if($request->has('autointeriordisplay')){
-                        $this->updateProductMeta($editproduct->id, 'autointeriordisplay', serialize($request->input('autointeriordisplay')));
-                    }
-                     if($request->has('autolightdisplay')){
-                        $this->updateProductMeta($editproduct->id, 'autolightdisplay', serialize($request->input('autolightdisplay')));
-                    }
-                    if($request->has('autonumber')){
-                        $this->updateProductMeta($editproduct->id, 'autonumber', $request->input('autonumber'));
-                    }
-                break;
-
-            }
-
-        /*** End ***/
-
-        return redirect()->route('dashboard.getproductlist')->with('message', 'Successfully Updated!');
-
-        
-    }
+    
 
     public function updateProductMeta( $id, $meta_key, $meta_value){
         $count = Productmeta::where([
@@ -697,20 +106,49 @@ class ProductContoller extends Controller
 
 
 
-    public function getProducts(){
-        $products = Product::all();
-        return view( 'shop.index', [ 'products' => $products]);
-    }
-
     public function getProductsByCat($catName){
-         
-        $cats = Mainaddtype::where('slug', $catName)->get();
-        foreach($cats as $cat) $cat_id = $cat->id;
+        switch($catName){
+            case 'buses':
+                 $products = Product::where('media_type', 'Buses')->get();    
+           break;
+           case 'airports':
+                 $products = Product::where('media_type', 'Airports')->get();    
+           break;
+           case 'autos':
+                 $products = Product::where('media_type', 'Autos')->get();    
+           break;
+           case 'bill-board':
+                 $products = Product::where('media_type', 'Billboards')->get();    
+           break;
+           case 'bus-stops':
+                 $products = Product::where('media_type', 'Busstops')->get();    
+           break;
+           case 'cars':
+                 $products = Product::where('media_type', 'Cars')->get();    
+           break;
+           case 'cinemas':
+                 $products = Product::where('media_type', 'Cinemas')->get();    
+           break;
+           case 'metros':
+                 $products = Product::where('media_type', 'Metros')->get();    
+           break;
+           case 'newspapers':
+                 $products = Product::where('media_type', 'Newspapers')->get();    
+           break;
+           case 'shopping-malls':
+                 $products = Product::where('media_type', 'Shoppingmalls')->get();    
+           break;
+           case 'social-media-marketing':
+                 $products = Product::where('media_type', 'Social Media')->get();    
+           break;
+
+            default:
+                 $products = Product::all();
+        }
        
         
-        $products = Product::where('mediatype_id', $cat_id)->get();
          
-        return view( 'shop.index', [ 'products' => $products]);
+        return view( 'shop.mediatype-products', [ 'products' => $products]);
     }
 
     public function getAddToCart(Request $request, $id){
@@ -981,11 +419,14 @@ class ProductContoller extends Controller
       }
       // get product single page
 
-      public function getProductSingle($id){
+     public function getProductSingle($id){
+          
           $product = Product::find($id);
+          $id = $product->media_id;
+          $model = $product->media_type;
           $product_title = $product->title;
-          $productmeta = Productmeta::where('product_id', $id)->get();
-          return view('shop.product-single', ['product' => $product, 'productmeta' => $productmeta, 'title' => $product_title]);
+          
+          return view('shop.product-single', ['title' => $product_title]);
       }
       
       public function getproductform(){

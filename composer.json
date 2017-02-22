@@ -10,7 +10,9 @@
         "stripe/stripe-php": "4.*",
         "intervention/image": "^2.3",
         "mews/purifier": "^2.0",
-        "cartalyst/sentinel": "2.0.*"
+        "cartalyst/sentinel": "2.0.*",
+        "niranjan94/payumoney": "1.*",
+        "softon/indipay": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
