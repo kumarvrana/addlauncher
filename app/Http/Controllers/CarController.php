@@ -89,7 +89,7 @@ class CarController extends Controller
                 'display_options' => serialize($request->input('cardisplay')),
                 'light_option' => $request->input('aplighting'),
                 'discount' => $request->input('cardiscount'),
-                'numberofcars' => $request->input('carsnumber')
+                'numberofcars' => $request->input('carnumber')
         ]);
 
         $car->save();
@@ -218,7 +218,7 @@ class CarController extends Controller
          $editcar->status = $request->input('status');
          $editcar->references = $request->input('reference');
          $editcar->display_options = serialize($request->input('cardisplay'));
-          $editcar->numberofcars = $request->input('carsnumber');
+          $editcar->numberofcars = $request->input('carnumber');
           $editcar->discount = $request->input('cardiscount');
 
         if($request->hasFile('image')){
@@ -285,10 +285,57 @@ class CarController extends Controller
         $car_ad = Cars::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $number_key = "number_".$main_key;
+        $duration_key = "duration_".$main_key;
         $car_price = Carsprice::where([
                                     ['cars_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+
+        $car_number = Carsprice::where([
+                                    ['cars_id', '=', $id],
+                                    ['price_key', '=', $number_key],
+                                ])->first()->toArray();
+        $car_duration = Carsprice::where([
+                                    ['cars_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $car_change_price = array();
+        foreach($car_price as $key => $value){
+            if($key == 'price_key'){
+                $car_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $car_change_price[$key] = $value;
+            }
+        }
+        $car_change_num = array();
+        foreach($car_number as $key => $value){
+            if($key == 'price_key'){
+                $key = 'number_key';
+                $car_change_num[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'number_value';
+                $car_change_num[$key] = $value;
+            }
+        }
+        $car_change_duration = array();
+        foreach($car_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $car_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $car_change_duration[$key] = $value;
+            }
+        }
+        $car_merge = array_merge($car_change_num, $car_change_duration);
+        
+        $car_price = array_merge($car_change_price, $car_merge);
         
         $car_Ad = array_merge($car_ad, $car_price);
        

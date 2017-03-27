@@ -17,7 +17,7 @@ use App\Order;
 class MetroController extends Controller
 {
     
-     //frontend function starts
+    //frontend function starts
     
     public function getfrontendAllMetroads()
     {
@@ -28,6 +28,7 @@ class MetroController extends Controller
     public function getfrontMetroad($id)
     {
         $metroad = Metros::find($id);
+       
         $metroprice = Metrosprice::where('metros_id', $id)->get();
         return view('frontend-mediatype.metros.metro-single', ['metroad' => $metroad, 'metroprice' => $metroprice]);
     }
@@ -38,19 +39,19 @@ class MetroController extends Controller
     //Backend functions below
 
 
-    // get list of all the products in bus stop media type
+    // get list of all the products in metro stop media type
     public function getDashboardMetroList(){
         $metro_ads = Metros::all();
         return view('backend.mediatypes.metros.metro-list', ['metro_ads' => $metro_ads]);
     }
     
-    // get form of bus stop media type
+    // get form of metro stop media type
      public function getDashboardMetroForm()
     {
         return view('backend.mediatypes.metros.metro-addform');
     }
 
-    // post list of all the products in bus media type
+    // post list of all the products in metro media type
 
     public function postDashboardMetroForm(Request $request)
     {
@@ -86,8 +87,9 @@ class MetroController extends Controller
                 'description' => $request->input('description'),
                 'references' => $request->input('reference'),
                 'status' => $request->input('status'),
-                'display_options' => serialize($request->input('busdisplay')),
-                'light_option' => $request->input('bslighting'),
+                'display_options' => serialize($request->input('metrodisplay')),
+                'light_option' => $request->input('metrolight'),
+                'discount' => $request->input('metrodiscount'),
                 'metronumber' => $request->input('metrosnumber')
         ]);
 
@@ -97,9 +99,8 @@ class MetroController extends Controller
 
 
 
-        //bus display prices insertion
-
-   	   if($request->has('price_full')){
+        //metro display prices insertion
+if($request->has('price_full')){
             $this->addMetroPrice($lastinsert_ID, 'price_full', $request->input('price_full'));
         }
       
@@ -145,12 +146,13 @@ class MetroController extends Controller
       
       
 
+
        
-        //return to bus product list
+        //return to metro product list
        return redirect()->route('dashboard.getMetroList')->with('message', 'Successfully Added!');
     }
 
-    //insert price data to bus price table
+    //insert price data to metro price table
     public function addMetroPrice($id, $key, $value)
     {
         $insert = new Metrosprice();
@@ -163,48 +165,51 @@ class MetroController extends Controller
 
     }
 
-    // delete bus product and price form db tables
+    // delete metro product and price form db tables
 
     public function getDeleteMetroad($metroadID)
     {
-        $delele_busad = Metros::where('id', $metroadID)->first();
-        $delele_busad->delete();
+        $delele_metroad = Metros::where('id', $metroadID)->first();
+        $delele_metroad->delete();
         $delete_metroadprice = Metrosprice::where('metros_id', $metroadID);
         $delete_metroadprice->delete();
-        // $delete_product = Product::where([
-        //                             ['media_id', '=', $metroadID],
-        //                             ['media_type', '=', 'Metros'],
-        //                         ])->first();
-        // $delete_product->delete();
+       
         return redirect()->route('dashboard.getMetroList')->with(['message' => "Successfully Deleted From the List!"]);
     }
 
-    // update bus product
-    public function getUpdateeBusad($ID)
+    // update metro product
+    public function getUpdateeMetroad($ID)
     {
-        $metroData = Buses::find($ID);
-        $metropriceData = Busesprice::where('buses_id', $ID)->get();
+        $metroData = Metros::find($ID);
+        $metropriceData = Metrosprice::where('metros_id', $ID)->get();
         $fieldData = array();
-        foreach($metropriceData as $pricebus){
-           $fieldData[] = ucwords(substr(str_replace("_", " ", $pricebus->price_key), 6));
+        foreach($metropriceData as $pricemetro){
+           $fieldData[] = $pricemetro->price_key;
         }
-       $fieldData = serialize($fieldData);
-        return view('backend.mediatypes.buses.bus-editform', ['bus' => $metroData, 'buspricemeta' => $metropriceData, 'fieldData' => $fieldData]);
+        $name_key = array_chunk($fieldData, 3);
+        $datta = array();
+         $j = 0; 
+        foreach($name_key as $options){
+            $datta[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
+            $j++;
+        }
+       $fieldDatas = serialize($datta);
+        return view('backend.mediatypes.metros.metro-editform', ['metro' => $metroData, 'metropricemeta' => $metropriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
-    public function getuncheckBusadOptions(Request $request)
+    public function getuncheckMetroadOptions(Request $request)
     {
-        $count = Busesprice::where([
-                                    ['buses_id', '=', $request['id']],
+        $count = Metrosprice::where([
+                                    ['metros_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
         if($count > 0){
-            Buses::where('id', $request['id'])->update(['display_options' => serialize($request['displayoptions'])]);
-            $buses = Busesprice::where([
-                                    ['buses_id', '=', $request['id']],
+            Metros::where('id', $request['id'])->update(['display_options' => serialize($request['displayoptions'])]);
+            $metros = Metrosprice::where([
+                                    ['metros_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
-            $buses->delete();
+            $metros->delete();
             return response(['msg' => 'price deleted'], 200);
         }
               
@@ -212,7 +217,7 @@ class MetroController extends Controller
         
     }
 
-    public function postUpdateeBusad(Request $request, $ID)
+    public function postUpdateeMetroad(Request $request, $ID)
     {
        $this->validate( $request, [
            'title' => 'required',
@@ -226,77 +231,94 @@ class MetroController extends Controller
            'status' => 'required'
         ]);
 
-        $editbus = Buses::find($ID);
+        $editmetro = Metros::find($ID);
 
-         $editbus->title = $request->input('title');
-         $editbus->price = $request->input('price');
-         $editbus->location = $request->input('location');
-         $editbus->state = $request->input('state');
-         $editbus->city = $request->input('city');
-         $editbus->rank = $request->input('rank');
-         $editbus->description = $request->input('description');
-         $editbus->status = $request->input('status');
-         $editbus->references = $request->input('reference');
-         $editbus->display_options = serialize($request->input('busdisplay'));
-          $editbus->busnumber = $request->input('busesnumber');
+         $editmetro->title = $request->input('title');
+         $editmetro->price = $request->input('price');
+         $editmetro->location = $request->input('location');
+         $editmetro->state = $request->input('state');
+         $editmetro->city = $request->input('city');
+         $editmetro->rank = $request->input('rank');
+         $editmetro->description = $request->input('description');
+         $editmetro->status = $request->input('status');
+         $editmetro->references = $request->input('reference');
+         $editmetro->display_options = serialize($request->input('metrodisplay'));
+          $editmetro->metronumber = $request->input('metrosnumber');
+          $editmetro->discount = $request->input('metrodiscount');
 
         if($request->hasFile('image')){
             $file = $request->file('image');
             $filename = time() .'.'. $file->getClientOriginalExtension();
-            $location = public_path("images\buses\\" . $filename);
+            $location = public_path("images\metros\\" . $filename);
             Image::make($file)->resize(800, 400)->save($location);
-            $oldimage = $editbus->image;
-            $editbus->image = $filename;
+            $oldimage = $editmetro->image;
+            $editmetro->image = $filename;
         }
 
-       $editbus->update();
+       $editmetro->update();
 
-        //bus display prices insertion
+        //metro display prices insertion
 
         if($request->has('price_full')){
-            $this->updateBusPrice($ID, 'price_full', $request->input('price_full'));
+            $this->updateMetroPrice($ID, 'price_full', $request->input('price_full'));
         }
-        if($request->has('price_both_side')){
-            $this->updateBusPrice($ID, 'price_both_side', $request->input('price_both_side'));
-        }
-        if($request->has('price_left_side')){
-            $this->updateBusPrice($ID, 'price_left_side', $request->input('price_left_side'));
-        }
-        if($request->has('price_right_side')){
-            $this->updateBusPrice($ID, 'price_right_side', $request->input('price_right_side'));
-        }
-        if($request->has('price_back_side')){
-            $this->updateBusPrice($ID, 'price_back_side', $request->input('price_back_side'));
-        }
-        if($request->has('price_back_glass')){
-            $this->updateBusPrice($ID, 'price_back_glass', $request->input('price_back_glass'));
-        }
-        if($request->has('price_internal_ceiling')){
-            $this->updateBusPrice($ID, 'price_internal_ceiling', $request->input('price_internal_ceiling'));
-        }
-        if($request->has('price_bus_grab_handles')){
-            $this->updateBusPrice($ID, 'price_bus_grab_handles', $request->input('price_bus_grab_handles'));
-        }
-        if($request->has('price_inside_billboards')){
-            $this->updateBusPrice($ID, 'price_inside_billboards', $request->input('price_inside_billboards'));
+      
+       if($request->has('number_full')){
+            $this->updateMetroPrice($ID, 'number_full', $request->input('number_full'));
         }
 
+       if($request->has('duration_full')){
+            $this->updateMetroPrice($ID, 'duration_full', $request->input('duration_full'));
+        }
+
+        if($request->has('price_roof_front')){
+            $this->updateMetroPrice($ID, 'price_roof_front', $request->input('price_roof_front'));
+        }
+        if($request->has('number_roof_front')){
+            $this->updateMetroPrice($ID, 'number_roof_front', $request->input('number_roof_front'));
+        }
+        if($request->has('duration_roof_front')){
+            $this->updateMetroPrice($ID, 'duration_roof_front', $request->input('duration_roof_front'));
+        }
+        if($request->has('price_seat_backs')){
+            $this->updateMetroPrice($ID, 'price_seat_backs', $request->input('price_seat_backs'));
+        }
+         if($request->has('number_seat_backs')){
+            $this->updateMetroPrice($ID, 'number_seat_backs', $request->input('number_seat_backs'));
+        }
+      
+       if($request->has('duration_seat_backs')){
+            $this->updateMetroPrice($ID, 'duration_seat_backs', $request->input('duration_seat_backs'));
+        }
+      
+       if($request->has('price_side_boards')){
+            $this->updateMetroPrice($ID, 'price_side_boards', $request->input('price_side_boards'));
+        }
+      
+       if($request->has('number_side_boards')){
+            $this->updateMetroPrice($ID, 'number_side_boards', $request->input('number_side_boards'));
+        }
+
+      if($request->has('duration_side_boards')){
+            $this->updateMetroPrice($ID, 'duration_side_boards', $request->input('duration_side_boards'));
+        }
+      
         
 
-        //return to bus product list
-       return redirect()->route('dashboard.getBusList')->with('message', 'Successfully Edited!');
+        //return to metro product list
+       return redirect()->route('dashboard.getMetroList')->with('message', 'Successfully Edited!');
     }
 
-    public function updateBusPrice( $id, $meta_key, $meta_value){
-        $count = Busesprice::where([
-                                    ['buses_id', '=', $id],
+    public function updateMetroPrice( $id, $meta_key, $meta_value){
+        $count = Metrosprice::where([
+                                    ['metros_id', '=', $id],
                                     ['price_key', '=', $meta_key],
                                 ])->count();
         if($count < 1){
-            $this->addBusPrice($id, $meta_key, $meta_value);
+            $this->addMetroPrice($id, $meta_key, $meta_value);
         }else{
-            $update = Busesprice::where([
-                                    ['buses_id', '=', $id],
+            $update = Metrosprice::where([
+                                    ['metros_id', '=', $id],
                                     ['price_key', '=', $meta_key],
                                 ])->update(['price_value' => $meta_value]);
         }
@@ -307,13 +329,61 @@ class MetroController extends Controller
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)
    {
-        $metro_ad = Buses::where('id', $id)->first()->toArray();
+        $metro_ad = Metros::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
-        $metro_price = Busesprice::where([
-                                    ['buses_id', '=', $id],
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $number_key = "number_".$main_key;
+        $duration_key = "duration_".$main_key;
+     
+        $metro_price = Metrosprice::where([
+                                    ['metros_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+       
+        $metro_number = Metrosprice::where([
+                                    ['metros_id', '=', $id],
+                                    ['price_key', '=', $number_key],
+                                ])->first()->toArray();
+        $metro_duration = Metrosprice::where([
+                                    ['metros_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $metro_change_price = array();
+        foreach($metro_price as $key => $value){
+            if($key == 'price_key'){
+                $metro_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $metro_change_price[$key] = $value;
+            }
+        }
+        $metro_change_num = array();
+        foreach($metro_number as $key => $value){
+            if($key == 'price_key'){
+                $key = 'number_key';
+                $metro_change_num[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'number_value';
+                $metro_change_num[$key] = $value;
+            }
+        }
+        $metro_change_duration = array();
+        foreach($metro_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $metro_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $metro_change_duration[$key] = $value;
+            }
+        }
+        $metro_merge = array_merge($metro_change_num, $metro_change_duration);
+        
+        $metro_price = array_merge($metro_change_price, $metro_merge);
         
         $metro_Ad = array_merge($metro_ad, $metro_price);
        
@@ -321,7 +391,7 @@ class MetroController extends Controller
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($metro_Ad, $metro_ad['id'], 'buses'); //pass full bus details, id and model name like "buses"
+        $cart->addorRemove($metro_Ad, $metro_ad['id'], 'metros'); //pass full metro details, id and model name like "metros"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');

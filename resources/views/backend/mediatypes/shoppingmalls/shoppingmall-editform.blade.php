@@ -103,7 +103,7 @@
                     </div>
                     <div class="form-group">
                         <label for="shoppingmallsnumber">Numbers Of Shoppingmalls Display this Ad? : </label>
-                        <input class="form-control" type="text" name="shoppingmallsnumber" value="{{$shoppingmall->shoppingmallnumber}}" required></div>
+                        <input class="form-control" type="text" name="shoppingmallsnumber" value="{{$shoppingmall->numberofshoppingmalls}}" required></div>
                     </div>
                      
                 </div>
@@ -116,12 +116,30 @@
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$shoppingmall->id}}">
                         <input type="hidden" id="tablename" value="shoppingmalls">
+
                          @foreach($shoppingmallpricemeta as $shoppingmallprice)
-                         @PHP $p_key = str_replace("_", " ", $shoppingmallprice->price_key);
-                             $label =  ucfirst(substr($p_key, 6));
+                         @PHP 
+                             $p_key = str_replace("_", " ", $shoppingmallprice->price_key);
+                             $field_name = explode(' ', $p_key);
+                             
+                             switch($field_name[0]){
+                                case 'price';
+                                    $label_field =  ucfirst(substr($p_key, 6));
+                                    $label = "Price for $label_field Shoppingmall Ad:";
+                                break;
+                                case 'number';
+                                    $label_field =  ucfirst(substr($p_key, 7));
+                                    $label = "Number of $label_field Shoppingmall Ad:";
+                                break;
+                                case 'duration';
+                                    $label_field =  ucfirst(substr($p_key, 9));
+                                    $label = "Duration for $label_field Shoppingmall Ad:";
+                                break;
+                             }
+
                          @ENDPHP
                         <div id="p{{$shoppingmallprice->price_key}}" class="form-group">
-                            <label for="{{$shoppingmallprice->price_key}}">Price for {{$label}} Shoppingmall Ad:</label>
+                            <label for="{{$shoppingmallprice->price_key}}">{{$label}}</label>
                             <input class="form-control" type="text" name="{{$shoppingmallprice->price_key}}" value="{{$shoppingmallprice->price_value}}" required>
                         </div>
                         @endforeach
@@ -152,7 +170,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice')}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice', ['table' => 'Shoppingmall'])}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

@@ -8,12 +8,24 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{route('product.mainCats')}}">Ad Launcher</a>
+          <a class="navbar-brand" href="{{env('APP_URL')}}">Ad Launcher</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{{route('dashboard')}}">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
+            <li><a href="{{route('dashboard.orders')}}">Orders<span class="badge">1</span></a></li>
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i>
+ Settings<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+              <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+ Payments
+              <ul class="dropdown-menu">
+                <li><a href="{{route('dashboard.cashtransfer')}}">Cash Transfer</a></li>
+                <li><a href="{{route('dashboard.citrustransfer')}}">Cirtus Payment</a></li>
+                <li><a href="{{route('dashboard.stripetransfer')}}">Stripe Payment</a></li>
+              </ul>
+            </li>
+              </ul>
+            </li>
             <!--li><a href="#">Profile</a></li-->
             <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i>

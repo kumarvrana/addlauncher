@@ -117,12 +117,29 @@
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$bus->id}}">
                         <input type="hidden" id="tablename" value="buses">
-                         @foreach($buspricemeta as $busprice)
-                         @PHP $p_key = str_replace("_", " ", $busprice->price_key);
-                             $label =  ucfirst(substr($p_key, 6));
+                          @foreach($buspricemeta as $busprice)
+                         @PHP 
+                             $p_key = str_replace("_", " ", $busprice->price_key);
+                             $field_name = explode(' ', $p_key);
+                             
+                             switch($field_name[0]){
+                                case 'price';
+                                    $label_field =  ucfirst(substr($p_key, 6));
+                                    $label = "Price for $label_field Bus Ad:";
+                                break;
+                                case 'number';
+                                    $label_field =  ucfirst(substr($p_key, 7));
+                                    $label = "Number of $label_field Bus Ad:";
+                                break;
+                                case 'duration';
+                                    $label_field =  ucfirst(substr($p_key, 9));
+                                    $label = "Duration for $label_field Bus Ad:";
+                                break;
+                             }
+
                          @ENDPHP
                         <div id="p{{$busprice->price_key}}" class="form-group">
-                            <label for="{{$busprice->price_key}}">Price for {{$label}} Bus Ad:</label>
+                            <label for="{{$busprice->price_key}}">{{$label}}</label>
                             <input class="form-control" type="text" name="{{$busprice->price_key}}" value="{{$busprice->price_value}}" required>
                         </div>
                         @endforeach
@@ -153,7 +170,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice')}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceBus')}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

@@ -22,14 +22,14 @@ class BusstopController extends Controller
     public function getfrontendAllBusstopads()
     {
        $busstop_ads = Busstops::all();
-       return view('frontend-mediatype.busstopads-list', ['products' => $busstop_ads]);
+       return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads]);
     }
     
     public function getfrontBusstopad($id)
     {
         $busstopad = Busstops::find($id);
         $busstopprice = Busstopsprice::where('busstops_id', $id)->get();
-        return view('frontend-mediatype.busstop-single', ['busstopad' => $busstopad, 'busstopprice' => $busstopprice]);
+        return view('frontend-mediatype.busstops.busstop-single', ['busstopad' => $busstopad, 'busstopprice' => $busstopprice]);
     }
     
     
@@ -89,7 +89,7 @@ class BusstopController extends Controller
                 'display_options' => serialize($request->input('busstopdisplay')),
                 'light_option' => $request->input('bslighting'),
                 'discount' => $request->input('busstopdiscount'),
-                'busstopnumber' => $request->input('busstopsnumber')
+                'stopinnumber' => $request->input('busstopsnumber')
         ]);
 
         $busstop->save();
@@ -172,11 +172,7 @@ class BusstopController extends Controller
         $delele_busstopad->delete();
         $delete_busstopadprice = Busstopsprice::where('busstops_id', $busstopadID);
         $delete_busstopadprice->delete();
-        // $delete_product = Product::where([
-        //                             ['media_id', '=', $busstopadID],
-        //                             ['media_type', '=', 'Busstops'],
-        //                         ])->first();
-        // $delete_product->delete();
+       
         return redirect()->route('dashboard.getBusstopList')->with(['message' => "Successfully Deleted From the List!"]);
     }
 
@@ -195,17 +191,35 @@ class BusstopController extends Controller
     //check and uncheck options remove
     public function getuncheckBusstopadOptions(Request $request)
     {
+        $displayoptions = json_decode($request['displayoptions']);
+        $datta = array();
+        foreach($displayoptions as $options){
+            $datta[] = strtolower(str_replace(' ', '_', $options));
+        
+        }
+
         $count = Busstopsprice::where([
                                     ['busstops_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
         if($count > 0){
-            Busstops::where('id', $request['id'])->update(['display_options' => serialize($request['displayoptions'])]);
+            Busstops::where('id', $request['id'])->update(['display_options' => serialize($datta)]);
+
             $busstops = Busstopsprice::where([
                                     ['busstops_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
             $busstops->delete();
+            $busstopsnumber = Busstopsprice::where([
+                                    ['busstops_id', '=', $request['id']],
+                                    ['price_key', '=', $request['number_key']],
+                                ])->first();
+            $busstopsnumber->delete();
+            $busstopsduration = Busstopsprice::where([
+                                    ['busstops_id', '=', $request['id']],
+                                    ['price_key', '=', $request['duration_key']]
+                                ])->first();
+            $busstopsduration->delete();
             return response(['msg' => 'price deleted'], 200);
         }
               
@@ -239,7 +253,8 @@ class BusstopController extends Controller
          $editbusstop->status = $request->input('status');
          $editbusstop->references = $request->input('reference');
          $editbusstop->display_options = serialize($request->input('busstopdisplay'));
-          $editbusstop->busstopnumber = $request->input('busstopsnumber');
+         $editbusstop->light_option = $request->input('bslighting');
+          $editbusstop->stopinnumber = $request->input('busstopsnumber');
           $editbusstop->discount = $request->input('busstopdiscount');
 
         if($request->hasFile('image')){
@@ -327,10 +342,58 @@ class BusstopController extends Controller
         $busstop_ad = Busstops::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $number_key = "number_".$main_key;
+        $duration_key = "duration_".$main_key;
+
         $busstop_price = Busstopsprice::where([
                                     ['busstops_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+
+        $busstop_number = Busstopsprice::where([
+                                    ['busstops_id', '=', $id],
+                                    ['price_key', '=', $number_key],
+                                ])->first()->toArray();
+        $busstop_duration = Busstopsprice::where([
+                                    ['busstops_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $busstop_change_price = array();
+        foreach($busstop_price as $key => $value){
+            if($key == 'price_key'){
+                $busstop_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $busstop_change_price[$key] = $value;
+            }
+        }
+        $busstop_change_num = array();
+        foreach($busstop_number as $key => $value){
+            if($key == 'price_key'){
+                $key = 'number_key';
+                $busstop_change_num[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'number_value';
+                $busstop_change_num[$key] = $value;
+            }
+        }
+        $busstop_change_duration = array();
+        foreach($busstop_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $busstop_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $busstop_change_duration[$key] = $value;
+            }
+        }
+        $busstop_merge = array_merge($busstop_change_num, $busstop_change_duration);
+        
+        $busstop_price = array_merge($busstop_change_price, $busstop_merge);
         
         $busstop_Ad = array_merge($busstop_ad, $busstop_price);
        

@@ -75,7 +75,7 @@
                 <td>{{$status}}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="...">
-                        <a type="button" href="" class="btn btn-primary">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        <a type="button" href="{{route('dashboard.editmetrosad', ['metroadID' => $metroad->id])}}" class="btn btn-primary">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 </a>
                         <a type="button" type="button" href="{{route('dashboard.deleteMetroad', ['metroadID' => $metroad->id])}}" class="btn btn-danger">Delete <i class="fa fa-trash" aria-hidden="true"></i>
 </a>

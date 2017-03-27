@@ -57,19 +57,13 @@ $printsession = (array) Session::get('cart');
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i>@if(Sentinel::check()) Hi {{ Sentinel::getUser()->first_name }} @else User @endif <span class="caret"></span></a>
               <ul class="dropdown-menu">
                   @if(Sentinel::check())
-                        <li><a href="{{route('user.profile')}}"><i class="fa fa-user-md" aria-hidden="true"></i>
- Profile</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><form action="{{ route('user.postsignout') }}" method="POST" id="logout-form">{{csrf_field()}}<a href="#" onclick="document.getElementById('logout-form').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>
-Logout</a></form></li>
+                  <li><a href="{{route('user.profile')}}"><i class="fa fa-user-md" aria-hidden="true"></i> Profile</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><form action="{{ route('user.postsignout') }}" method="POST" id="logout-form">{{csrf_field()}}<a href="#" onclick="document.getElementById('logout-form').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a></form></li>
                   @else
-                        <li><a data-name="Register Here" href="{{route('user.signup')}}" id="register"><i class="fa fa-user-plus" aria-hidden="true"></i>
-SignUp</a></li>
-                        <li><a data-name="Login Form" href="{{route('user.signin')}}" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i>
-SignIn</a></li>
+                  <li><a data-name="Register Here" href="{{route('user.signup')}}" id="register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
+                  <li><a data-name="Login Form" href="{{route('user.signin')}}" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i>SignIn</a></li>
                   @endif
-               
-                
               </ul>
             </li>
             <!-- search form -->

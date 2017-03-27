@@ -98,19 +98,18 @@
                     @endforeach
                                        
                     </div>
-                     <div class="form-group">
-                     <label for="bslighting">Do you want lighting options on Car Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="carlighting" type="radio" value="1">Yes</label>
-                     </div>
+
+                      <div class="form-group"><label for="bslighting">Do you want lighting options on Car Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="carlighting" type="radio" @PHP if($car->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="carlighting" type="radio" @PHP if($car->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
 
                        <div class="form-group">
                         <label for="cardiscount">Discount (%): </label>
-                        <input class="form-control" type="text" value="{{$car->discount}}" name="cardiscount" placeholder="put an integer value for discount like 5 or 10">
+                        <input class="form-control" type="text"  name="cardiscount" placeholder="put an integer value for discount like 5 or 10" value="{{$car->discount}}">
                     </div>
 
 
                     <div class="form-group">
                         <label for="carsnumber">Numbers Of Cars Display this Ad? : </label>
-                        <input class="form-control" type="text" name="carsnumber" value="{{$car->carnumber}}" required></div>
+                        <input class="form-control" type="text" name="carnumber" value="{{$car->numberofcars}}" required></div>
                     </div>
 
                   
@@ -161,7 +160,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice')}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice', ['table' => 'Car'])}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

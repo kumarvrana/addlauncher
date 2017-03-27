@@ -343,10 +343,58 @@ class ShoppingmallController extends Controller
         $shoppingmall_ad = Shoppingmalls::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $number_key = "number_".$main_key;
+        $duration_key = "duration_".$main_key;
+
         $shoppingmall_price = Shoppingmallsprice::where([
                                     ['shoppingmalls_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+
+        $shoppingmall_number = Shoppingmallsprice::where([
+                                    ['shoppingmalls_id', '=', $id],
+                                    ['price_key', '=', $number_key],
+                                ])->first()->toArray();
+        $shoppingmall_duration = Shoppingmallsprice::where([
+                                    ['shoppingmalls_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $shoppingmall_change_price = array();
+        foreach($shoppingmall_price as $key => $value){
+            if($key == 'price_key'){
+                $shoppingmall_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $shoppingmall_change_price[$key] = $value;
+            }
+        }
+        $shoppingmall_change_num = array();
+        foreach($shoppingmall_number as $key => $value){
+            if($key == 'price_key'){
+                $key = 'number_key';
+                $shoppingmall_change_num[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'number_value';
+                $shoppingmall_change_num[$key] = $value;
+            }
+        }
+        $shoppingmall_change_duration = array();
+        foreach($shoppingmall_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $shoppingmall_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $shoppingmall_change_duration[$key] = $value;
+            }
+        }
+        $shoppingmall_merge = array_merge($shoppingmall_change_num, $shoppingmall_change_duration);
+        
+        $shoppingmall_price = array_merge($shoppingmall_change_price, $shoppingmall_merge);
         
         $shoppingmall_Ad = array_merge($shoppingmall_ad, $shoppingmall_price);
        

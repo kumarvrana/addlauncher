@@ -37,6 +37,19 @@ class Cart
             $this->totalQty++;
             $this->totalPrice += $item['price_value'];
     }
+
+    public function UpdateCartQty($item, $itemskey, $count)
+    {
+        $price = 0;
+        $this->items[$itemskey]['qty'] = $count;
+        $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['price_value'] * $count;
+
+        foreach($this->items as $itm){
+            $price += $itm['price'];
+           
+        }
+        $this->totalPrice = $price;
+   }
   
     public function removeCartItem($id)
     {

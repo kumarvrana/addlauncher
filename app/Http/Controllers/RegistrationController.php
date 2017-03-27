@@ -15,7 +15,7 @@ class RegistrationController extends Controller
     
     public function getSignup()
     {
-        return view('user.signup');
+        return view('shop.user.signup');
     }
 
      public function postSignup(Request $request)

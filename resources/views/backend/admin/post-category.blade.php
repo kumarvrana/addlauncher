@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label for="slug">Category Slug:</label>
-                <input type="text" id="category-slug" name="slug" class="form-control" value="{{old('slug')}}" required>
+                <input type="text" id="category-slug" name="slug" class="form-control" readonly value="{{old('slug')}}" required>
             </div>
             <div class="form-group">
                 <label for="description">Category Description:</label>

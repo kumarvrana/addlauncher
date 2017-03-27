@@ -45,7 +45,7 @@
             <div class="col-md-3">
                     <div class="package-box width-439-226">
                         <div class="destination-box">
-                            <a href="{{route('frontend.adProductsByName', ['catName' => $mediacat->slug])}}" class="similar-destination">
+                            <a href="{{$mediacat->slug}}" class="similar-destination">
                               <img  alt="" class="img-responsive" src="{{asset('images/'.$mediacat->image)}}" style="display: block;">
                                 <div class="description">
                                     <h2 class="destination-name">{{$mediacat->title}}</h2>

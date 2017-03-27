@@ -25,6 +25,9 @@
         "classmap": [
             "database"
         ],
+        "files": [
+            "app/lib/enumOrder.php" 
+        ],
         "psr-4": {
             "App\\": "app/"
         }

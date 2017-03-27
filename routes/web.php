@@ -19,17 +19,86 @@ Route::get('/', [
 
 
 
- Route::get('/add-product',[
-    'uses' => 'ProductContoller@getHTMLContentByMediaType',
-    'as' => 'dashboard.getproductvariationshtmlbycat'
-    ]);
+ 
 Route::group( ['middleware' => 'admin'], function(){
     Route::get('/dashboard', [
     'uses' => 'DashboardController@getDashboard',
     'as' => 'dashboard'
     ]);
+
+
         Route::group([ 'prefix' => 'dashboard'], function(){
 
+            //payment setting routes
+             Route::get('/cashtransfer-settings',[
+                'uses' => 'PaymentSettingsController@getCashTransfer',
+                'as'  => 'dashboard.cashtransfer'
+            ]);
+             Route::post('/cashtransfer-settings',[
+                'uses' => 'PaymentSettingsController@postCashTransfer',
+                'as'  => 'dashboard.postcashtransfer'
+            ]);
+              Route::post('/cashtransfer-add',[
+                'uses' => 'PaymentSettingsController@AddCashTransfer',
+                'as'  => 'dashboard.addcashtransfer'
+            ]);
+            Route::post('/cashtransfer-settings', [
+                'uses' => 'PaymentSettingsController@UpdateCashPayment',
+                'as' => 'dashboard.updatecashtransfer'
+            ]); 
+            
+            
+
+
+
+             Route::get('/citrustransfer-settings',[
+                'uses' => 'PaymentSettingsController@getCitrusTransfer',
+                'as'  => 'dashboard.citrustransfer'
+            ]);
+             Route::post('/citrustransfer-settings',[
+                'uses' => 'PaymentSettingsController@postCitrusTransfer',
+                'as'  => 'dashboard.postcitrustransfer'
+            ]);
+            Route::post('/citrustransfer-settings', [
+                'uses' => 'PaymentSettingsController@UpdateCitrusPayment',
+                'as' => 'dashboard.updatecitrustransfer'
+            ]); 
+
+
+
+
+             Route::get('/stripetransfer-settings',[
+                'uses' => 'PaymentSettingsController@getStripeTransfer',
+                'as'  => 'dashboard.stripetransfer'
+            ]);
+             Route::post('/stripetransfer-settings',[
+                'uses' => 'PaymentSettingsController@postStripeTransfer',
+                'as'  => 'dashboard.poststripetransfer'
+            ]);
+            Route::post('/stripetransfer-settings', [
+                'uses' => 'PaymentSettingsController@UpdateStripePayment',
+                'as' => 'dashboard.updatestripetransfer'
+            ]);
+
+            
+
+            //end payment settings
+
+            //get order view
+
+            Route::get('/orders',[
+                'uses' => 'OrderController@getOrders',
+                'as'  => 'dashboard.orders'
+            ]);
+            Route::get('/order/{id}',[
+                'uses' => 'OrderController@viewOrder',
+                'as'  => 'dashboard.viewOrder'
+            ]);
+            Route::get('/orderstatus',[
+                'uses' => 'OrderController@getChangeStatus',
+                'as'  => 'order.statusChange'
+            ]);
+            //end order dashboard
 
             //start Adevertising Consolution media type routing
 
@@ -74,9 +143,9 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'AirportController@getUpdateeAirportad',
                 'as' => 'dashboard.editairportsad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-airports/', [
                 'uses' => 'AirportController@getuncheckAirportadOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceAirport'
             ]);
             
             Route::post('/cat/edit-airport/{ID}', [
@@ -115,14 +184,14 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'AutoController@getUpdateeAutoad',
                 'as' => 'dashboard.editautosad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-auto/', [
                 'uses' => 'AutoController@getuncheckAutoadOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceAuto'
             ]);
             
             Route::post('/cat/edit-auto/{ID}', [
                 'uses' => 'AutoController@postUpdateeAutoad',
-                'as' => 'dashboard.Postbusesad'
+                'as' => 'dashboard.Postautosad'
             ]);
             
            
@@ -157,9 +226,9 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'BillboardController@getUpdateeBillboardad',
                 'as' => 'dashboard.editbillboardsad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-billboards/', [
                 'uses' => 'BillboardController@getuncheckBillboardadOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceBillboard'
             ]);
             
             Route::post('/cat/edit-billboard/{ID}', [
@@ -197,9 +266,9 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'BusController@getUpdateeBusad',
                 'as' => 'dashboard.editbusesad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-buses/', [
                 'uses' => 'BusController@getuncheckBusadOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceBus'
             ]);
             
             Route::post('/cat/edit-bus/{ID}', [
@@ -238,9 +307,9 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'BusStopController@getUpdateeBusstopad',
                 'as' => 'dashboard.editbusstopsad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-busstops/', [
                 'uses' => 'BusStopController@getuncheckBusstopadOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceBusstop'
             ]);
             
             Route::post('/cat/edit-busstop/{ID}', [
@@ -322,9 +391,9 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'CinemaController@getUpdateeCinemaad',
                 'as' => 'dashboard.editcinemasad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-cinema/', [
                 'uses' => 'CinemaController@getuncheckCinemaadOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceCinema'
             ]);
             
             Route::post('/cat/edit-cinema/{ID}', [
@@ -402,14 +471,14 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'NewspaperController@getUpdateeNewspaperad',
                 'as' => 'dashboard.editnewspapersad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions/{table}', [
                 'uses' => 'NewspaperController@getuncheckNewspaperadOptions',
                 'as' => 'dashboard.deleteUncheckPrice'
             ]);
             
             Route::post('/cat/edit-newspaper/{ID}', [
                 'uses' => 'NewspaperController@postUpdateeNewspaperad',
-                'as' => 'dashboard.Postcaresad'
+                'as' => 'dashboard.Postnewspapersad'
             ]);
 
             //End Newspaper media type routing
@@ -670,7 +739,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************    
   
     // airport frontend starts
-    Route::get('/media/airports-ads', [
+    Route::get('/media/airports', [
         'uses' => 'AirportController@getfrontendAllAirportads',
         'as' => 'frontend.getallairports'
     ]);
@@ -693,7 +762,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // auto frontend starts
-    Route::get('/media/autos-ads', [
+    Route::get('/media/autos', [
         'uses' => 'AutoController@getfrontendAllAutoads',
         'as' => 'frontend.getallautos'
     ]);
@@ -716,7 +785,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // billboard frontend starts
-    Route::get('/media/billboards-ads', [
+    Route::get('/media/billboards', [
         'uses' => 'BillboardController@getfrontendAllBillboardads',
         'as' => 'frontend.getallbillboards'
     ]);
@@ -740,7 +809,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
         // bus frontend starts
-    Route::get('/media/buses-ads', [
+    Route::get('/media/buses', [
         'uses' => 'BusController@getfrontendAllBusads',
         'as' => 'frontend.getallbuses'
     ]);
@@ -763,7 +832,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************    
 
     // busstop frontend starts
-    Route::get('/media/busstops-ads', [
+    Route::get('/media/busstops', [
         'uses' => 'BusStopController@getfrontendAllBusstopads',
         'as' => 'frontend.getallbusstops'
     ]);
@@ -786,7 +855,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // car frontend starts
-    Route::get('/media/cars-ads', [
+    Route::get('/media/cars', [
         'uses' => 'CarController@getfrontendAllCarads',
         'as' => 'frontend.getallcars'
     ]);
@@ -809,7 +878,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // cinema frontend starts
-    Route::get('/media/cinemas-ads', [
+    Route::get('/media/cinemas', [
         'uses' => 'CinemaController@getfrontendAllCinemaads',
         'as' => 'frontend.getallcinemas'
     ]);
@@ -832,7 +901,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // metro frontend starts
-    Route::get('/media/metros-ads', [
+    Route::get('/media/metros', [
         'uses' => 'MetroController@getfrontendAllMetroads',
         'as' => 'frontend.getallmetros'
     ]);
@@ -855,7 +924,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // newspaper frontend starts
-    Route::get('/media/newspapers-ads', [
+    Route::get('/media/newspapers', [
         'uses' => 'NewspaperController@getfrontendAllNewspaperads',
         'as' => 'frontend.getallnewspapers'
     ]);
@@ -878,7 +947,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // shoppingmall frontend starts
-    Route::get('/media/shoppingmalls-ads', [
+    Route::get('/media/shoppingmalls', [
         'uses' => 'ShoppingmallController@getfrontendAllShoppingmallads',
         'as' => 'frontend.getallshoppingmalls'
     ]);
@@ -901,7 +970,7 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
     // socialmedia frontend starts
-    Route::get('/media/socialmedias-ads', [
+    Route::get('/media/socialmedias', [
         'uses' => 'SocialmediaController@getfrontendAllSocialmediaads',
         'as' => 'frontend.getallsocialmedias'
     ]);
@@ -929,8 +998,11 @@ Route::group([ 'prefix' => 'user'], function(){
 
 // ***************--CART OPTIONS--***************
 
+
     // Cart options start
-      Route::get('/shop/cart', [
+Route::group(['middleware' => 'user', 'middleware' => 'admin'], function(){    
+   
+    Route::get('/shop/cart', [
         'uses' => 'CartController@getCart',
         'as' => 'cart.shoppingCart',
     ]);
@@ -940,16 +1012,40 @@ Route::group([ 'prefix' => 'user'], function(){
         'as' => 'Cart.removeItemCart',
     ]);
 
-     Route::get('/shop/checkout', [
-        'uses' => 'CheckoutController@getCheckout',
-        'as' => 'checkout'
+     Route::get('/shop/payment', [
+        'uses' => 'CheckoutController@getpayment',
+        'as' => 'getpayment'
+       
+    ]);
+
+    Route::post('/shop/payment', [
+        'uses' => 'CheckoutController@postPaymentmethod',
+        'as' => 'postpayment'
        
     ]);
 
     Route::post('/shop/checkout', [
         'uses' => 'CheckoutController@postCheckout',
-        'as' => 'checkout'
+        'as' => 'postCheckout'
        
     ]);
 
+    Route::post('/shop/paymentbycirtus', [
+        'uses' => 'CheckoutController@paymentBycirtus',
+        'as' => 'paymentBycirtus'
+       
+    ]);
 
+    Route::get('/shop/updatecart/', [
+        'uses' => 'CartController@updateCart',
+        'as' => 'shoppingCart.UpdateCart'
+       
+    ]);
+
+    Route::get('thank-you/{order}', [
+        'uses' => 'CheckoutController@getThankyoupage',
+        'as' => 'order.thankyou'
+       
+    ]);
+});
+      

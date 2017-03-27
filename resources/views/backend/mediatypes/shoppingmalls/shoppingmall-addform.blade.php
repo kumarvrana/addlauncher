@@ -86,7 +86,7 @@
             <div class="step-header">Shoppingmall Display Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Shoppingmall">
                 @PHP
-                    $shoppingmall_options = array('drop_down_banners' => 'Drop Down Banners', 'free_stand_display' => 'Free Stand Display','walls' => 'Walls','poles_or_pillar' => 'Poles/Pillar','signage' => 'Signage');
+                    $shoppingmall_options = array('drop_down_banners' => 'Drop Down Banners', 'free_stand_display' => 'Free Stand Display','walls' => 'Walls','poles_or_pillar' => 'Poles_or_Pillar','signage' => 'Signage');
                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Shoppingmall Options</h3></div><div class="panel-body">

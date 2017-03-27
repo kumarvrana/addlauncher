@@ -28,6 +28,7 @@ class AirportController extends Controller
     public function getfrontAirportad($id)
     {
         $airportad = Airports::find($id);
+       
         $airportprice = Airportsprice::where('airports_id', $id)->get();
         return view('frontend-mediatype.airports.airport-single', ['airportad' => $airportad, 'airportprice' => $airportprice]);
     }
@@ -160,11 +161,7 @@ class AirportController extends Controller
         $delele_airportad->delete();
         $delete_airportadprice = Airportsprice::where('airports_id', $airportadID);
         $delete_airportadprice->delete();
-        // $delete_product = Product::where([
-        //                             ['media_id', '=', $airportadID],
-        //                             ['media_type', '=', 'Airports'],
-        //                         ])->first();
-        // $delete_product->delete();
+       
         return redirect()->route('dashboard.getAirportList')->with(['message' => "Successfully Deleted From the List!"]);
     }
 
@@ -175,30 +172,58 @@ class AirportController extends Controller
         $airportpriceData = Airportsprice::where('airports_id', $ID)->get();
         $fieldData = array();
         foreach($airportpriceData as $priceairport){
-           $fieldData[] = ucwords(substr(str_replace("_", " ", $priceairport->price_key), 6));
+           $fieldData[] = $priceairport->price_key;
         }
-       $fieldData = serialize($fieldData);
-        return view('backend.mediatypes.airports.airport-editform', ['airport' => $airportData, 'airportpricemeta' => $airportpriceData, 'fieldData' => $fieldData]);
+
+        $name_key = array_chunk($fieldData, 3);
+        $datta = array();
+         $j = 0; 
+		foreach($name_key as $options){
+			$datta[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
+			$j++;
+		}
+       $fieldDatas = serialize($datta);
+        return view('backend.mediatypes.airports.airport-editform', ['airport' => $airportData, 'airportpricemeta' => $airportpriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
     public function getuncheckAirportadOptions(Request $request)
     {
+        
+        $displayoptions = json_decode($request['displayoptions']);
+        $datta = array();
+        foreach($displayoptions as $options){
+			$datta[] = strtolower(str_replace(' ', '_', $options));
+		
+		}
+               
         $count = Airportsprice::where([
                                     ['airports_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
+        
         if($count > 0){
-            Airports::where('id', $request['id'])->update(['display_options' => serialize($request['displayoptions'])]);
+            Airports::where('id', $request['id'])->update(['display_options' =>  serialize($datta)]);
             $airports = Airportsprice::where([
                                     ['airports_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
             $airports->delete();
+           
+            $airportsnumber = Airportsprice::where([
+                                    ['airports_id', '=', $request['id']],
+                                    ['price_key', '=', $request['number_key']]
+                                ])->first();
+            $airportsnumber->delete();
+            $airportsduration = Airportsprice::where([
+                                    ['airports_id', '=', $request['id']],
+                                    ['price_key', '=', $request['duration_key']]
+                                ])->first();
+            $airportsduration->delete();
             return response(['msg' => 'price deleted'], 200);
+        }else{
+             return response(['msg' => 'Value not present in db!'], 200);
         }
               
-            return response(['msg' => 'Value not present in db!'], 200);
-        
     }
 
     public function postUpdateeAirportad(Request $request, $ID)
@@ -223,10 +248,12 @@ class AirportController extends Controller
          $editairport->state = $request->input('state');
          $editairport->city = $request->input('city');
          $editairport->rank = $request->input('rank');
+         $editairport->landmark = $request->input('landmark');
          $editairport->description = $request->input('description');
          $editairport->status = $request->input('status');
          $editairport->references = $request->input('reference');
          $editairport->display_options = serialize($request->input('airportdisplay'));
+          $editairport->light_option = $request->input('aplighting');
           $editairport->airportnumber = $request->input('airportsnumber');
           $editairport->discount = $request->input('airportdiscount');
 
@@ -304,10 +331,58 @@ class AirportController extends Controller
         $airport_ad = Airports::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $number_key = "number_".$main_key;
+        $duration_key = "duration_".$main_key;
+     
         $airport_price = Airportsprice::where([
                                     ['airports_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+       
+        $airport_number = Airportsprice::where([
+                                    ['airports_id', '=', $id],
+                                    ['price_key', '=', $number_key],
+                                ])->first()->toArray();
+        $airport_duration = Airportsprice::where([
+                                    ['airports_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $airport_change_price = array();
+        foreach($airport_price as $key => $value){
+            if($key == 'price_key'){
+                $airport_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $airport_change_price[$key] = $value;
+            }
+        }
+        $airport_change_num = array();
+        foreach($airport_number as $key => $value){
+            if($key == 'price_key'){
+                $key = 'number_key';
+                $airport_change_num[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'number_value';
+                $airport_change_num[$key] = $value;
+            }
+        }
+        $airport_change_duration = array();
+        foreach($airport_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $airport_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $airport_change_duration[$key] = $value;
+            }
+        }
+        $airport_merge = array_merge($airport_change_num, $airport_change_duration);
+        
+        $airport_price = array_merge($airport_change_price, $airport_merge);
         
         $airport_Ad = array_merge($airport_ad, $airport_price);
        

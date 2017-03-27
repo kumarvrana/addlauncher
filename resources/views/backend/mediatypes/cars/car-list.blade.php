@@ -57,7 +57,7 @@
                 <td>{{$carad->state}}</td>
                 <td>
                
-                    <img src="{{asset('images/buses/'.$carad->image)}}" alt="{{$carad->title}}" width="50px" height="50px" class="img-responsive">
+                    <img src="{{asset('images/cars/'.$carad->image)}}" alt="{{$carad->title}}" width="50px" height="50px" class="img-responsive">
                 
                 </td>
                 @PHP

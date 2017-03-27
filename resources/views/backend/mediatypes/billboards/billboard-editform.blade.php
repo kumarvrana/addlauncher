@@ -25,7 +25,7 @@
                     <p>{{Session::get('message')}}</p>
                 </div>
             @endif
-  <form class="form" action="{{route('dashboard.postBillboardForm', ['ID' => $billboard->id])}}" method="post" enctype="multipart/form-data">
+  <form class="form" action="{{route('dashboard.editbillboardsad', ['ID' => $billboard->id])}}" method="post" enctype="multipart/form-data">
 		<div class="step">
             <div class="step-header">General Options</div>
             <div class="form-group">
@@ -86,7 +86,8 @@
             <input type="hidden" name="modelname" id="modelname" value="Billboard">
                @PHP
                     $billboard_options = array('hoarding' => 'Hoarding', 'pole_kiosk' => 'Pole Kiosk','bus_shelters' => 'Bus Shelters');
-                     $bsdisplayData = unserialize($billboard->display_options);
+                     $billboarddisplayData = unserialize($billboard->display_options);
+                     
                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Billboard Options</h3></div><div class="panel-body">
@@ -94,7 +95,7 @@
                         <label for="billboarddisplay">Billboards Ad Display Options: </label>
                           
                     @foreach($billboard_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Billboards Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='billboarddisplay[]' type='checkbox'  @PHP if(in_array($key, $bsdisplayData)){echo "checked"; } @ENDPHP value="{{$key}}">{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Billboards Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='billboarddisplay[]' type='checkbox'  @PHP if(in_array($key, $billboarddisplayData)){echo "checked"; } @ENDPHP value="{{$key}}">{{$value}}</label>
                     @endforeach
                                        
                     </div>
@@ -102,11 +103,11 @@
                         <label for="billboardsnumber">Numbers Of Billboards Display this Ad? : </label>
                         <input class="form-control" type="text" name="billboardsnumber" value="{{$billboard->billboardnumber}}" required>
                     </div>
-
-                     <div class="form-group"><label for="bslighting">Do you want lighting options on Billboard Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="billboardlighting" type="radio" value="1">Yes</label></div>
+                        
+                     <div class="form-group"><label for="bslighting">Do you want lighting options on Billboard Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="billboardlighting" type="radio" @PHP if($billboard->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="billboardlighting" type="radio" @PHP if($billboard->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
                     <div class="form-group">
                         <label for="billboardsnumber">Discount (%): </label>
-                        <input class="form-control" type="text" name="billboarddiscount" placeholder="put an integer value for discount like 5 or 10">
+                        <input class="form-control" type="text" name="billboarddiscount" placeholder="put an integer value for discount like 5 or 10" value="{{$billboard->discount}}">
                     </div>
                     </div>
 
@@ -120,12 +121,30 @@
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$billboard->id}}">
                         <input type="hidden" id="tablename" value="billboards">
+
                          @foreach($billboardpricemeta as $billboardprice)
-                         @PHP $p_key = str_replace("_", " ", $billboardprice->price_key);
-                             $label =  ucfirst(substr($p_key, 6));
+                         @PHP 
+                             $p_key = str_replace("_", " ", $billboardprice->price_key);
+                             $field_name = explode(' ', $p_key);
+                             
+                             switch($field_name[0]){
+                                case 'price';
+                                    $label_field =  ucfirst(substr($p_key, 6));
+                                    $label = "Price for $label_field Billboard Ad:";
+                                break;
+                                case 'number';
+                                    $label_field =  ucfirst(substr($p_key, 7));
+                                    $label = "Number of $label_field Billboard Ad:";
+                                break;
+                                case 'duration';
+                                    $label_field =  ucfirst(substr($p_key, 9));
+                                    $label = "Duration for $label_field Billboard Ad:";
+                                break;
+                             }
+
                          @ENDPHP
                         <div id="p{{$billboardprice->price_key}}" class="form-group">
-                            <label for="{{$billboardprice->price_key}}">Price for {{$label}} Billboard Ad:</label>
+                            <label for="{{$billboardprice->price_key}}">{{$label}}</label>
                             <input class="form-control" type="text" name="{{$billboardprice->price_key}}" value="{{$billboardprice->price_value}}" required>
                         </div>
                         @endforeach
@@ -148,7 +167,7 @@
 		
 		<button type="button" class="action back btn btn-info">Back</button>
 		<button type="button" class="action next btn btn-info">Next</button>
-		<button type="submit" class="action submit btn btn-success">Add Product</button>	
+		<button type="submit" class="action submit btn btn-success">Edit Product</button>	
   	</form>
    
    </div>
@@ -156,7 +175,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice')}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceBillboard')}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

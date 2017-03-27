@@ -125,14 +125,14 @@ class BillboardController extends Controller
             $this->addBillboardPrice($lastinsert_ID, 'duration_pole_kiosk', $request->input('duration_pole_kiosk'));
         }
 
-          if($request->has('price_billboard_shelters')){
-            $this->addBillboardPrice($lastinsert_ID, 'price_billboard_shelters', $request->input('price_billboard_shelters'));
+          if($request->has('price_bus_shelters')){
+            $this->addBillboardPrice($lastinsert_ID, 'price_bus_shelters', $request->input('price_bus_shelters'));
         }
-        if($request->has('number_billboard_shelters')){
-            $this->addBillboardPrice($lastinsert_ID, 'number_billboard_shelters', $request->input('number_billboard_shelters'));
+        if($request->has('number_bus_shelters')){
+            $this->addBillboardPrice($lastinsert_ID, 'number_bus_shelters', $request->input('number_bus_shelters'));
         }
-        if($request->has('duration_billboard_shelters')){
-            $this->addBillboardPrice($lastinsert_ID, 'duration_billboard_shelters', $request->input('duration_billboard_shelters'));
+        if($request->has('duration_bus_shelters')){
+            $this->addBillboardPrice($lastinsert_ID, 'duration_bus_shelters', $request->input('duration_bus_shelters'));
         }
       
       
@@ -179,25 +179,50 @@ class BillboardController extends Controller
         $billboardpriceData = Billboardsprice::where('billboards_id', $ID)->get();
         $fieldData = array();
         foreach($billboardpriceData as $pricebillboard){
-           $fieldData[] = ucwords(substr(str_replace("_", " ", $pricebillboard->price_key), 6));
+           $fieldData[] = $pricebillboard->price_key; //(substr(str_replace("_", " ", $pricebillboard->price_key), 6));
         }
-       $fieldData = serialize($fieldData);
-        return view('backend.mediatypes.billboards.billboard-editform', ['billboard' => $billboardData, 'billboardpricemeta' => $billboardpriceData, 'fieldData' => $fieldData]);
+        $name_key = array_chunk($fieldData, 3);
+        $datta = array();
+         $j = 0; 
+		foreach($name_key as $options){
+			$datta[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
+			$j++;
+		}
+       $fieldDatas = serialize($datta);
+       
+        return view('backend.mediatypes.billboards.billboard-editform', ['billboard' => $billboardData, 'billboardpricemeta' => $billboardpriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
     public function getuncheckBillboardadOptions(Request $request)
     {
+        $displayoptions = json_decode($request['displayoptions']);
+        $datta = array();
+        foreach($displayoptions as $options){
+			$datta[] = strtolower(str_replace(' ', '_', $options));
+		
+		}
+        
         $count = Billboardsprice::where([
                                     ['billboards_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
         if($count > 0){
-            Billboards::where('id', $request['id'])->update(['display_options' => serialize($request['displayoptions'])]);
+            Billboards::where('id', $request['id'])->update(['display_options' => serialize($datta)]);
             $billboards = Billboardsprice::where([
                                     ['billboards_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
             $billboards->delete();
+            $billboardsnumber = Billboardsprice::where([
+                                    ['billboards_id', '=', $request['id']],
+                                    ['price_key', '=', $request['number_key']]
+                                ])->first();
+            $billboardsnumber->delete();
+            $billboardsduration = Billboardsprice::where([
+                                    ['billboards_id', '=', $request['id']],
+                                    ['price_key', '=', $request['duration_key']]
+                                ])->first();
+            $billboardsduration->delete();
             return response(['msg' => 'price deleted'], 200);
         }
               
@@ -233,6 +258,7 @@ class BillboardController extends Controller
          $editbillboard->display_options = serialize($request->input('billboarddisplay'));
           $editbillboard->light_option = $request->input('billboardlighting');
           $editbillboard->billboardnumber = $request->input('billboardsnumber');
+          $editbillboard->discount = $request->input('billboarddiscount');
 
         if($request->hasFile('image')){
             $file = $request->file('image');
@@ -305,26 +331,73 @@ class BillboardController extends Controller
 
     //billboardt functions
    // add or remove item to billboardt
-   public function getAddToBillboardt(Request $request, $id, $variation)
+   public function getAddToCart(Request $request, $id, $variation)
    {
         $billboard_ad = Billboards::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $number_key = "number_".$main_key;
+        $duration_key = "duration_".$main_key;
+       
         $billboard_price = Billboardsprice::where([
                                     ['billboards_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+        $billboard_number = Billboardsprice::where([
+                                    ['billboards_id', '=', $id],
+                                    ['price_key', '=', $number_key],
+                                ])->first()->toArray();
+        $billboard_duration = Billboardsprice::where([
+                                    ['billboards_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $billboard_change_price = array();
+        foreach($billboard_price as $key => $value){
+            if($key == 'price_key'){
+                $billboard_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $billboard_change_price[$key] = $value;
+            }
+        }
+        $billboard_change_num = array();
+        foreach($billboard_number as $key => $value){
+            if($key == 'price_key'){
+                $key = 'number_key';
+                $billboard_change_num[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'number_value';
+                $billboard_change_num[$key] = $value;
+            }
+        }
+        $billboard_change_duration = array();
+        foreach($billboard_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $billboard_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $billboard_change_duration[$key] = $value;
+            }
+        }
+        $billboard_merge = array_merge($billboard_change_num, $billboard_change_duration);
+        
+        $billboard_price = array_merge($billboard_change_price, $billboard_merge);
         
         $billboard_Ad = array_merge($billboard_ad, $billboard_price);
        
-        $oldBillboardt = Session::has('billboardt') ? Session::get('billboardt') : null;
+        $oldBillboard = Session::has('cart') ? Session::get('cart') : null;
                 
-        $billboardt = new Billboardt($oldBillboardt);
+        $billboard = new cart($oldBillboard);
 
-        $billboardt->addorRemove($billboard_Ad, $billboard_ad['id'], 'billboards'); //pass full billboard details, id and model name like "billboards"
+        $billboard->addorRemove($billboard_Ad, $billboard_ad['id'], 'billboards'); //pass full billboard details, id and model name like "billboards"
         
-        $request->session()->put('billboardt', $billboardt);
-        //Session::forget('billboardt');
+        $request->session()->put('cart', $billboard);
+        //Session::forget('cart');
 
         return redirect()->back()->with(['status' => 'added']);
     }

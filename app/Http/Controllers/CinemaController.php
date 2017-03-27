@@ -54,7 +54,7 @@ class CinemaController extends Controller
 
     public function postDashboardCinemaForm(Request $request)
     {
-         // dd($request->all());
+         
         $this->validate( $request, [
            'title' => 'required',
            'price' => 'numeric',
@@ -64,7 +64,12 @@ class CinemaController extends Controller
            'city' => 'required',
            'rank' => 'numeric',
            'description' => 'required',
-           'status' => 'required'
+           'status' => 'required',
+           'audiseats' => 'numeric',
+           'audinumber' => 'numeric',
+           'cinemanumber' => 'numeric',
+           'cinemadiscount' => 'numeric'
+           
         ]);
 
         if($request->hasFile('image')){
@@ -89,7 +94,10 @@ class CinemaController extends Controller
                 'display_options' => serialize($request->input('cinemadisplay')),
         
                 'discount' => $request->input('cinemadiscount'),
-                'cinemanumber' => $request->input('cinemasnumber')
+                'cinemanumber' => $request->input('cinemasnumber'),
+                'audiseats' => $request->input('audiseats'),
+                'audinumber' => $request->input('audinumber'),
+                'cinemacategory' => $request->input('cinemacategory')
         ]);
 
         $cinema->save();
@@ -97,54 +105,32 @@ class CinemaController extends Controller
         $lastinsert_ID = $cinema->id;
 
 
-
         //cinema display prices insertion
 
    	  
-   	   if($request->has('price_ten_sec_mute_slide')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_ten_sec_mute_slide', $request->input('price_ten_sec_mute_slide'));
+   	   if($request->has('price_rate_per_week')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_rate_per_week', $request->input('price_rate_per_week'));
         }
       
-       if($request->has('number_ten_sec_mute_slide')){
-            $this->addCinemaPrice($lastinsert_ID, 'number_ten_sec_mute_slide', $request->input('number_ten_sec_mute_slide'));
+       if($request->has('duration_rate_per_week')){
+            $this->addCinemaPrice($lastinsert_ID, 'duration_rate_per_week', $request->input('duration_rate_per_week'));
         }
 
-       if($request->has('duration_ten_sec_mute_slide')){
-            $this->addCinemaPrice($lastinsert_ID, 'duration_ten_sec_mute_slide', $request->input('duration_ten_sec_mute_slide'));
+       if($request->has('price_trailor_per_week')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'));
         } //can be used as no of seats or no of screens
 
-        if($request->has('price_ten_sec_audio_slide')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_ten_sec_audio_slide', $request->input('price_ten_sec_audio_slide'));
+        if($request->has('duration_trailor_per_week')){
+            $this->addCinemaPrice($lastinsert_ID, 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
         }
-        if($request->has('number_ten_sec_audio_slide')){
-            $this->addCinemaPrice($lastinsert_ID, 'number_ten_sec_audio_slide', $request->input('number_ten_sec_audio_slide'));
+        if($request->has('price_mute_slide_per_week')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'));
         }
-        if($request->has('duration_ten_sec_audio_slide')){
-            $this->addCinemaPrice($lastinsert_ID, 'duration_ten_sec_audio_slide', $request->input('duration_ten_sec_audio_slide'));
-        }
-
-           if($request->has('price_thirty_sec_video')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_thirty_sec_video', $request->input('price_thirty_sec_video'));
-        }
-        if($request->has('number_thirty_sec_video')){
-            $this->addCinemaPrice($lastinsert_ID, 'number_thirty_sec_video', $request->input('number_thirty_sec_video'));
-        }
-        if($request->has('duration_thirty_sec_video')){
-            $this->addCinemaPrice($lastinsert_ID, 'duration_thirty_sec_video', $request->input('duration_thirty_sec_video'));
+        if($request->has('duration_mute_slide_per_week')){
+            $this->addCinemaPrice($lastinsert_ID, 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
         }
 
-         if($request->has('price_sixty_sec_video')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_sixty_sec_video', $request->input('price_sixty_sec_video'));
-        }
-        if($request->has('number_sixty_sec_video')){
-            $this->addCinemaPrice($lastinsert_ID, 'number_sixty_sec_video', $request->input('number_sixty_sec_video'));
-        }
-        if($request->has('duration_sixty_sec_video')){
-            $this->addCinemaPrice($lastinsert_ID, 'duration_sixty_sec_video', $request->input('duration_sixty_sec_video'));
-        }
-      
-    
-      
+       
 
        
         //return to cinema product list
@@ -172,11 +158,7 @@ class CinemaController extends Controller
         $delele_cinemaad->delete();
         $delete_cinemaadprice = Cinemasprice::where('cinemas_id', $cinemaadID);
         $delete_cinemaadprice->delete();
-        // $delete_product = Product::where([
-        //                             ['media_id', '=', $cinemaadID],
-        //                             ['media_type', '=', 'Cinemas'],
-        //                         ])->first();
-        // $delete_product->delete();
+      
         return redirect()->route('dashboard.getCinemaList')->with(['message' => "Successfully Deleted From the List!"]);
     }
 
@@ -187,25 +169,44 @@ class CinemaController extends Controller
         $cinemapriceData = Cinemasprice::where('cinemas_id', $ID)->get();
         $fieldData = array();
         foreach($cinemapriceData as $pricecinema){
-           $fieldData[] = ucwords(substr(str_replace("_", " ", $pricecinema->price_key), 6));
+           $fieldData[] = $pricecinema->price_key;
         }
-       $fieldData = serialize($fieldData);
-        return view('backend.mediatypes.cinemas.cinema-editform', ['cinema' => $cinemaData, 'cinemapricemeta' => $cinemapriceData, 'fieldData' => $fieldData]);
+
+        $name_key = array_chunk($fieldData, 2);
+        $datta = array();
+         $j = 0; 
+		foreach($name_key as $options){
+			$datta[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
+			$j++;
+		}
+       $fieldDatas = serialize($datta);
+        return view('backend.mediatypes.cinemas.cinema-editform', ['cinema' => $cinemaData, 'cinemapricemeta' => $cinemapriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
     public function getuncheckCinemaadOptions(Request $request)
     {
+        $displayoptions = json_decode($request['displayoptions']);
+        $datta = array();
+        foreach($displayoptions as $options){
+			$datta[] = strtolower(str_replace(' ', '_', $options));
+		
+		}
         $count = Cinemasprice::where([
                                     ['cinemas_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
         if($count > 0){
-            Cinemas::where('id', $request['id'])->update(['display_options' => serialize($request['displayoptions'])]);
+            Cinemas::where('id', $request['id'])->update(['display_options' => serialize($datta)]);
             $cinemas = Cinemasprice::where([
                                     ['cinemas_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
             $cinemas->delete();
+             $cinemasduration = Cinemasprice::where([
+                                    ['cinemas_id', '=', $request['id']],
+                                    ['price_key', '=', $request['duration_key']],
+                                ])->first();
+            $cinemasduration->delete();
             return response(['msg' => 'price deleted'], 200);
         }
               
@@ -224,7 +225,11 @@ class CinemaController extends Controller
            'city' => 'required',
            'rank' => 'numeric',
            'description' => 'required',
-           'status' => 'required'
+           'status' => 'required',
+           'audiseats' => 'numeric',
+           'audinumber' => 'numeric',
+           'cinemanumber' => 'numeric',
+           'cinemadiscount' => 'numeric'
         ]);
 
         $editcinema = Cinemas::find($ID);
@@ -235,13 +240,17 @@ class CinemaController extends Controller
          $editcinema->state = $request->input('state');
          $editcinema->city = $request->input('city');
          $editcinema->rank = $request->input('rank');
+         $editcinema->landmark = $request->input('landmark');
          $editcinema->description = $request->input('description');
          $editcinema->status = $request->input('status');
          $editcinema->references = $request->input('reference');
          $editcinema->display_options = serialize($request->input('cinemadisplay'));
-          $editcinema->cinemanumber = $request->input('cinemasnumber');
-          $editcinema->discount = $request->input('cinemadiscount');
-
+         $editcinema->cinemanumber = $request->input('cinemasnumber');
+         $editcinema->discount = $request->input('cinemadiscount');
+         $editcinema->audiseats = $request->input('audiseats');
+         $editcinema->audinumber = $request->input('audinumber');
+         $editcinema->cinemacategory = $request->input('cinemacategory');
+         
         if($request->hasFile('image')){
             $file = $request->file('image');
             $filename = time() .'.'. $file->getClientOriginalExtension();
@@ -255,50 +264,27 @@ class CinemaController extends Controller
 
         //cinema display prices insertion
 
-   	   if($request->has('price_ten_sec_mute_slide')){
-            $this->updateCinemaPrice($ID, 'price_ten_sec_mute_slide', $request->input('price_ten_sec_mute_slide'));
+   	   if($request->has('price_rate_per_week')){
+            $this->updateCinemaPrice($ID, 'price_rate_per_week', $request->input('price_rate_per_week'));
         }
       
-       if($request->has('number_ten_sec_mute_slide')){
-            $this->updateCinemaPrice($ID, 'number_ten_sec_mute_slide', $request->input('number_ten_sec_mute_slide'));
+       if($request->has('duration_rate_per_week')){
+            $this->updateCinemaPrice($ID, 'duration_rate_per_week', $request->input('duration_rate_per_week'));
         }
 
-       if($request->has('duration_ten_sec_mute_slide')){
-            $this->updateCinemaPrice($ID, 'duration_ten_sec_mute_slide', $request->input('duration_ten_sec_mute_slide'));
+       if($request->has('price_trailor_per_week')){
+            $this->updateCinemaPrice($ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'));
         } //can be used as no of seats or no of screens
 
-        if($request->has('price_ten_sec_audio_slide')){
-            $this->updateCinemaPrice($ID, 'price_ten_sec_audio_slide', $request->input('price_ten_sec_audio_slide'));
+        if($request->has('duration_trailor_per_week')){
+            $this->updateCinemaPrice($ID, 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
         }
-        if($request->has('number_ten_sec_audio_slide')){
-            $this->updateCinemaPrice($ID, 'number_ten_sec_audio_slide', $request->input('number_ten_sec_audio_slide'));
+        if($request->has('price_mute_slide_per_week')){
+            $this->updateCinemaPrice($ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'));
         }
-        if($request->has('duration_ten_sec_audio_slide')){
-            $this->updateCinemaPrice($ID, 'duration_ten_sec_audio_slide', $request->input('duration_ten_sec_audio_slide'));
+        if($request->has('duration_mute_slide_per_week')){
+            $this->updateCinemaPrice($ID, 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
         }
-
-           if($request->has('price_thirty_sec_video')){
-            $this->updateCinemaPrice($ID, 'price_thirty_sec_video', $request->input('price_thirty_sec_video'));
-        }
-        if($request->has('number_thirty_sec_video')){
-            $this->updateCinemaPrice($ID, 'number_thirty_sec_video', $request->input('number_thirty_sec_video'));
-        }
-        if($request->has('duration_thirty_sec_video')){
-            $this->updateCinemaPrice($ID, 'duration_thirty_sec_video', $request->input('duration_thirty_sec_video'));
-        }
-
-         if($request->has('price_sixty_sec_video')){
-            $this->updateCinemaPrice($ID, 'price_sixty_sec_video', $request->input('price_sixty_sec_video'));
-        }
-        if($request->has('number_sixty_sec_video')){
-            $this->updateCinemaPrice($ID, 'number_sixty_sec_video', $request->input('number_sixty_sec_video'));
-        }
-        if($request->has('duration_sixty_sec_video')){
-            $this->updateCinemaPrice($ID, 'duration_sixty_sec_video', $request->input('duration_sixty_sec_video'));
-        }
-      
-
-        
 
         //return to cinema product list
        return redirect()->route('dashboard.getCinemaList')->with('message', 'Successfully Edited!');
@@ -327,10 +313,44 @@ class CinemaController extends Controller
         $cinema_ad = Cinemas::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
+
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $duration_key = "duration_".$main_key;
+
         $cinema_price = Cinemasprice::where([
                                     ['cinemas_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+
+        
+        $cinema_duration = Cinemasprice::where([
+                                    ['cinemas_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $cinema_change_price = array();
+        foreach($cinema_price as $key => $value){
+            if($key == 'price_key'){
+                $cinema_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $cinema_change_price[$key] = $value;
+            }
+        }
+       
+        $cinema_change_duration = array();
+        foreach($cinema_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $cinema_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $cinema_change_duration[$key] = $value;
+            }
+        }
+       
+        $cinema_price = array_merge($cinema_change_price, $cinema_change_duration);
         
         $cinema_Ad = array_merge($cinema_ad, $cinema_price);
        

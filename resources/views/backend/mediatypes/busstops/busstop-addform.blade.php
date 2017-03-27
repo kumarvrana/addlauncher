@@ -94,18 +94,18 @@
                         <label for="bsdbusdisplayisplay">Buse Stop Ad Display Options: </label>
                              
                     @foreach($bus_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Buses Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='busdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Buses Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='busstopdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
                     </div> 
                     <div class="form-group"><label for="bslighting">Do you want lighting options on Bus Stops?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="bslighting" type="radio" value="1">Yes</label></div>
                     <div class="form-group">
-                        <label for="busesnumber">Numbers Of Bus Stops Display this Ad? : </label>
+                        <label for="busstopsnumber">Numbers Of Bus Stops Display this Ad? : </label>
                         <input class="form-control" type="text" name="busstopsnumber" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="busesnumber">Discount (%): </label>
+                        <label for="busstopdiscount">Discount (%): </label>
                         <input class="form-control" type="text" name="busstopdiscount" placeholder="put an integer value for discount like 5 or 10">
                     </div>
                     </div>

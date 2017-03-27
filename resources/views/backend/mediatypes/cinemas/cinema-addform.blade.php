@@ -83,31 +83,49 @@
 
                
                 
-            <div class="step-header">Cinema Display Options</div>
+            <div class="step-header">Cinema Ad Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Cinema">
                
                 @PHP
-                    $bus_options = array('ten_sec_mute_slide' => '10 sec Mute Slide', 'ten_sec_audio_slide' => '10 sec Audio Slide', 'thirty_sec_video' => '30 Sec Video', 'sixty_sec_video' => '60 Sec Video');
+                    $cinema_options = array('rate_per_week' => 'Rate Per Week', 'trailor_per_week' => 'Trailor Per Week', 'mute_slide_per_week' => 'Mute Slide Per Week');
+                    $offScreen_AdOptions = array('danglers' => 'Danglers', 'tent_cards' => 'Tent Cards', ''=> 'glow_box', '' => 'Glow Box', 'product_sampling' => 'Product', '' => '', '' => '', '' => '');
+                    $cinema_category = array('gold' => 'Gold', 'platinum' => 'Platinum', 'silver' => 'Silver'); 
                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Cinema Options</h3></div><div class="panel-body">
                     <div class="form-group">
                         <label for="bsdbusdisplayisplay">Do you want Full Ad Display On Cinema? </label>
                              
-                    @foreach($bus_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Cinema Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='busdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @foreach($cinema_options as $key => $value)
+                        <label class='checkbox-inline'><input data-label='cinema_options' onclick="addDomToPriceOptionsCinema('{{$value}}', 'cinema_options')" name='cinemadisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
                     </div> 
-                    
                     <div class="form-group">
-                        <label for="busesnumber">Numbers Of Cinema Display this Ad? : </label>
+                         <label for="status">Cinema Category:</label>
+                        <select class="form-control" name="cinemacategory" id="cinemacategory" required="required">
+                            <option value="">--Select--</option>
+                            @foreach( $cinema_category as $key => $value )
+                            <option value="{{$key}}">{{$value}}</option>
+                            @endforeach                        
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="audiseats">Numbers Of Seats in Audi? : </label>
+                        <input class="form-control" type="text" name="audiseats" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="audinumber">Numbers Of Audi Display this Ad? : </label>
+                        <input class="form-control" type="text" name="audinumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cinemasnumber">Numbers Of Cinema Display this Ad? : </label>
                         <input class="form-control" type="text" name="cinemasnumber" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="busesnumber">Discount (%): </label>
-                        <input class="form-control" type="text" name="busdiscount" placeholder="put an integer value for discount like 5 or 10">
+                        <label for="cinemadiscount">Discount (%): </label>
+                        <input class="form-control" type="text" name="cinemadiscount" placeholder="put an integer value for discount like 5 or 10">
                     </div>
                     </div>
                 </div>

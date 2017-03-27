@@ -92,14 +92,21 @@
                     <div class="form-group">
                         <label for="airportdisplay">Airports Ad Display Options: </label>
                           
-                    @foreach($airport_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Airports Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='airportdisplay[]' type='checkbox'  @PHP if(in_array($key, $bsdisplayData)){echo "checked"; } @ENDPHP value="{{$key}}">{{$value}}</label>
-                    @endforeach
-                                       
+                        @foreach($airport_options as $key => $value)
+                            <label class='checkbox-inline'><input data-label='Airports Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='airportdisplay[]' type='checkbox'  @PHP if($bsdisplayData){if(in_array($key, $bsdisplayData)){echo "checked"; } }@ENDPHP value="{{$key}}">{{$value}}</label>
+                        @endforeach
+                               
                     </div>
+                   <div class="form-group"><label for="bslighting">Do you want lighting options on Airport Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="airportlighting" type="radio" @PHP if($airport->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="airportlighting" type="radio" @PHP if($airport->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
+
                     <div class="form-group">
                         <label for="airportsnumber">Numbers Of Airports Display this Ad? : </label>
                         <input class="form-control" type="text" name="airportsnumber" value="{{$airport->airportnumber}}" required></div>
+
+                    <div class="form-group">
+                        <label for="airportsnumber">Discount (%): </label>
+                        <input class="form-control" type="text" name="airportdiscount" placeholder="put an integer value for discount like 5 or 10" value="{{$airport->discount}}">
+                    </div>
                     </div>
                 </div>
 
@@ -108,15 +115,34 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
+                        <input type="hidden" name="modelname" id="modelname" value="Airport">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$airport->id}}">
                         <input type="hidden" id="tablename" value="airports">
+                        
                          @foreach($airportpricemeta as $airportprice)
-                         @PHP $p_key = str_replace("_", " ", $airportprice->price_key);
-                             $label =  ucfirst(substr($p_key, 6));
+                         @PHP 
+                             $p_key = str_replace("_", " ", $airportprice->price_key);
+                             $field_name = explode(' ', $p_key);
+                             
+                             switch($field_name[0]){
+                                case 'price';
+                                    $label_field =  ucfirst(substr($p_key, 6));
+                                    $label = "Price for $label_field Airport Ad:";
+                                break;
+                                case 'number';
+                                    $label_field =  ucfirst(substr($p_key, 7));
+                                    $label = "Number of $label_field Airport Ad:";
+                                break;
+                                case 'duration';
+                                    $label_field =  ucfirst(substr($p_key, 9));
+                                    $label = "Duration for $label_field Airport Ad:";
+                                break;
+                             }
+
                          @ENDPHP
                         <div id="p{{$airportprice->price_key}}" class="form-group">
-                            <label for="{{$airportprice->price_key}}">Price for {{$label}} Airport Ad:</label>
+                            <label for="{{$airportprice->price_key}}">{{$label}}</label>
                             <input class="form-control" type="text" name="{{$airportprice->price_key}}" value="{{$airportprice->price_value}}" required>
                         </div>
                         @endforeach
@@ -139,7 +165,7 @@
 		
 		<button type="button" class="action back btn btn-info">Back</button>
 		<button type="button" class="action next btn btn-info">Next</button>
-		<button type="submit" class="action submit btn btn-success">Add Product</button>	
+		<button type="submit" class="action submit btn btn-success">Edit Product</button>	
   	</form>
    
    </div>
@@ -147,7 +173,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice')}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceAirport')}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

@@ -1,5 +1,4 @@
 
-
 $(function(){
     /*$(".error-div").hide();
     $("#register").on('click', function(){
@@ -7,86 +6,60 @@ $(function(){
         $('.modal-title').text(title);
         $("#register-model").modal();
        
-    });
-    $("#submit-register-form").on('click', function(e){
-        e.preventDefault();
-        var gemail = $("#cccemail").val();
-        
-        var firstName = $("#first_name").val();
-        var lastName = $("#last_name").val();
-        var rpassword = $("#password").val();
-        var passwordConfirm = $("#password_confirmation").val();
-        var token = $("input[name=_token]").val();
-        $('.form').validate({ // initialize plugin
-            ignore:":not(:visible)",			
-            rules: {
-                name : "required"
-            },
-        });
-        $.ajax({
-                method: 'POST',
-                url: registerURL,
-                data: {email: gemail, first_name: firstName, last_name: lastName, password: rpassword, password_confirmation: passwordConfirm, _token: token}
-			}).done(function (msg){
-                    $(".error-div").hide();
-					$('.results').html(msg['response']);
-           }).fail(function (error){
-              
-               var errors = $.parseJSON(error.responseText);
-               $(".error-div").show();
-                var htmlerror = '<div class="alert alert-danger error">';
-                $.each(errors, function(index, value) {
-             
-                    htmlerror += '<p>'+value+'</p>'
-                 });
-                htmlerror += '</div>';
-                $(".error-div").html(htmlerror);
-           });
-           
-    });
-    $("#login").on('click', function(){
-        var title = $(this).data('name');
-        $('.modal-title').text(title);
-        $("#login-model").modal();
-    });
-     $("#submit-login-form").on('click', function(){
+    });*/
+   $("#cart").on("change", ".change-cart", function(){
+       $(".error").hide();
+       var index = $(this).attr("data-index");
+       var itemTD = $(this).attr("data-itemkey");
+       var id = $(this).attr("id");
+       var maxValue = Number($(this).val());
+       if(id == 'quantity'){
+           var dbValue = $("#quantity-hidden-"+index).val();
+           if(maxValue <= dbValue){
+             $.ajax({
+					method: 'GET',
+					url: updateCartUrl,
+					data: {item: itemTD, count: maxValue}
+				})
+				.done(function (response){
+                    var subtotalOutput = "<h4>Rs. "+response.subtotal+"</h4>";
+                    $('.subtotal-'+index).html(subtotalOutput);
+                    $('.cart-total').text(response.total);
+				});
+           }else{
+               $(".quantity-error-"+index).show();
+           }
+       }
+       /*if(id === 'duration'){
+           var dbValue = $("#duration-hidden-"+index).val();
+           if(maxValue <= dbValue){
+                 
+                //var subTotal = Number(subTotalTD.attr("data-subtotal"));
+                //var subTotal = Number(subTotalTD.text());
+                //var changeSubtotal =  maxValue * subTotal;
+                //subTotalTD.attr("data-subtotal", changeSubtotal);
+                //subTotalTD.text(changeSubtotal);
+                $.ajax({
+					method: 'GET',
+					url: updateCartUrl,
+					data: {item: itemTD, count: maxValue}
+				})
+				.done(function (msg){
+					//$('.results').html(msg['response']);
+				});
+           }else{
+                $(".duration-error-"+index).show();
+           }
+       }*/
 
-        var gemail = $("#gemail").val();
-        var gpassword = $("#gpassword").val();
-        var token = $("input[name=_token]").val();
-         $('.form').validate({ // initialize plugin
-            ignore:":not(:visible)",			
-            rules: {
-                name : "required"
-            },
-        });
-        $.ajax({
-                method: 'POST',
-                url: loginURL,
-                data: {email: gemail, password: gpassword,  _token: token}
-			}).done(function (msg){
-                $(".error-div").hide();
-				$('.results').html(msg['response']);
-                
-            }).fail(function (error){
-                    var errors = $.parseJSON(error.responseText);
-                     $(".error-div").show();
-                     var htmlerror = '<div class="alert alert-danger error">';
-                    $.each(errors, function(index, value) {
-                        htmlerror += '<p>'+value+'</p>'
-                    });
-                    htmlerror += '</div>';
-                    $(".error-div").html(htmlerror);
+   });
+
+    $("#addClass").click(function () {
+            $('#qnimate').addClass('popup-box-on');
                 });
-		
-});*/
-
-$("#addClass").click(function () {
-          $('#qnimate').addClass('popup-box-on');
-            });
-          
-            $("#removeClass").click(function () {
-          $('#qnimate').removeClass('popup-box-on');
-            });
+            
+                $("#removeClass").click(function () {
+            $('#qnimate').removeClass('popup-box-on');
+    });
 });
 

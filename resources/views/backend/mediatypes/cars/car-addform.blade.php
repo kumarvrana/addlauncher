@@ -86,26 +86,26 @@
             <div class="step-header">Car Display Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Car">
                 @PHP
-                    $bus_options = array('full' => 'Full', 'full_outside_outside' => 'Full Outside only');
+                    $car_options = array('full' => 'Full', 'full_outside_outside' => 'Full Outside only');
                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Car Options</h3></div><div class="panel-body">
                     <div class="form-group">
-                        <label for="bsdbusdisplayisplay">Do you want Full Ad Display On Car? </label>
+                        <label for="cardisplay">Do you want Full Ad Display On Car? </label>
                              
-                    @foreach($bus_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Car Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='busdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @foreach($car_options as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Car Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='cardisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
                     </div> 
-                    <div class="form-group"><label for="bslighting">Do you want lighting options on Car Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="carlighting" type="radio" value="1">Yes</label></div>
+                    <div class="form-group"><label for="bslighting">Do you want lighting options on Car Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="carlighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="carlighting" type="radio" value="1">Yes</label></div>
                     <div class="form-group">
-                        <label for="busesnumber">Numbers Of Car Display this Ad? : </label>
-                        <input class="form-control" type="text" name="carsnumber" required>
+                        <label for="carnumber">Numbers Of Car Display this Ad? : </label>
+                        <input class="form-control" type="text" name="carnumber" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="busesnumber">Discount (%): </label>
+                        <label for="cardiscount">Discount (%): </label>
                         <input class="form-control" type="text" name="cardiscount" placeholder="put an integer value for discount like 5 or 10">
                     </div>
                     </div>

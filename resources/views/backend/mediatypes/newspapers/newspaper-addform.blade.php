@@ -85,28 +85,85 @@
                 
             <div class="step-header">Newspaper General Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Newspaper">
-                @PHP
-                    $bus_options = array('full' => 'Full', 'full_outside_outside' => 'Full Outside only');
-                @ENDPHP
+               
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Newspaper Options</h3></div><div class="panel-body">
+
                     <div class="form-group">
-                        <label for="bsdbusdisplayisplay">Do you want Full Ad Display On Newspaper? </label>
+                        <label for="circulation">Circulation: </label>
+                        <input class="form-control" type="text" name="circulation" placeholder="Enter Circulation">
+                    </div>
+
+                    <div class="form-group">
+                            <label for="language">Languages:</label><input type="hidden" id="languagekey" name="languagekey" value="language" class="form-control"><select class="form-control" name="language" id="language" required=""><option value="0">English</option><option value="1">Hindi</option><option value="2">Punjabi</option><option value="3">Sanskrit</option></select>
+                    </div>
+
+                @PHP 
+                    $newspaper_options = array('page1' => 'Page1', 'page3' => 'Page3','last_page' => 'Last Page','any_page' => 'Any Page',);
+                @ENDPHP
+
+                    <div class="form-group">
+                        <label for="newspaperdisplay">Newspaper Display Options: </label>
                              
-                    @foreach($bus_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Newspaper Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='busdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @foreach($newspaper_options as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Newspaper Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='newspaperdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
                     </div> 
+                      
+                @PHP 
+                    $other_options = array('jacket_front_page' => 'Jacket Front Page', 'jacket_front_insider' => 'Jacket Front Inside','pointer_ad' => 'Pointer Ad','sky_bus' => 'Sky Bus','ear_panel' => 'Ear Panel','half_page' => 'Half Page','quarter_page' => 'Quarter Page','pamphlets' => 'Pamphlets','flyers' => 'Flyers');
+                @ENDPHP
+
+                    <div class="form-group">
+                        <label for="otherdisplay">Other Display Options: </label>
+                             
+                    @foreach($other_options as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Other Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='otherdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @endforeach
+                                       
+                    </div>   
+
+                    @PHP           
+                    $classified_options = array('matrimonial' => 'Matrimonial', 'recruitment' => 'Recruitment','business' => 'Business','property' => 'Property','education' => 'Education','astrology' => 'Astrology','public_notices' => 'Public Notices','services' => 'Services','automobile' => 'Automobile','shopping' => 'Shopping');
+                @ENDPHP
+
+                    <div class="form-group">
+                        <label for="classifieddisplay">Classified Display Options: </label>
+                             
+                    @foreach($classified_options as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Classified Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='classifieddisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @endforeach
+                                       
+                    </div>  
+
+                      @PHP           
+                    $pricing_options = array('per_sq_cm' => 'per sq cm', 'per_day' => 'per Day','per_inserts' => 'per Inserts');
+                @ENDPHP
+
+                    <div class="form-group">
+                        <label for="pricingdisplay">Pricing Options: </label>
+                             
+                    @foreach($pricing_options as $key => $value)
+                        <label class='checkbox-inline'><input data-label='pricing Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='pricingdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @endforeach
+                                       
+                    </div>        
+
+             
+
+
                     
                     <div class="form-group">
-                        <label for="busesnumber">Numbers Of Newspaper Display this Ad? : </label>
-                        <input class="form-control" type="text" name="newspapersnumber" required>
+                        <label for="number">Numbers Of Newspaper Display this Ad? : </label>
+                        <input class="form-control" type="text" name="number" required>
                     </div>
+
+                    
                     
                     <div class="form-group">
-                        <label for="busesnumber">Discount (%): </label>
-                        <input class="form-control" type="text" name="busdiscount" placeholder="put an integer value for discount like 5 or 10">
+                        <label for="discount">Discount (%): </label>
+                        <input class="form-control" type="text" name="discount" placeholder="put an integer value for discount like 5 or 10">
                     </div>
                     </div>
                 </div>

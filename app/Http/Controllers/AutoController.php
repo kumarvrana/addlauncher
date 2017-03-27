@@ -29,9 +29,29 @@ class AutoController extends Controller
     
     public function getfrontAutoad($id)
     {
-        $autoad = Autos::find($id);
-        $autoprice = Autosprice::where('autos_id', $id)->get();
-        return view('frontend-mediatype.autos.auto-single', ['autoad' => $autoad, 'autoprice' => $autoprice]);
+         $autoad = Autos::find($id);
+        //$autoprice = Autosprice::where('autos_id', $id)->get();
+       $autodisplay = Autosprice::where([
+                                    ['autos_id', '=', $id],
+                                    ['option_type', '=', 'display'],
+                                ])->get();
+        $autofrontprdisplay = Autosprice::where([
+                                    ['autos_id', '=', $id],
+                                    ['option_type', '=', 'frontpr'],
+                                ])->get();
+        $autostickerdisplay = Autosprice::where([
+                                    ['autos_id', '=', $id],
+                                    ['option_type', '=', 'sticker'],
+                                ])->get();
+        $autohooddisplay = Autosprice::where([
+                                    ['autos_id', '=', $id],
+                                    ['option_type', '=', 'hood'],
+                                ])->get();
+        $autointeriordisplay = Autosprice::where([
+                                    ['autos_id', '=', $id],
+                                    ['option_type', '=', 'interior'],
+                                ])->get();
+        return view('frontend-mediatype.autos.auto-single', ['autoad' => $autoad, 'auto_display' => $autodisplay, 'auto_frontprdisplay' => $autofrontprdisplay, 'auto_stickerdisplay' => $autostickerdisplay, 'auto_hooddisplay' => $autohooddisplay, 'auto_interiordisplay' => $autointeriordisplay]);
     }
     
     
@@ -109,101 +129,101 @@ class AutoController extends Controller
         //auto display prices insertion
 
    	   if($request->has('price_front')){
-            $this->addAutoPrice($lastinsert_ID, 'price_front', $request->input('price_front'));
+            $this->addAutoPrice($lastinsert_ID, 'price_front', $request->input('price_front'), 'display');
         }
       
        if($request->has('number_front')){
-            $this->addAutoPrice($lastinsert_ID, 'number_front', $request->input('number_front'));
+            $this->addAutoPrice($lastinsert_ID, 'number_front', $request->input('number_front'), 'display');
         }
 
        if($request->has('duration_front')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_front', $request->input('duration_front'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_front', $request->input('duration_front'), 'display');
         }
 
 
 
         if($request->has('price_back')){
-            $this->addAutoPrice($lastinsert_ID, 'price_back', $request->input('price_back'));
+            $this->addAutoPrice($lastinsert_ID, 'price_back', $request->input('price_back'), 'display');
         }
         if($request->has('number_back')){
-            $this->addAutoPrice($lastinsert_ID, 'number_back', $request->input('number_back'));
+            $this->addAutoPrice($lastinsert_ID, 'number_back', $request->input('number_back'), 'display');
         }
         if($request->has('duration_back')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_back', $request->input('duration_back'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_back', $request->input('duration_back'), 'display');
         }
 
 
 
 
         if($request->has('price_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'price_hood', $request->input('price_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'price_hood', $request->input('price_hood'), 'display');
         }
          if($request->has('number_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'number_hood', $request->input('number_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'number_hood', $request->input('number_hood'), 'display');
         }
       
        if($request->has('duration_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_hood', $request->input('duration_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_hood', $request->input('duration_hood'), 'display');
         }
 
 
 
       
        if($request->has('price_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'price_interior', $request->input('price_interior'));
+            $this->addAutoPrice($lastinsert_ID, 'price_interior', $request->input('price_interior'), 'display');
         }
       
        if($request->has('number_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'number_interior', $request->input('number_interior'));
+            $this->addAutoPrice($lastinsert_ID, 'number_interior', $request->input('number_interior'), 'display');
         }
 
       if($request->has('duration_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_interior', $request->input('duration_interior'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_interior', $request->input('duration_interior'), 'display');
         }
 
 
         
       
        if($request->has('price_large_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'price_large_pamphlets', $request->input('price_large_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'price_large_pamphlets', $request->input('price_large_pamphlets'), 'frontpr');
         }
       
        if($request->has('number_large_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'number_large_pamphlets', $request->input('number_large_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'number_large_pamphlets', $request->input('number_large_pamphlets'), 'frontpr');
         }
 
       if($request->has('duration_large_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_large_pamphlets', $request->input('duration_large_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_large_pamphlets', $request->input('duration_large_pamphlets'), 'frontpr');
         }
 
 
         
       
        if($request->has('price_medium_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'price_medium_pamphlets', $request->input('price_medium_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'price_medium_pamphlets', $request->input('price_medium_pamphlets'), 'frontpr');
         }
       
        if($request->has('number_medium_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'number_medium_pamphlets', $request->input('number_medium_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'number_medium_pamphlets', $request->input('number_medium_pamphlets'), 'frontpr');
         }
 
       if($request->has('duration_medium_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_medium_pamphlets', $request->input('duration_medium_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_medium_pamphlets', $request->input('duration_medium_pamphlets'), 'frontpr');
         }
 
 
         
       
        if($request->has('price_small_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'price_small_pamphlets', $request->input('price_small_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'price_small_pamphlets', $request->input('price_small_pamphlets'), 'frontpr');
         }
       
        if($request->has('number_small_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'number_small_pamphlets', $request->input('number_small_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'number_small_pamphlets', $request->input('number_small_pamphlets'), 'frontpr');
         }
 
       if($request->has('duration_small_pamphlets')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_small_pamphlets', $request->input('duration_small_pamphlets'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_small_pamphlets', $request->input('duration_small_pamphlets'), 'frontpr');
         }
 
 
@@ -211,120 +231,119 @@ class AutoController extends Controller
         
       
        if($request->has('price_medium_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'price_medium_front_sticker', $request->input('price_medium_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'price_medium_front_sticker', $request->input('price_medium_front_sticker'), 'sticker');
         }
       
        if($request->has('number_medium_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'number_medium_front_sticker', $request->input('number_medium_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'number_medium_front_sticker', $request->input('number_medium_front_sticker'), 'sticker');
         }
 
       if($request->has('duration_medium_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_medium_front_sticker', $request->input('duration_medium_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_medium_front_sticker', $request->input('duration_medium_front_sticker'), 'sticker');
         }
 
 
         
       
        if($request->has('price_small_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'price_small_front_sticker', $request->input('price_small_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'price_small_front_sticker', $request->input('price_small_front_sticker'), 'sticker');
         }
       
        if($request->has('number_small_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'number_small_front_sticker', $request->input('number_small_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'number_small_front_sticker', $request->input('number_small_front_sticker'), 'sticker');
         }
 
       if($request->has('duration_small_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_small_front_sticker', $request->input('duration_small_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_small_front_sticker', $request->input('duration_small_front_sticker'), 'sticker');
         }
 
 
         
       
        if($request->has('price_large_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'price_large_front_sticker', $request->input('price_large_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'price_large_front_sticker', $request->input('price_large_front_sticker'), 'sticker');
         }
       
        if($request->has('number_large_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'number_large_front_sticker', $request->input('number_large_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'number_large_front_sticker', $request->input('number_large_front_sticker'), 'sticker');
         }
 
       if($request->has('duration_large_front_sticker')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_large_front_sticker', $request->input('duration_large_front_sticker'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_large_front_sticker', $request->input('duration_large_front_sticker'), 'sticker');
         }
 
 
         
       
        if($request->has('price_full_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'price_full_auto_hood', $request->input('price_full_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'price_full_auto_hood', $request->input('price_full_auto_hood'), 'hood');
         }
       
        if($request->has('number_full_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'number_full_auto_hood', $request->input('number_full_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'number_full_auto_hood', $request->input('number_full_auto_hood'), 'hood');
         }
 
       if($request->has('duration_full_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_full_auto_hood', $request->input('duration_full_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_full_auto_hood', $request->input('duration_full_auto_hood'), 'hood');
         }
 
 
-        
-      
-       if($request->has('price_driver_seat_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'price_driver_seat_interior', $request->input('price_driver_seat_interior'));
-        }
-      
-       if($request->has('number_driver_seat_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'number_driver_seat_interior', $request->input('number_driver_seat_interior'));
-        }
-
-      if($request->has('duration_driver_seat_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_driver_seat_interior', $request->input('duration_driver_seat_interior'));
-        }
-
-
-        
+            
       
        if($request->has('price_left_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'price_left_auto_hood', $request->input('price_left_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'price_left_auto_hood', $request->input('price_left_auto_hood'), 'hood');
         }
       
        if($request->has('number_left_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'number_left_auto_hood', $request->input('number_left_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'number_left_auto_hood', $request->input('number_left_auto_hood'), 'hood');
         }
 
       if($request->has('duration_left_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_left_auto_hood', $request->input('duration_left_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_left_auto_hood', $request->input('duration_left_auto_hood'), 'hood');
         }
 
 
         
       
        if($request->has('price_right_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'price_right_auto_hood', $request->input('price_right_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'price_right_auto_hood', $request->input('price_right_auto_hood'), 'hood');
         }
       
        if($request->has('number_right_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'number_right_auto_hood', $request->input('number_right_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'number_right_auto_hood', $request->input('number_right_auto_hood'), 'hood');
         }
 
       if($request->has('duration_right_auto_hood')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_right_auto_hood', $request->input('duration_right_auto_hood'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_right_auto_hood', $request->input('duration_right_auto_hood'), 'hood');
         }
 
 
         
       
        if($request->has('price_roof_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'price_roof_interior', $request->input('price_roof_interior'));
+            $this->addAutoPrice($lastinsert_ID, 'price_roof_interior', $request->input('price_roof_interior'), 'interior');
         }
       
        if($request->has('number_roof_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'number_roof_interior', $request->input('number_roof_interior'));
+            $this->addAutoPrice($lastinsert_ID, 'number_roof_interior', $request->input('number_roof_interior'), 'interior');
         }
 
       if($request->has('duration_roof_interior')){
-            $this->addAutoPrice($lastinsert_ID, 'duration_roof_interior', $request->input('duration_roof_interior'));
+            $this->addAutoPrice($lastinsert_ID, 'duration_roof_interior', $request->input('duration_roof_interior'), 'interior');
+        }
+
+
+
+       if($request->has('price_driver_seat_interior')){
+            $this->addAutoPrice($lastinsert_ID, 'price_driver_seat_interior', $request->input('price_driver_seat_interior'), 'interior');
+        }
+      
+       if($request->has('number_driver_seat_interior')){
+            $this->addAutoPrice($lastinsert_ID, 'number_driver_seat_interior', $request->input('number_driver_seat_interior'), 'interior');
+        }
+
+      if($request->has('duration_driver_seat_interior')){
+            $this->addAutoPrice($lastinsert_ID, 'duration_driver_seat_interior', $request->input('duration_driver_seat_interior'), 'interior');
         }
       
       
@@ -335,13 +354,14 @@ class AutoController extends Controller
     }
 
     //insert price data to auto price table
-    public function addAutoPrice($id, $key, $value)
+    public function addAutoPrice($id, $key, $value, $type)
     {
         $insert = new Autosprice();
 
         $insert->autos_id = $id;
         $insert->price_key = $key;
         $insert->price_value = $value;
+         $insert->option_type = $type;
        
         $insert->save();
 
@@ -355,11 +375,7 @@ class AutoController extends Controller
         $delele_autoad->delete();
         $delete_autoadprice = Autosprice::where('autos_id', $autoadID);
         $delete_autoadprice->delete();
-        // $delete_product = Product::where([
-        //                             ['media_id', '=', $autoadID],
-        //                             ['media_type', '=', 'Autos'],
-        //                         ])->first();
-        // $delete_product->delete();
+        
         return redirect()->route('dashboard.getAutoList')->with(['message' => "Successfully Deleted From the List!"]);
     }
 
@@ -370,25 +386,50 @@ class AutoController extends Controller
         $autopriceData = Autosprice::where('autos_id', $ID)->get();
         $fieldData = array();
         foreach($autopriceData as $priceauto){
-           $fieldData[] = ucwords(substr(str_replace("_", " ", $priceauto->price_key), 6));
+           $fieldData[] = $priceauto->price_key;
         }
-       $fieldData = serialize($fieldData);
-        return view('backend.mediatypes.autos.auto-editform', ['auto' => $autoData, 'autopricemeta' => $autopriceData, 'fieldData' => $fieldData]);
+       $name_key = array_chunk($fieldData, 3);
+        $datta = array();
+         $j = 0; 
+		foreach($name_key as $options){
+			$datta[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
+			$j++;
+		}
+       $fieldDatas = serialize($datta);
+        return view('backend.mediatypes.autos.auto-editform', ['auto' => $autoData, 'autopricemeta' => $autopriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
     public function getuncheckAutoadOptions(Request $request)
     {
+       
+       $displayoptions = json_decode($request['displayoptions']);
+       $datta = array();
+        foreach($displayoptions as $options){
+			$datta[] = strtolower(str_replace(' ', '_', $options));
+		
+		}
+       
         $count = Autosprice::where([
                                     ['autos_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
         if($count > 0){
-            Autos::where('id', $request['id'])->update(['display_options' => serialize($request['displayoptions'])]);
+            Autos::where('id', $request['id'])->update([$request['option_type'] => serialize($datta)]);
             $autos = Autosprice::where([
                                     ['autos_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
             $autos->delete();
+            $autosnumber = Autosprice::where([
+                                    ['autos_id', '=', $request['id']],
+                                    ['price_key', '=', $request['number_key']]
+                                ])->first();
+            $autosnumber->delete();
+            $autosduration = Autosprice::where([
+                                    ['autos_id', '=', $request['id']],
+                                    ['price_key', '=', $request['duration_key']]
+                                ])->first();
+            $autosduration->delete();
             return response(['msg' => 'price deleted'], 200);
         }
               
@@ -398,6 +439,7 @@ class AutoController extends Controller
 
     public function postUpdateeAutoad(Request $request, $ID)
     {
+
        $this->validate( $request, [
            'title' => 'required',
            'price' => 'numeric',
@@ -426,12 +468,14 @@ class AutoController extends Controller
          $editauto->front_stickers_options = serialize($request->input('autostickerdisplay'));
          $editauto->hood_options = serialize($request->input('autohooddisplay'));
          $editauto->interior_options = serialize($request->input('autointeriordisplay'));
+         $editauto->light_option = $request->input('autolighting');
          $editauto->auto_number = $request->input('autosnumber');
+         $editauto->discount = $request->input('autodiscount');
 
         if($request->hasFile('image')){
             $file = $request->file('image');
             $filename = time() .'.'. $file->getClientOriginalExtension();
-            $location = public_path("images\buses\\" . $filename);
+            $location = public_path("images\autos\\" . $filename);
             Image::make($file)->resize(800, 400)->save($location);
             $oldimage = $editauto->image;
             $editauto->image = $filename;
@@ -442,101 +486,101 @@ class AutoController extends Controller
         //auto display prices insertion
 
        if($request->has('price_front')){
-            $this->updateAutoPrice($ID, 'price_front', $request->input('price_front'));
+            $this->updateAutoPrice($ID, 'price_front', $request->input('price_front'), 'display');
         }
       
        if($request->has('number_front')){
-            $this->updateAutoPrice($ID, 'number_front', $request->input('number_front'));
+            $this->updateAutoPrice($ID, 'number_front', $request->input('number_front'), 'display');
         }
 
        if($request->has('duration_front')){
-            $this->updateAutoPrice($ID, 'duration_front', $request->input('duration_front'));
+            $this->updateAutoPrice($ID, 'duration_front', $request->input('duration_front'), 'display');
         }
 
 
 
         if($request->has('price_back')){
-            $this->updateAutoPrice($ID, 'price_back', $request->input('price_back'));
+            $this->updateAutoPrice($ID, 'price_back', $request->input('price_back'), 'display');
         }
         if($request->has('number_back')){
-            $this->updateAutoPrice($ID, 'number_back', $request->input('number_back'));
+            $this->updateAutoPrice($ID, 'number_back', $request->input('number_back'), 'display');
         }
         if($request->has('duration_back')){
-            $this->updateAutoPrice($ID, 'duration_back', $request->input('duration_back'));
+            $this->updateAutoPrice($ID, 'duration_back', $request->input('duration_back'), 'display');
         }
 
 
 
 
         if($request->has('price_hood')){
-            $this->updateAutoPrice($ID, 'price_hood', $request->input('price_hood'));
+            $this->updateAutoPrice($ID, 'price_hood', $request->input('price_hood'), 'display');
         }
          if($request->has('number_hood')){
-            $this->updateAutoPrice($ID, 'number_hood', $request->input('number_hood'));
+            $this->updateAutoPrice($ID, 'number_hood', $request->input('number_hood'), 'display');
         }
       
        if($request->has('duration_hood')){
-            $this->updateAutoPrice($ID, 'duration_hood', $request->input('duration_hood'));
+            $this->updateAutoPrice($ID, 'duration_hood', $request->input('duration_hood'), 'display');
         }
 
 
 
       
        if($request->has('price_interior')){
-            $this->updateAutoPrice($ID, 'price_interior', $request->input('price_interior'));
+            $this->updateAutoPrice($ID, 'price_interior', $request->input('price_interior'), 'display');
         }
       
        if($request->has('number_interior')){
-            $this->updateAutoPrice($ID, 'number_interior', $request->input('number_interior'));
+            $this->updateAutoPrice($ID, 'number_interior', $request->input('number_interior'), 'display');
         }
 
       if($request->has('duration_interior')){
-            $this->updateAutoPrice($ID, 'duration_interior', $request->input('duration_interior'));
+            $this->updateAutoPrice($ID, 'duration_interior', $request->input('duration_interior'), 'display');
         }
 
 
         
       
        if($request->has('price_large_pamphlets')){
-            $this->updateAutoPrice($ID, 'price_large_pamphlets', $request->input('price_large_pamphlets'));
+            $this->updateAutoPrice($ID, 'price_large_pamphlets', $request->input('price_large_pamphlets'), 'frontpr');
         }
       
        if($request->has('number_large_pamphlets')){
-            $this->updateAutoPrice($ID, 'number_large_pamphlets', $request->input('number_large_pamphlets'));
+            $this->updateAutoPrice($ID, 'number_large_pamphlets', $request->input('number_large_pamphlets'), 'frontpr');
         }
 
       if($request->has('duration_large_pamphlets')){
-            $this->updateAutoPrice($ID, 'duration_large_pamphlets', $request->input('duration_large_pamphlets'));
+            $this->updateAutoPrice($ID, 'duration_large_pamphlets', $request->input('duration_large_pamphlets'), 'frontpr');
         }
 
 
         
       
        if($request->has('price_medium_pamphlets')){
-            $this->updateAutoPrice($ID, 'price_medium_pamphlets', $request->input('price_medium_pamphlets'));
+            $this->updateAutoPrice($ID, 'price_medium_pamphlets', $request->input('price_medium_pamphlets'), 'frontpr');
         }
       
        if($request->has('number_medium_pamphlets')){
-            $this->updateAutoPrice($ID, 'number_medium_pamphlets', $request->input('number_medium_pamphlets'));
+            $this->updateAutoPrice($ID, 'number_medium_pamphlets', $request->input('number_medium_pamphlets'), 'frontpr');
         }
 
       if($request->has('duration_medium_pamphlets')){
-            $this->updateAutoPrice($ID, 'duration_medium_pamphlets', $request->input('duration_medium_pamphlets'));
+            $this->updateAutoPrice($ID, 'duration_medium_pamphlets', $request->input('duration_medium_pamphlets'), 'frontpr');
         }
 
 
         
       
        if($request->has('price_small_pamphlets')){
-            $this->updateAutoPrice($ID, 'price_small_pamphlets', $request->input('price_small_pamphlets'));
+            $this->updateAutoPrice($ID, 'price_small_pamphlets', $request->input('price_small_pamphlets'), 'frontpr');
         }
       
        if($request->has('number_small_pamphlets')){
-            $this->updateAutoPrice($ID, 'number_small_pamphlets', $request->input('number_small_pamphlets'));
+            $this->updateAutoPrice($ID, 'number_small_pamphlets', $request->input('number_small_pamphlets'), 'frontpr');
         }
 
       if($request->has('duration_small_pamphlets')){
-            $this->updateAutoPrice($ID, 'duration_small_pamphlets', $request->input('duration_small_pamphlets'));
+            $this->updateAutoPrice($ID, 'duration_small_pamphlets', $request->input('duration_small_pamphlets'), 'frontpr');
         }
 
 
@@ -544,135 +588,131 @@ class AutoController extends Controller
         
       
        if($request->has('price_medium_front_sticker')){
-            $this->updateAutoPrice($ID, 'price_medium_front_sticker', $request->input('price_medium_front_sticker'));
+            $this->updateAutoPrice($ID, 'price_medium_front_sticker', $request->input('price_medium_front_sticker'), 'sticker');
         }
       
        if($request->has('number_medium_front_sticker')){
-            $this->updateAutoPrice($ID, 'number_medium_front_sticker', $request->input('number_medium_front_sticker'));
+            $this->updateAutoPrice($ID, 'number_medium_front_sticker', $request->input('number_medium_front_sticker'), 'sticker');
         }
 
       if($request->has('duration_medium_front_sticker')){
-            $this->updateAutoPrice($ID, 'duration_medium_front_sticker', $request->input('duration_medium_front_sticker'));
+            $this->updateAutoPrice($ID, 'duration_medium_front_sticker', $request->input('duration_medium_front_sticker'), 'sticker');
         }
 
 
         
       
        if($request->has('price_small_front_sticker')){
-            $this->updateAutoPrice($ID, 'price_small_front_sticker', $request->input('price_small_front_sticker'));
+            $this->updateAutoPrice($ID, 'price_small_front_sticker', $request->input('price_small_front_sticker'), 'sticker');
         }
       
        if($request->has('number_small_front_sticker')){
-            $this->updateAutoPrice($ID, 'number_small_front_sticker', $request->input('number_small_front_sticker'));
+            $this->updateAutoPrice($ID, 'number_small_front_sticker', $request->input('number_small_front_sticker'), 'sticker');
         }
 
       if($request->has('duration_small_front_sticker')){
-            $this->updateAutoPrice($ID, 'duration_small_front_sticker', $request->input('duration_small_front_sticker'));
+            $this->updateAutoPrice($ID, 'duration_small_front_sticker', $request->input('duration_small_front_sticker'), 'sticker');
         }
 
 
         
       
        if($request->has('price_large_front_sticker')){
-            $this->updateAutoPrice($ID, 'price_large_front_sticker', $request->input('price_large_front_sticker'));
+            $this->updateAutoPrice($ID, 'price_large_front_sticker', $request->input('price_large_front_sticker'), 'sticker');
         }
       
        if($request->has('number_large_front_sticker')){
-            $this->updateAutoPrice($ID, 'number_large_front_sticker', $request->input('number_large_front_sticker'));
+            $this->updateAutoPrice($ID, 'number_large_front_sticker', $request->input('number_large_front_sticker'), 'sticker');
         }
 
       if($request->has('duration_large_front_sticker')){
-            $this->updateAutoPrice($ID, 'duration_large_front_sticker', $request->input('duration_large_front_sticker'));
+            $this->updateAutoPrice($ID, 'duration_large_front_sticker', $request->input('duration_large_front_sticker'), 'sticker');
         }
 
 
         
       
        if($request->has('price_full_auto_hood')){
-            $this->updateAutoPrice($ID, 'price_full_auto_hood', $request->input('price_full_auto_hood'));
+            $this->updateAutoPrice($ID, 'price_full_auto_hood', $request->input('price_full_auto_hood'), 'hood');
         }
       
        if($request->has('number_full_auto_hood')){
-            $this->updateAutoPrice($ID, 'number_full_auto_hood', $request->input('number_full_auto_hood'));
+            $this->updateAutoPrice($ID, 'number_full_auto_hood', $request->input('number_full_auto_hood'), 'hood');
         }
 
       if($request->has('duration_full_auto_hood')){
-            $this->updateAutoPrice($ID, 'duration_full_auto_hood', $request->input('duration_full_auto_hood'));
+            $this->updateAutoPrice($ID, 'duration_full_auto_hood', $request->input('duration_full_auto_hood'), 'hood');
         }
 
 
-        
-      
-       if($request->has('price_driver_seat_interior')){
-            $this->updateAutoPrice($ID, 'price_driver_seat_interior', $request->input('price_driver_seat_interior'));
-        }
-      
-       if($request->has('number_driver_seat_interior')){
-            $this->updateAutoPrice($ID, 'number_driver_seat_interior', $request->input('number_driver_seat_interior'));
-        }
-
-      if($request->has('duration_driver_seat_interior')){
-            $this->updateAutoPrice($ID, 'duration_driver_seat_interior', $request->input('duration_driver_seat_interior'));
-        }
-
-
-        
       
        if($request->has('price_left_auto_hood')){
-            $this->updateAutoPrice($ID, 'price_left_auto_hood', $request->input('price_left_auto_hood'));
+            $this->updateAutoPrice($ID, 'price_left_auto_hood', $request->input('price_left_auto_hood'), 'hood');
         }
       
        if($request->has('number_left_auto_hood')){
-            $this->updateAutoPrice($ID, 'number_left_auto_hood', $request->input('number_left_auto_hood'));
+            $this->updateAutoPrice($ID, 'number_left_auto_hood', $request->input('number_left_auto_hood'), 'hood');
         }
 
       if($request->has('duration_left_auto_hood')){
-            $this->updateAutoPrice($ID, 'duration_left_auto_hood', $request->input('duration_left_auto_hood'));
+            $this->updateAutoPrice($ID, 'duration_left_auto_hood', $request->input('duration_left_auto_hood'), 'hood');
         }
 
 
         
       
        if($request->has('price_right_auto_hood')){
-            $this->updateAutoPrice($ID, 'price_right_auto_hood', $request->input('price_right_auto_hood'));
+            $this->updateAutoPrice($ID, 'price_right_auto_hood', $request->input('price_right_auto_hood'), 'hood');
         }
       
        if($request->has('number_right_auto_hood')){
-            $this->updateAutoPrice($ID, 'number_right_auto_hood', $request->input('number_right_auto_hood'));
+            $this->updateAutoPrice($ID, 'number_right_auto_hood', $request->input('number_right_auto_hood'), 'hood');
         }
 
       if($request->has('duration_right_auto_hood')){
-            $this->updateAutoPrice($ID, 'duration_right_auto_hood', $request->input('duration_right_auto_hood'));
+            $this->updateAutoPrice($ID, 'duration_right_auto_hood', $request->input('duration_right_auto_hood'), 'hood');
         }
 
 
         
       
        if($request->has('price_roof_interior')){
-            $this->updateAutoPrice($ID, 'price_roof_interior', $request->input('price_roof_interior'));
+            $this->updateAutoPrice($ID, 'price_roof_interior', $request->input('price_roof_interior'), 'interior');
         }
       
        if($request->has('number_roof_interior')){
-            $this->updateAutoPrice($ID, 'number_roof_interior', $request->input('number_roof_interior'));
+            $this->updateAutoPrice($ID, 'number_roof_interior', $request->input('number_roof_interior'), 'interior');
         }
 
       if($request->has('duration_roof_interior')){
-            $this->updateAutoPrice($ID, 'duration_roof_interior', $request->input('duration_roof_interior'));
+            $this->updateAutoPrice($ID, 'duration_roof_interior', $request->input('duration_roof_interior'), 'interior');
         }
 
-        
+         
+       if($request->has('price_driver_seat_interior')){
+            $this->updateAutoPrice($ID, 'price_driver_seat_interior', $request->input('price_driver_seat_interior'), 'interior');
+        }
+      
+       if($request->has('number_driver_seat_interior')){
+            $this->updateAutoPrice($ID, 'number_driver_seat_interior', $request->input('number_driver_seat_interior'), 'interior');
+        }
+
+      if($request->has('duration_driver_seat_interior')){
+            $this->updateAutoPrice($ID, 'duration_driver_seat_interior', $request->input('duration_driver_seat_interior'), 'interior');
+        }
+
 
         //return to auto product list
        return redirect()->route('dashboard.getAutoList')->with('message', 'Successfully Edited!');
     }
 
-    public function updateAutoPrice( $id, $meta_key, $meta_value){
+    public function updateAutoPrice( $id, $meta_key, $meta_value, $type){
         $count = Autosprice::where([
                                     ['autos_id', '=', $id],
                                     ['price_key', '=', $meta_key],
                                 ])->count();
         if($count < 1){
-            $this->addAutoPrice($id, $meta_key, $meta_value);
+            $this->addAutoPrice($id, $meta_key, $meta_value, $type);
         }else{
             $update = Autosprice::where([
                                     ['autos_id', '=', $id],
@@ -689,11 +729,58 @@ class AutoController extends Controller
         $auto_ad = Autos::where('id', $id)->first()->toArray();
         
         $selectDisplayOpt = explode("+", $variation);
+        $main_key = substr($selectDisplayOpt[1], 6);
+        
+        $number_key = "number_".$main_key;
+        $duration_key = "duration_".$main_key;
+
         $auto_price = Autosprice::where([
                                     ['autos_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
+        $auto_number = Autosprice::where([
+                                    ['autos_id', '=', $id],
+                                    ['price_key', '=', $number_key],
+                                ])->first()->toArray();
+        $auto_duration = Autosprice::where([
+                                    ['autos_id', '=', $id],
+                                    ['price_key', '=', $duration_key],
+                                ])->first()->toArray();
+        $auto_change_price = array();
+        foreach($auto_price as $key => $value){
+            if($key == 'price_key'){
+                $auto_change_price[$key] = $value;
+            }
+            if($key == 'price_value'){
+               $auto_change_price[$key] = $value;
+            }
+        }
+        $auto_change_num = array();
+        foreach($auto_number as $key => $value){
+            if($key == 'price_key'){
+                $key = 'number_key';
+                $auto_change_num[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'number_value';
+                $auto_change_num[$key] = $value;
+            }
+        }
+        $auto_change_duration = array();
+        foreach($auto_duration as $key => $value){
+            if($key == 'price_key'){
+                $key = 'duration_key';
+                $auto_change_duration[$key] = $value;
+            }
+            if($key == 'price_value'){
+                $key = 'duration_value';
+                $auto_change_duration[$key] = $value;
+            }
+        }
+        $auto_merge = array_merge($auto_change_num, $auto_change_duration);
         
+        $auto_price = array_merge($auto_change_price, $auto_merge);
+
         $auto_Ad = array_merge($auto_ad, $auto_price);
        
         $oldCart = Session::has('cart') ? Session::get('cart') : null;

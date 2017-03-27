@@ -19,6 +19,6 @@ class UserMiddleware
          if(Sentinel::check() && Sentinel::getUser()->roles()->first()->slug == 'site-user')
             return $next($request);
         else
-            return redirect('/');
+            return redirect()->route('user.signin');
     }
 }

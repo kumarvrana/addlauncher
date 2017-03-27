@@ -98,7 +98,8 @@
                     @endforeach
                                        
                     </div> 
-                    <div class="form-group"><label for="bslighting">Do you want lighting options on Billboard Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="billboardlighting" type="radio" value="1">Yes</label></div>
+                    <div class="form-group"><label for="bslighting">Do you want lighting options on Billboard Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="billboardlighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="billboardlighting" type="radio" value="1">Yes</label></div>
+                    
                     <div class="form-group">
                         <label for="billboardsnumber">Numbers Of Billboard Display this Ad? : </label>
                         <input class="form-control" type="text" name="billboardsnumber" required>

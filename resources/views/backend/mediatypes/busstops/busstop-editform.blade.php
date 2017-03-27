@@ -84,7 +84,7 @@
 		<div class="step">
             <div class="step-header">Busstops Ad Options</div>
                @PHP
-                    $busstop_options = array('full' => 'Full', 'both_side' => 'Both Side', 'left_side' => 'Left Side', 'right_side' => 'Right Side', 'back_side' => 'Back Side', 'back_glass' => 'Back Glass', 'internal_ceiling' => 'Internal Ceiling', 'bus_grab_handles' => 'Bus Stop Grab Handles', 'inside_billboards' => 'Inside Billboards');
+                    $busstop_options = array('full' => 'Full', 'roof_front' => 'Roof Front', 'seat_backs' => 'Seat Backs', 'side_boards' => 'Side Boards');
                      $bsdisplayData = unserialize($busstop->display_options);
                 @ENDPHP
                 <div class="panel panel-primary">
@@ -97,9 +97,12 @@
                     @endforeach
                                        
                     </div>
+
+                     <div class="form-group"><label for="bslighting">Do you want lighting options on Busstop Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" @PHP if($busstop->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="bslighting" type="radio" @PHP if($busstop->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
+
                     <div class="form-group">
                         <label for="busstopsnumber">Numbers Of Busstops Display this Ad? : </label>
-                        <input class="form-control" type="text" name="busstopsnumber" value="{{$busstop->busnumber}}" required></div>
+                        <input class="form-control" type="text" name="busstopsnumber" value="{{$busstop->stopinnumber}}" required></div>
                     </div>
 
                     <div class="form-group">
@@ -116,12 +119,30 @@
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$busstop->id}}">
                         <input type="hidden" id="tablename" value="busstops">
+
                          @foreach($busstoppricemeta as $busstopprice)
-                         @PHP $p_key = str_replace("_", " ", $busstopprice->price_key);
-                             $label =  ucfirst(substr($p_key, 6));
+                         @PHP 
+                             $p_key = str_replace("_", " ", $busstopprice->price_key);
+                             $field_name = explode(' ', $p_key);
+                             
+                             switch($field_name[0]){
+                                case 'price';
+                                    $label_field =  ucfirst(substr($p_key, 6));
+                                    $label = "Price for $label_field Busstop Ad:";
+                                break;
+                                case 'number';
+                                    $label_field =  ucfirst(substr($p_key, 7));
+                                    $label = "Number of $label_field Busstop Ad:";
+                                break;
+                                case 'duration';
+                                    $label_field =  ucfirst(substr($p_key, 9));
+                                    $label = "Duration for $label_field Busstop Ad:";
+                                break;
+                             }
+
                          @ENDPHP
                         <div id="p{{$busstopprice->price_key}}" class="form-group">
-                            <label for="{{$busstopprice->price_key}}">Price for {{$label}} Bus Stop Ad:</label>
+                            <label for="{{$busstopprice->price_key}}">{{$label}}</label>
                             <input class="form-control" type="text" name="{{$busstopprice->price_key}}" value="{{$busstopprice->price_value}}" required>
                         </div>
                         @endforeach
@@ -152,7 +173,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice')}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceBusstop')}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection
