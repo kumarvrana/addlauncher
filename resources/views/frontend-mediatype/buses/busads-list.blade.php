@@ -16,92 +16,53 @@
             </div>
         </div>
         @endif
-        <div class="container-fluid con-2-main"> <!-- container fluid 1 starts here -->
-            <div class="row"> <!-- row starts here -->
-                <div class="col-md-3">
-                  @include('partials.sidebar')
-                </div>
+<section class="sec-banner">
+     <div class="jumbotron jumbo-1 text-center">
+         <h1><small>&emsp;ADVERTISE ON</small> <br><span>BUSES</span></h1>
+     </div>
+</section>       
+<section class="main-sec">
+    <div class="container-fluid"> {{-- container fluid 1 starts here --}}
+        <div class="row"> {{-- row starts here --}}
+            <div class="col-md-2">
+                @include('partials.sidebar')
+            </div>
 
-                <div class="col-md-9">
-                    <h2>Result Found:</h2>
-           
+            <div class="col-md-8">
+              <div class="ad-sec">  
+                <div class="loader" style="display:none"><img class="img-responsive" src="{{asset('images/logo/loading.gif')}}"/></div>
+                <div class="row" id="table-results"> <!-- row repeater starts here -->
+                    @PHP
+                        $bus_options = array('full' => 'Full', 'both_side' => 'Both Side', 'left_side' => 'Left Side', 'right_side' => 'Right Side', 'back_side' => 'Back Side', 'back_glass' => 'Back Glass ', 'internal_ceiling' => 'Internal Ceiling', 'bus_grab_handles' => 'Bus Grab Handles', 'inside_billboards' => 'Inside Billboards');
+                    @ENDPHP
 
-                  <div class="row"> <!-- row repeater starts here -->
-                    
-             @foreach( $products->chunk(3) as $productchunk)
-                       @foreach( $productchunk as $product)
+                    @foreach($bus_options as $key => $value)
                         @PHP
-                            if($product->status){
-                                switch($product->status){
-                                    case 1:
-                                        $status = 'Available';
-                                    break;
-                                    case 2:
-                                        $status = 'Sold Out';
-                                    break;
-                                    case 3:
-                                        $status = 'Coming Soon';
-                                    break;
-                                }
-                            }
-                            $st_class= strtolower(str_replace(' ','_', $status));
-                             
-                      if($status!='Available')  {
-                      @ENDPHP
+                            $image = $key.".jpg";
+                        @ENDPHP
                     <div class="col-md-3">
                         <div class="owl-item active">
                             <div class="single-product">
                                 <div class="product-img">
-                                        <img class="second-img" src="{{asset('images/buses/'.$product->image)}}" alt="product">
+                                        <img class="second-img {{$key}}" src="{{asset('images/buses/'.$image)}}" alt="{{$key}}">
                                 </div>
                                 <div class="products-desc">
                                     
-                                    <div class="product-price"><span>{{$product->title}}</span></div>
+                                    <div class="product-price"><span>{{$value}}</span></div>
                                     <hr>
                                     <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
+                                        Delhi NCR
                                     </div>
                                 </div>
-                                <div class="product-mark {{$st_class}}">{{$status}}</div>
+                                <div class="product-mark"></div>
                                 <div class="product-hover">
-                                    <div class="add-to-cart {{$st_class}}"><span class="fa fa-ban"></span> {{$status}}</div>
+                                    <div class="add-to-cart"><a href="{{ route('frontend.getfrontBusadByOption', ['busOption' => $key]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    @PHP }
-
-                    else { @ENDPHP
-
-                    <div class="col-md-3">
-                        <div class="owl-item active">
-                            <div class="single-product">
-                                <div class="product-img">
-                                        <img class="second-img" src="{{asset('images/buses/'.$product->image)}}" alt="product">
-                                </div>
-                                <div class="products-desc">
-                                    
-                                    <div class="product-price"><span>{{$product->title}}</span></div>
-                                    <hr>
-                                    <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
-                                    </div>
-                                </div>
-                                <div class="product-mark {{$st_class}}">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{ route('frontend.bussingle', ['id' => $product->id]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @PHP } @ENDPHP
-
-              @endforeach
-        @endforeach
-        
-          </div> <!-- row repeater ends here -->
+                    @endforeach
+                </div>  <!-- row repeater ends here -->
            
         </div>
         </div><!-- row ends here -->

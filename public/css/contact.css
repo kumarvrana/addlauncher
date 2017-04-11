@@ -1,0 +1,416 @@
+/**
+*
+* Contents
+* 
+* 01. General Styles
+* 02. Buttons
+* 03. Forms
+* 04. Alerts
+* 05. Progress Bar
+* 06. Header
+* 07. Footer
+* 08. Social Icons
+* 09. Sections
+* 10. Widgets
+* 11. Signature
+* 12. Services
+* 13. Experience
+* 14. Testimonials
+* 15. Education
+* 16. Icon Box
+* 17. Portfolio
+* 18. Blog
+* 19. Error Page
+* 
+**/
+
+
+/* ==========================================================================
+   01. General Styles
+   ========================================================================== */
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,500);
+@import url(http://fonts.googleapis.com/css?family=Lato:700);
+html, body {
+	overflow-x: hidden;
+}
+body {
+	background: #f5f5f5;
+	font-size: 14px;
+	line-height: 24px;
+	color: #666;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+}
+p {
+	margin-bottom: 24px;
+}
+blockquote {
+	margin: 24px 0;
+	margin-left: 72px;
+	border-left: 4px solid #38b1e2;
+	padding: 0;
+	padding-left: 38px;
+	font-size: 16px;
+	line-height: 28px;
+	color: #232323;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+blockquote p {
+	position: relative;
+}
+blockquote p:before {
+	content: '“';
+	font-family: 'Lato', sans-serif;
+	font-size: 24px;
+	line-height: 28px;
+	position: absolute;
+	left: -12px;
+	top: 0;
+}
+blockquote p:after {
+	content: '”';
+	font-family: 'Lato', sans-serif;
+	font-size: 24px;
+	line-height: 28px;
+}
+blockquote footer {
+	font-size: 13px;
+	line-height: 28px;
+	text-transform: uppercase;
+	color: #38b1e2;
+	margin-top: 12px;
+}
+blockquote footer:before {
+	content: '';
+}
+a {
+	-webkit-transition: .25s;
+	-moz-transition: .25s;
+	-o-transition: .25s;
+	-ms-transition: .25s;
+	transition: .25s;
+	outline: none !important;
+	color: #7e50ff;
+}
+a:hover {
+	color: #7e50ff;
+}
+a:focus {
+	text-decoration: none;
+}
+a img {
+	-webkit-transition: .25s;
+	-moz-transition: .25s;
+	-o-transition: .25s;
+	-ms-transition: .25s;
+	transition: .25s;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+a:hover img {
+	opacity: .75;
+}
+
+section#section8 {
+    padding-top: 50px;
+}
+
+.list-unstyled li {
+	margin-bottom: 12px;
+}
+.list-icons {
+	padding-left: 0;
+	margin-left: 36px;
+	list-style-type: none;
+}
+.list-icons > li {
+	position: relative;
+}
+.list-icons > li > i {
+	position: absolute;
+	left: -36px;
+	width: 36px;
+	top: 2px;
+	text-align: center;
+	color: #232323;
+	font-size: 18px;
+	vertical-align: middle;
+}
+.list-icons.purple > li > i {
+	color: #7e50ff;
+}
+.bold-list {
+	font-weight: 500;
+	text-transform: uppercase;
+}
+.bold-list li {
+	margin-bottom: 12px;
+}
+h1, h2, h3, h4, h5, h6 {
+	text-transform: uppercase;
+	font-weight: 700;
+	color: #232323;
+}
+h1 {
+	font-size: 50px;
+	line-height: 60px;
+	margin-top: 0;
+	margin-bottom: 24px;
+}
+h2 {
+	font-size: 22px;
+	line-height: 26px;
+	margin-top: 0;
+	margin-bottom: 36px;
+}
+h3 {
+	font-size: 20px;
+	line-height: 26px;
+	margin-top: 0;
+	margin-bottom: 36px;
+	font-weight: 500;
+}
+h4 {
+	font-size: 16px;
+	line-height: 24px;
+	margin-top: 0;
+	margin-bottom: 24px;
+}
+h5 {
+	font-size: 15px;
+	line-height: 32px;
+	margin-top: 0;
+	margin-bottom: 24px;
+}
+h6 {
+	font-size: 14px;
+	line-height: 32px;
+	font-weight: 500;
+}
+h3.small-margin-bottom {
+	margin-bottom: 6px;
+}
+.map {
+	width: 100%;
+	height: 426px;
+	margin-top: 72px;
+}
+
+/* ==========================================================================
+   02. Buttons
+   ========================================================================== */
+.button {
+	font-weight: 500;
+	text-transform: uppercase;
+	-webkit-transition: .25s;
+	-moz-transition: .25s;
+	-o-transition: .25s;
+	-ms-transition: .25s;
+	transition: .25s;
+	outline: none !important;
+}
+.button:hover {
+	text-decoration: none;
+}
+.button i {
+	font-size: 24px;
+	vertical-align: middle;
+}
+.button.icon-left i {
+	margin-right: 12px;
+}
+.button.icon-right i {
+	margin-left: 12px;
+}
+.button-row {
+	margin-top: 48px;
+}
+.button-row .button {
+	margin-right: 32px;
+	margin-bottom: 12px;
+}
+@media all and (max-width: 1024px) {
+	.button-row .button {
+		display: block;
+		margin-right: 0;
+	}
+}
+/*==========  Solid Button  ==========*/
+.solid-button {
+	font-size: 15px;
+	line-height: 26px;
+	padding: 11px 29px;
+	border: none;
+	border-radius: 3px;
+	box-shadow: 0 2px 2px rgba(0,0,0,.3);
+	text-align: center;
+}
+.solid-button:hover {
+	box-shadow: 0 3px 6px rgba(0,0,0,.3);
+}
+.solid-button.purple {
+	background: #38b1e2;
+	color: #fff;
+}
+.solid-button.white {
+	background: #fff;
+	color: #232323;
+}
+.solid-button.dark {
+	background: #232323;
+	color: #fff;
+}
+.solid-button.white-purple {
+	background: #fff;
+	color: #232323;
+}
+.solid-button.white-purple:hover {
+	background: #38b1e2;
+	color: #fff;
+}
+.solid-button.small {
+	font-size: 12px;
+	padding: 2px 20px;
+}
+/*==========  Link Button  ==========*/
+.link-button {
+	font-size: 13px;
+	line-height: 32px;
+}
+.link-button:hover {
+	opacity: .75;
+}
+.link-button.white {
+	color: #fff;
+}
+/*==========  Action Button  ==========*/
+.action-button {
+	background: #38b1e2;
+	color: #fff;
+	font-size: 24px;
+	width: 60px;
+	height: 60px;
+	line-height: 60px;
+	border-radius: 100%;
+	display: inline-block;
+	text-align: center;
+	box-shadow: 0 4px 12px rgba(0,0,0,.13), 0 6px 10px rgba(0,0,0,.3);
+}
+.action-button:hover {
+	box-shadow: 0 6px 18px rgba(0,0,0,.13), 0 9px 15px rgba(0,0,0,.3);
+}
+
+/* ==========================================================================
+   03. Forms
+   ========================================================================== */
+input:not([type=submit]):not([type=file]), select, textarea {
+	border: none;
+	border-bottom: 1px solid #d7d7d7;
+	background: none;
+	width: 100%;
+	padding: 2px 6px;
+	outline: none !important;
+	-webkit-transition: .25s;
+	-moz-transition: .25s;
+	-o-transition: .25s;
+	-ms-transition: .25s;
+	transition: .25s;
+}
+input:not([type=submit]):not([type=file]):focus, select:focus, textarea:focus {
+	border-color: #38b1e2;
+}
+.input-group {
+	margin-bottom: 28px;
+}
+.form-horizontal .control-label {
+	text-align: left;
+}
+
+
+/* ==========================================================================
+   07. Footer
+   ========================================================================== */
+.footer {
+	text-align: center;
+	color: #fff;
+	font-weight: 500;
+}
+.footer .top {
+	background: #232323;
+	padding: 48px 0;
+}
+.footer .bottom {
+	background: #1c1c1c;
+	line-height: 50px;
+}
+.footer h4 {
+	color: #fff;
+}
+.footer .social-icons {
+	margin-bottom: 24px;
+}
+
+/* ==========================================================================
+   08. Social Icons
+   ========================================================================== */
+.social-icon {
+	display: inline-block;
+	width: 42px;
+	height: 42px;
+	line-height: 42px;
+	font-size: 16px;
+	color: #232323;
+	background: #fff;
+	border-radius: 100%;
+	box-shadow: 0 4px 12px rgba(0,0,0,.13);
+	margin: 0 4px;
+	text-align: center;
+}
+.social-icon:hover {
+	box-shadow: 0 4px 12px rgba(0,0,0,.13), 0 6px 10px rgba(0,0,0,.3);
+}
+.footer .social-icon {
+	box-shadow: 0 4px 12px rgba(0,0,0,.13), 0 6px 10px rgba(0,0,0,.3);
+}
+.social-icon:hover {
+	background: #38b1e2;
+	color: #fff;
+}
+
+
+
+/* ==========================================================================
+   16. Icon Box
+   ========================================================================== */
+.icon-box {
+	text-align: center;
+	margin: 12px 0;
+}
+.icon-box .icon {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	line-height: 100px;
+	font-size: 48px;
+	color: #232323;
+	background: #fff;
+	box-shadow: 0 2px 6px rgba(0,0,0,.25);
+	margin-bottom: 24px;
+	-webkit-transition: .25s;
+	-moz-transition: .25s;
+	-o-transition: .25s;
+	-ms-transition: .25s;
+	transition: .25s;
+}
+.icon-box:hover .icon {
+	background: #38b1e2;
+	color: #fff;
+	box-shadow: 0 3px 6px rgba(0,0,0,.3);
+}
+.icon-box h6 {
+	line-height: 12px;
+	margin-bottom: 0;
+}
+

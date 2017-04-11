@@ -34,8 +34,9 @@
         <table class="table">
             <tr>
                 <th>S.NO</th>
-                <th>Name</th>
+                <th>Label</th>
                 <th>Description</th>
+                <th>Name</th>
                 <th>Slug</th>
                 <th>Image</th>
                 <th>Actions</th>
@@ -45,8 +46,9 @@
             <tr class="row-details">
             
                 <td>{{$loop->iteration}}</td>
-                <td>{{$category->title}}</td>
+                <td>{{$category->label}}</td>
                 <td>{{substr(strip_tags($category->description), 0, 100)}}</td>
+                <td>{{$category->title}}</td>
                 <td>{{$category->slug}}</td>
                 <td>
                

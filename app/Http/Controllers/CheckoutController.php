@@ -21,8 +21,16 @@ class CheckoutController extends Controller
     
      public function  getpayment()
      {
-        if(!Session::has('cart')){
-            return view('shop.shopping-cart');
+        if(!Sentinel::check()){
+           return redirect()->route('user.signin');
+        }
+        
+        $CheckoldCart = Session::has('cart') ? Session::get('cart') : null;
+        if($CheckoldCart == null){
+            return redirect()->route('cart.shoppingCart');
+        }
+        if(count($CheckoldCart->items) < 1){
+            return redirect()->route('cart.shoppingCart');
         }
         $oldcart = Session::get('cart');
         $cart = new Cart($oldcart);
@@ -31,41 +39,82 @@ class CheckoutController extends Controller
         return view('shop.checkout', ['products' => $cart->items, 'total' => $totalPrice]);
  
     }
-    public function postPaymentmethod(Request $request){
-        if(!Session::has('cart')){
-            return view('shop.shopping-cart');
+
+     public function getThankyoupage($order)
+     {
+          $order_data = Order::find($order);
+          return view('shop.thankyou', ['orders' => $order_data]);
+     }
+    
+    public function getPaymentmethod($paymentMethod)
+    {
+        if(!Sentinel::check()){
+           return redirect()->route('user.signin');
+        }
+
+        $CheckoldCart = Session::has('cart') ? Session::get('cart') : null;
+        if($CheckoldCart == null){
+            return redirect()->route('cart.shoppingCart');
+        }
+        if(count($CheckoldCart->items) < 1){
+            return redirect()->route('cart.shoppingCart');
         }
         $oldcart = Session::get('cart');
         $cart = new Cart($oldcart);
         $totalPrice = $cart->totalPrice;
         
-       Switch($request['payment-method']){
-           case 'Transfer Money':
+       Switch($paymentMethod){
+           case 'transfer-money':
                 $settings = PaymentSetting::find(2);
-                return view('shop.checkoutByCash', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $request['payment-method'], 'settings' => $settings]);
+                return view('shop.checkoutByCash', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $paymentMethod, 'settings' => $settings]);
            break;
-           case 'Stripe Payment':
+           case 'stripe-payment':
                 $settings = PaymentSetting::find(19);
-                return view('shop.checkoutByStripe', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $request['payment-method'], 'settings' => $settings ]);
+                return view('shop.checkoutByStripe', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $paymentMethod, 'settings' => $settings ]);
            break;
-           case 'Cirtus Payment':
+           case 'cirtus-payment':
                 
                  $settings = PaymentSetting::find(14);
                 
-                return view('shop.checkoutByCirtus', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $request['payment-method'], 'settings' => $settings]);
+                return view('shop.checkoutByCirtus', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $paymentMethod, 'settings' => $settings]);
            break;
            default:
                  $settings = PaymentSetting::find(2);
-                return view('shop.checkoutByCash', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $request['payment-method'], 'settings' => $settings]);
+                return view('shop.checkoutByCash', ['products' => $cart->items, 'total' => $totalPrice, 'payMethod' => $paymentMethod, 'settings' => $settings]);
         }
         
     }
-    public function postCheckoutCashtransfer(Request $request)
+    public function postCheckoutSwitch(Request $request)
+    {
+        $paymentMethod = $request->input('paymentMethod');
+        switch($paymentMethod){
+            case 'transfer-money':
+                $order = $this->postCheckoutCashtransfer($request->all());
+            break;
+            case 'stripe-payment':
+                $order = $this->postCheckout($request->all());
+            break;
+            case 'cirtus-payment':
+                 $order = $this->paymentBycirtus($request->all());
+            break;
+        }
+        return redirect()->route('order.thankyou', ['order' => $order]);
+    }
+    
+    public function postCheckoutCashtransfer($requestForm)
     {
        
+        if(!Sentinel::check()){
+           return redirect()->route('user.signin');
+        }
+
         $user = Sentinel::getUser();
              
-        if(!Session::has('cart')){
+        $CheckoldCart = Session::has('cart') ? Session::get('cart') : null;
+        if($CheckoldCart == null){
+            return redirect()->route('cart.shoppingCart');
+        }
+        if(count($CheckoldCart->items) < 1){
             return redirect()->route('cart.shoppingCart');
         }
 
@@ -74,29 +123,34 @@ class CheckoutController extends Controller
        
         $order = new Order();
         $order->cart = serialize($cart);
-        $order->name = $request->input('name');
-        $order->address = $request->input('address')." ".$request->input('city')." ".$request->input('state')." ".$request->input('country')."-".$request->input('zip_code');
-        $order->payment_id = $charge->id;
+        $order->name = $requestForm['firstName'];
+        $order->address = $requestForm['addressStreet1']." ".$requestForm['addressCity']." ".$requestForm['addressState']." ".$requestForm['addressCountry']."-".$requestForm['addressZip'];
+        $order->payment_id = uniqid();
         $order->payment_method = 'cash transfer';
         $order->payment_status = 'Awaiting Payment';
         $order->order_status = 'Pending';
         Sentinel::getUser()->orders()->save($order);
-        $last_orderID = $order->id;
-
-        $order_data = Order::find($last_orderID);
-        $this->sendEmail($user, $order_data);
-
+       
+        $order_data = Order::find($order->id);
+        //$this->sendEmail($user, $order_data);
        
         Session::forget('cart');
-        return view('shop.thankYou', ['order' => $order_data]);
-
+        return $order_data;
+        
     }
-    public function postCheckout(Request $request)
+    public function postCheckout($requestForm)
     {
-       
+        if(!Sentinel::check()){
+           return redirect()->route('user.signin');
+        }
+        
         $user = Sentinel::getUser();
              
-        if(!Session::has('cart')){
+        $CheckoldCart = Session::has('cart') ? Session::get('cart') : null;
+        if($CheckoldCart == null){
+            return redirect()->route('cart.shoppingCart');
+        }
+        if(count($CheckoldCart->items) < 1){
             return redirect()->route('cart.shoppingCart');
         }
 
@@ -111,14 +165,14 @@ class CheckoutController extends Controller
         $charge = Charge::create(array(
                 "amount" => $cart->totalPrice * 100,
                 "currency" => "INR",
-                "source" => $request->input('stripeToken'), // obtained with Stripe.js
+                "source" => $requestForm['stripeToken'], // obtained with Stripe.js
                 "description" => "Payment Done"
             ));
 
             $order = new Order();
             $order->cart = serialize($cart);
-            $order->name = $request->input('name');
-            $order->address = $request->input('address')." ".$request->input('city')." ".$request->input('state')." ".$request->input('country')."-".$request->input('zip_code');
+            $order->name = $requestForm['name'];
+            $order->address = $requestForm['address']." ".$requestForm['city']." ".$requestForm['state']." ".$requestForm['country']."-".$requestForm['zip_code'];
             $order->payment_id = $charge->id;
             $order->payment_method = 'stripe';
             $order->payment_status = 'Awaiting Payment';
@@ -135,32 +189,39 @@ class CheckoutController extends Controller
     
 
         Session::forget('cart');
-        return redirect()->route('order.thankyou', ['order' => $order_data ]);
-        //return view('shop.thankYou', ['order' => $order_data]);
+        return $order_data;
+        
          
     }
 
-    public function paymentBycirtus(Request $request)
+    public function paymentBycirtus($requestForm)
     {
-
-        if(!Session::has('cart')){
+        if(!Sentinel::check()){
+           return redirect()->route('user.signin');
+        }
+        
+        $CheckoldCart = Session::has('cart') ? Session::get('cart') : null;
+        if($CheckoldCart == null){
+            return redirect()->route('cart.shoppingCart');
+        }
+        if(count($CheckoldCart->items) < 1){
             return redirect()->route('cart.shoppingCart');
         }
 
         $oldcart = Session::get('cart');
         $cart = new Cart($oldcart);
 
-        if($request['TxStatus'] !== 'SUCCESS' && $request['pgRespCode'] !== 0 ){
-            $fail_message = $request['pgRespCode'].":".$request['TxStatus']." ".$request['TxMsg'];
+        if($requestForm['TxStatus'] !== 'SUCCESS' && $requestForm['pgRespCode'] !== 0 ){
+            $fail_message = $requestForm['pgRespCode'].":".$requestForm['TxStatus']." ".$requestForm['TxMsg'];
             return redirect()->back()->with('error', $fail_message);
         }
 
-        if($request['TxStatus'] == 'SUCCESS' && $request['pgRespCode'] == 0 ){
+        if($requestForm['TxStatus'] == 'SUCCESS' && $requestForm['pgRespCode'] == 0 ){
             $order = new Order();
             $order->cart = serialize($cart);
-            $order->name = $request['firstName'];
-            $order->address = $request['addressStreet1']." ".$request['addressCity']." ".$request['addressState']." ".$request['addressCountry']." ".$request['addressZip'];
-            $order->payment_id = $request['TxId'];
+            $order->name = $requestForm['firstName'];
+            $order->address = $requestForm['addressStreet1']." ".$requestForm['addressCity']." ".$requestForm['addressState']." ".$requestForm['addressCountry']." ".$requestForm['addressZip'];
+            $order->payment_id = $requestForm['TxId'];
             $order->payment_method = 'citrus';
             $order->payment_status = 'Awaiting Payment';
             $order->order_status = 'Pending';
@@ -172,14 +233,10 @@ class CheckoutController extends Controller
         }
 
         Session::forget('cart');
-        return redirect()->route('order.thankyou', ['order' => $order_data ]);
-        //$this->getThankyoupage($order_data);
+        return $order_data;
+        
     }
-     public function getThankyoupage($order)
-     {
-         $order_data = Order::find($order);
-         return redirect()->route('order.thankyou', ['order' => $order_data]);
-     }
+    
      private function sendEmail($user, $order)
      {
          Mail::send('emails.order', [

@@ -13,7 +13,7 @@ class ForgetPasswordController extends Controller
     
     public function getForgetPassword()
     {
-        return view('user.forgetpassword');
+        return view('shop.user.forgetpassword');
     }
 
     public function postForgetPassword(Request $request)
@@ -52,7 +52,7 @@ class ForgetPasswordController extends Controller
         if($reminder = Reminder::exists($user))
         {
             if($code == $reminder->code)
-                return view('user.resetpassword');
+                return view('shop.user.resetpassword');
             else
                 return redirect('/');
         }    

@@ -100,6 +100,42 @@ $(function(){
 				});
 			}
 	});
+
+	//Start Auto options code
+
+	var fieldisieditpage = document.getElementById("priceData");
+	$('.e_rickshawOtions, .autorikshawOtions').hide();
+	if(fieldisieditpage){
+		var selectedAutotypeEdit = $('#autotype').find(':selected').attr('value');
+		if(selectedAutotypeEdit == 'auto_rikshaw'){
+				$('.autorikshawOtions').addClass('selected');
+				$('.autorikshawOtions').show();
+			}
+			if(selectedAutotypeEdit == 'e_rikshaw'){
+				$('.e_rickshawOtions').addClass('selected');
+				$('.e_rickshawOtions').show();
+			}	
+	}
+	
+	$('#autotype').on('change', function(){
+		$('.selected').hide();
+		$('.selected').removeClass('selected');
+		var selectedAutotype = $(this).find(':selected').attr('value');
+		if (typeof selectedAutotype === "undefined") {
+				msg = "Select Auto Type";
+				return msg; 
+		}else{
+			if(selectedAutotype == 'auto_rikshaw'){
+				$('.autorikshawOtions').addClass('selected');
+				$('.autorikshawOtions').show();
+			}
+			if(selectedAutotype == 'e_rikshaw'){
+				$('.e_rickshawOtions').addClass('selected');
+				$('.e_rickshawOtions').show();
+			}	
+		}
+	});
+	//End Auto options code
 });
 
 	// making category slug
@@ -216,7 +252,7 @@ $(function(){
 			var option_type = type;
 				
 			var chkExist = fieldData.indexOf(name);
-    				 
+    		console.log(fieldData);		 
 			if(chkExist == -1){
 				var model = document.getElementById("modelname").value;
 				var labeltext = "Price for "+name+" "+model+" Ad Per unit:";
@@ -495,7 +531,7 @@ function addDomToPriceOptionsCinema(name, type){
 	var option_type = type;
 		
 	var chkExist = fieldData.indexOf(name);
-	alert(chkExist);		
+		
 	if(chkExist == -1){
 		var model = document.getElementById("modelname").value;
 		var labeltext = "Price for "+name+" "+model+" Ad Per unit:";
@@ -593,6 +629,136 @@ function removeItemCinema(name, option_type) {
 	var deleteNode = document.getElementById(divId);
 	deleteNode.remove();
 	
+	var deletedurNode = document.getElementById(divdurId);
+	deletedurNode.remove();
+	
+}
+
+
+
+function addDomToPriceOptionsAuto(name, type){
+	var option_type = type;
+	var chkExist = fieldData.indexOf(name);
+	console.log(fieldData);		 
+	if(chkExist == -1){
+		var model = document.getElementById("modelname").value;
+		var labeltext = "Price for "+name+" "+model+" Ad Per unit:";
+		var labelnumbertext = "Number of "+model+" for "+name+" Ad:";
+		var labeldurationtext = "Ad Duration of "+model+" for "+name+" Ad (in Months):";
+		var iname = name.toLowerCase();
+		var res = iname.split(' ').join('_');
+		var inputname = "price_"+res;
+		var numberbuses = "number_"+res;
+		var durationbuses = "duration_"+res;
+		var priceElement = document.getElementById('pricing-options-step');
+		
+		var divrow = document.createElement('div');
+		divrow.className = 'form-group';
+		divrow.id = 'p'+inputname;
+
+		var divrownum = document.createElement('div');
+		divrownum.className = 'form-group';
+		divrownum.id = 'p'+numberbuses;
+
+		var divrowduration = document.createElement('div');
+		divrowduration.className = 'form-group';
+		divrowduration.id = 'p'+durationbuses;
+		//iput field
+		var labelhtm = document.createElement('label');
+		labelhtm.setAttribute("for", inputname);
+		labelhtm.innerText = labeltext;
+
+		var inputhtm = document.createElement("input"); //input element, text
+		inputhtm.setAttribute('type',"text");
+		inputhtm.setAttribute('name',inputname);
+		inputhtm.setAttribute('class', "form-control");
+		inputhtm.setAttribute('id', inputname);
+		inputhtm.setAttribute('required', 'required');
+		inputhtm.setAttribute('placeholder', 'put value as number eg: 35345');
+
+		//number of buses
+		var labelnumhtm = document.createElement('label');
+		labelnumhtm.setAttribute("for", numberbuses);
+		labelnumhtm.innerText = labelnumbertext;
+
+		var inputnumhtm = document.createElement("input"); //input element, text
+		inputnumhtm.setAttribute('type',"text");
+		inputnumhtm.setAttribute('name',numberbuses);
+		inputnumhtm.setAttribute('class', "form-control");
+		inputnumhtm.setAttribute('id', numberbuses);
+		inputnumhtm.setAttribute('required', 'required');
+		inputnumhtm.setAttribute('placeholder', 'put number of buses as number');
+
+		//Duration of buses
+		var labeldurationhtm = document.createElement('label');
+		labeldurationhtm.setAttribute("for", durationbuses);
+		labeldurationhtm.innerText = labeldurationtext;
+
+		var inputdurationhtm = document.createElement("input"); //input element, text
+		inputdurationhtm.setAttribute('type',"text");
+		inputdurationhtm.setAttribute('name',durationbuses);
+		inputdurationhtm.setAttribute('class', "form-control");
+		inputdurationhtm.setAttribute('id', durationbuses);
+		inputdurationhtm.setAttribute('required', 'required');
+		inputdurationhtm.setAttribute('placeholder', 'put duration of ad for buses(in Months)');
+
+		fieldData.push(name);
+		if(fieldisi){
+			fieldisi.value = JSON.stringify(fieldData);
+		}
+		divrow.appendChild(labelhtm);
+		divrow.appendChild(inputhtm);
+		divrownum.appendChild(labelnumhtm);
+		divrownum.appendChild(inputnumhtm);
+		divrowduration.appendChild(labeldurationhtm);
+		divrowduration.appendChild(inputdurationhtm);
+		priceElement.appendChild(divrow);
+		priceElement.appendChild(divrownum);
+		priceElement.appendChild(divrowduration);
+	}else{
+		removeItemAuto(name, option_type);
+	}
+
+}
+
+function removeItemAuto(name, option_type) {
+						
+	var iname = name.toLowerCase();
+	var res = iname.split(' ').join('_');
+
+	var inputname = "price_"+res;
+	var numberbuses = "number_"+res;
+	var durationbuses = "duration_"+res;
+	var divId = 'p'+inputname;
+	
+	var divnumId = 'p'+numberbuses;
+	
+	var divdurId = 'p'+durationbuses;
+	
+	fieldData.splice(fieldData.indexOf(name), 1);
+	if(fieldisi){
+		editfieldData.splice(editfieldData.indexOf(name), 1);
+		
+		var id = document.getElementById("uncheckID").value;
+		var tableName = document.getElementById("tablename").value;
+		var update_options = '';
+		
+	
+		fieldisi.value = JSON.stringify(fieldData);
+		$.ajax({
+				method: 'GET',
+				url: uncheckDeleteURL,
+				data: {id: id, price_key: inputname, option_type: option_type, number_key: numberbuses, duration_key: durationbuses, displayoptions: JSON.stringify(fieldData) }
+			})
+			.done(function (msg){
+				console.log(msg);
+		});
+	}
+	
+	var deleteNode = document.getElementById(divId);
+	deleteNode.remove();
+	var deletenumNode = document.getElementById(divnumId);
+	deletenumNode.remove();
 	var deletedurNode = document.getElementById(divdurId);
 	deletedurNode.remove();
 	

@@ -1,12 +1,12 @@
 @extends('backend.layouts.backend-master')
 
 @section('title')
-   Edit Shoppingmall | Ad Launcher
+   Edit Shopping Mall | Ad Launcher
 @endsection
 
 @section('content')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Shoppingmall Edit Form</h1>
+          <h1 class="page-header">Shopping Mall Edit Form</h1>
    
         <div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
@@ -82,9 +82,10 @@
 
         </div>
 		<div class="step">
-            <div class="step-header">Shoppingmalls Ad Options</div>
+            <div class="step-header">Shopping Malls Ad Options</div>
+            <input type="hidden" name="modelname" id="modelname" value="Shoppingmalls">
                @PHP
-                   $shoppingmall_options = array('drop_down_banners' => 'Drop Down Banners', 'free_stand_display' => 'Free Stand Display','walls' => 'Walls','poles_or_pillar' => 'Poles/Pillar','signage' => 'Signage');
+                   $shoppingmall_options = array('danglers' => 'Danglers', 'drop_down_banners' => 'Drop Down Banners', 'signage' => 'Signage', 'pillar_branding' => 'Pillar Branding', 'washroom_branding' => 'Washroom Branding', 'wall_branding' => 'Wall Branding', 'popcorn_tub_branding' => 'Popcorn Tub Branding', 'product_kiosk' => 'Product Kiosk', 'standee' => 'Standee');
                      $shoppingmalldisplayData = unserialize($shoppingmall->display_options);
                 @ENDPHP
                 <div class="panel panel-primary">
@@ -93,7 +94,7 @@
                         <label for="shoppingmalldisplay">Shoppingmalls Ad Display Options: </label>
                           
                     @foreach($shoppingmall_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Shoppingmalls Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='shoppingmalldisplay[]' type='checkbox'  @PHP if(in_array($key, $shoppingmalldisplayData)){echo "checked"; } @ENDPHP value="{{$key}}">{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Shoppingmalls Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='shoppingmalldisplay[]' type='checkbox'  @PHP if($shoppingmalldisplayData){ if(in_array($key, $shoppingmalldisplayData)){echo "checked"; } } @ENDPHP value="{{$key}}">{{$value}}</label>
                     @endforeach
                                        
                     </div>
@@ -113,35 +114,24 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
+                        <input type="hidden" name="modelname" id="modelname" value="Shoppingmall">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$shoppingmall->id}}">
                         <input type="hidden" id="tablename" value="shoppingmalls">
 
                          @foreach($shoppingmallpricemeta as $shoppingmallprice)
-                         @PHP 
-                             $p_key = str_replace("_", " ", $shoppingmallprice->price_key);
-                             $field_name = explode(' ', $p_key);
-                             
-                             switch($field_name[0]){
-                                case 'price';
-                                    $label_field =  ucfirst(substr($p_key, 6));
-                                    $label = "Price for $label_field Shoppingmall Ad:";
-                                break;
-                                case 'number';
-                                    $label_field =  ucfirst(substr($p_key, 7));
-                                    $label = "Number of $label_field Shoppingmall Ad:";
-                                break;
-                                case 'duration';
-                                    $label_field =  ucfirst(substr($p_key, 9));
-                                    $label = "Duration for $label_field Shoppingmall Ad:";
-                                break;
-                             }
-
-                         @ENDPHP
                         <div id="p{{$shoppingmallprice->price_key}}" class="form-group">
-                            <label for="{{$shoppingmallprice->price_key}}">{{$label}}</label>
-                            <input class="form-control" type="text" name="{{$shoppingmallprice->price_key}}" value="{{$shoppingmallprice->price_value}}" required>
-                        </div>
+                                <label for="{{$shoppingmallprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $shoppingmallprice->price_key), 6))}} Shoppingmall Ad:</label>
+                                <input class="form-control" type="text" name="{{$shoppingmallprice->price_key}}" value="{{$shoppingmallprice->price_value}}" required>
+                            </div>
+                            <div id="p{{$shoppingmallprice->number_key}}" class="form-group">
+                                <label for="{{$shoppingmallprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $shoppingmallprice->number_key), 7))}} Shoppingmall Ad:</label>
+                                <input class="form-control" type="text" name="{{$shoppingmallprice->number_key}}" value="{{$shoppingmallprice->number_value}}" required>
+                            </div>
+                            <div id="p{{$shoppingmallprice->duration_key}}" class="form-group">
+                                <label for="{{$shoppingmallprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $shoppingmallprice->duration_key), 9))}} Shoppingmall Ad:</label>
+                                <input class="form-control" type="text" name="{{$shoppingmallprice->duration_key}}" value="{{$shoppingmallprice->duration_value}}" required>
+                            </div>
                         @endforeach
                     </div>
 
@@ -162,7 +152,7 @@
 		
 		<button type="button" class="action back btn btn-info">Back</button>
 		<button type="button" class="action next btn btn-info">Next</button>
-		<button type="submit" class="action submit btn btn-success">Add Product</button>	
+		<button type="submit" class="action submit btn btn-success">Edit Shopping Mall</button>	
   	</form>
    
    </div>
@@ -170,7 +160,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice', ['table' => 'Shoppingmall'])}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceShoppingmall')}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

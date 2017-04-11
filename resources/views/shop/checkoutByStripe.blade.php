@@ -8,10 +8,8 @@
     
         <div class="container-fluid">
             <div class="row cart-body">
-                <div class="col-md-3">
-                    @include('partials.sidebar-cart')
-                </div>
-                <div class="col-md-9 wrapper">
+               
+                <div class="col-md-8 col-md-offset-2 wrapper">
                     <div class="section-title">
                         <h2>Checkout</h2>
                     </div>
@@ -25,9 +23,9 @@
                     @ENDPHP
                     <div id="charge-error-payment"> </div>
                     
-                    <form action="{{route('postCheckout')}}" method="post" id="checkout-form" class="form-horizontal">
+                    <form action="{{route('front.PostOrder', ['paymentMethod' => 'stripe-payment'])}}" method="post" id="checkout-form" class="form-horizontal">
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
-
+<input type="hidden" name="paymentMethod" value="stripe-payment">
                             <!--CREDIT CART PAYMENT-->
                     <div class="panel panel-cart">
                         <div class="panel-heading"><span><i class="glyphicon glyphicon-lock"></i></span> Secure Payment</div>

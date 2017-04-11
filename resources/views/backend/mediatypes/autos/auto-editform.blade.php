@@ -85,87 +85,52 @@
             <div class="step-header">Auto Display Options</div>
             <input type="hidden" name="modelname" id="modelname" value="Auto">
                @PHP
-                   $auto_options = array('front' => 'Front', 'back' => 'Back', 'hood' => 'Hood', 'interior' => 'Interior');
-                     $autodisplayData = unserialize($auto->display_options);
+                    $auto_type = array('auto_rikshaw' => 'Auto Rikshaw', 'e_rikshaw' => 'E Rikshaw', 'tricycle' => 'Tricycle');
+                   $autorikshawOtions = array('sticker' => 'Sticker', 'auto_hood' => 'Auto Hood', 'backboard' => 'Backboard', 'full_auto' => 'Full Auto');
+                    $e_rickshawOtions = array('back_board' => 'Back Board', 'stepney_tier' => 'Stepney Tier');
+                     $autodisplayData = unserialize($auto->autorikshaw_options);
+                     $erikhshawData = unserialize($auto->erikshaw_options);
+
 
                 @ENDPHP
                 <div class="panel panel-primary">
-                    <div class="panel-heading "><h3 class="panel-title">Auto Options</h3></div><div class="panel-body">
-
-
-
+                    <div class="panel-heading "><h3 class="panel-title">Auto Options</h3></div>
+                    <div class="panel-body">
                     <div class="form-group">
-                        <label for="bsdautodisplayisplay">Auto Ad Display Options: </label>
-                          
-                    @foreach($auto_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='display_options' onclick="addDomToPriceOptions('{{$value}}', 'display_options')" name='autodisplay[]' type='checkbox'  @PHP if($autodisplayData){ if(in_array($key, $autodisplayData)){echo "checked"; } } @ENDPHP value="{{$key}}">{{$value}}</label>
+                         <label for="autotype">Auto Type:</label>
+                            <select class="form-control" name="autotype" id="autotype" required="required" disabled readonly>
+                                <option value="">--Select--</option>
+                                @foreach( $auto_type as $key => $value )
+                                <option value="{{$key}}" @PHP if($auto->autotype == $key){
+                            echo "Selected";
+                        } @ENDPHP>{{$value}}</option>
+                                @endforeach
+                            
+                            </select>
+                                
+                    </div> 
+
+                    <div class="form-group autorikshawOtions">
+                        <label for="autodisplay">Auto Rikshaw Ad Display Options: </label>
+                             
+                    @foreach($autorikshawOtions as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Auto Ad Display Options' onclick="addDomToPriceOptionsAuto('{{$value}}', 'autorikshaw_options')" name='autodisplay[]' type='checkbox'  @PHP if($autodisplayData){ if(in_array($key, $autodisplayData)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
-                    </div>
+                    </div> 
+                    
+                    <div class="form-group e_rickshawOtions">
 
+                   
+                        <label for="erikshawdisplay">E Rikshaw Ad Display Options: </label>
 
-                    <div class="form-group">
-
-                    @PHP
-                    $pamphlets_options = array('large_pamphlets' => 'Large Pamphlets', 'medium_pamphlets' => 'Medium Pamphlets', 'small_pamphlets' => 'Small Pamphlets');
-                     $frontpamphlets = unserialize($auto->front_pamphlets_reactanguler_options);
-
-                    @ENDPHP
-                        <label for="autofrontprdisplay">Auto Front Pamphlets/Reactanguler Options: </label>
-
-                         @foreach($pamphlets_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='front_pamphlets_reactanguler_options' onclick="addDomToPriceOptions('{{$value}}', 'front_pamphlets_reactanguler_options')" name='autofrontprdisplay[]' type='checkbox' @PHP if($frontpamphlets){ if(in_array($key, $frontpamphlets)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
-                    @endforeach
+                         @foreach($e_rickshawOtions as $key => $value)
+                            <label class='checkbox-inline'><input data-label='erikshawdisplay' onclick="addDomToPriceOptionsAuto('{{$value}}', 'erikshaw_options')" name='erikshawdisplay[]' type='checkbox'  @PHP if($erikhshawData){ if(in_array($key, $erikhshawData)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
+                        @endforeach
 
                     </div>
 
-                    <div class="form-group">
-
-                    @PHP
-                    $front_sticker_options = array('large_front_sticker' => 'Large Front Sticker', 'medium_front_sticker' => 'Medium Front Sticker', 'small_front_sticker' => 'Small Front Sticker');
-                     $stickeroption = unserialize($auto->front_stickers_options);
-
-                    @ENDPHP
-                        <label for="autostickerdisplay">Auto Front Stickers Options:</label>
-
-                         @foreach($front_sticker_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='front_stickers_options' onclick="addDomToPriceOptions('{{$value}}', 'front_stickers_options')" name='autostickerdisplay[]' type='checkbox' @PHP if($stickeroption){ if(in_array($key, $stickeroption)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
-                    @endforeach
-
-                    </div>
-
-                     <div class="form-group">
-
-                    @PHP
-                    $auto_hood_options = array('full_auto_hood' => 'Full Auto Hood', 'left_auto_hood' => 'Left Auto Hood', 'right_auto_hood' => 'Right Auto Hood');
-                     $hoodoption = unserialize($auto->hood_options);
-
-                    @ENDPHP
-                        <label for="autohooddisplay">Auto Hood Options:</label>
-
-                         @foreach($auto_hood_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='hood_options' onclick="addDomToPriceOptions('{{$value}}', 'hood_options')" name='autohooddisplay[]' type='checkbox' @PHP if($hoodoption){ if(in_array($key, $hoodoption)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
-                    @endforeach
-
-                    </div>
-
-                      <div class="form-group">
-
-                    @PHP
-                    $auto_interior_options = array('roof_interior' => 'Roof Interior', 'driver_seat_interior' => 'Driver Seat Interior');
-                     $interior_options = unserialize($auto->interior_options);
-
-                    @ENDPHP
-                        <label for="autointeriordisplay">Auto Interior Options:</label>
-
-                         @foreach($auto_interior_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='interior_options' onclick="addDomToPriceOptions('{{$value}}', 'interior_options')" name='autointeriordisplay[]' type='checkbox' @PHP if($interior_options){ if(in_array($key, $interior_options)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
-                    @endforeach
-
-                    </div>
-
-
-
+               
 
                     <div class="form-group"><label for="bslighting">Do you want lighting options on Auto Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="autolighting" type="radio" @PHP if($auto->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="autolighting" type="radio" @PHP if($auto->light_option == 1) echo "checked"; @ENDPHP  value="1">Yes</label></div>
 
@@ -195,32 +160,21 @@
                         <input type="hidden" id="interior_options" value="{{json_encode(unserialize($auto->interior_options))}}">
                         <input type="hidden" id="uncheckID" value="{{$auto->id}}">
                         <input type="hidden" id="tablename" value="autos">
-                         
+                        
                          @foreach($autopricemeta as $autoprice)
-                         @PHP 
-                             $p_key = str_replace("_", " ", $autoprice->price_key);
-                             $field_name = explode(' ', $p_key);
-                             
-                             switch($field_name[0]){
-                                case 'price';
-                                    $label_field =  ucfirst(substr($p_key, 6));
-                                    $label = "Price for $label_field Auto Ad:";
-                                break;
-                                case 'number';
-                                    $label_field =  ucfirst(substr($p_key, 7));
-                                    $label = "Number of $label_field Auto Ad:";
-                                break;
-                                case 'duration';
-                                    $label_field =  ucfirst(substr($p_key, 9));
-                                    $label = "Duration for $label_field Auto Ad:";
-                                break;
-                             }
-
-                         @ENDPHP
-                        <div id="p{{$autoprice->price_key}}" class="form-group">
-                            <label for="{{$autoprice->price_key}}">{{$label}}</label>
-                            <input class="form-control" type="text" name="{{$autoprice->price_key}}" value="{{$autoprice->price_value}}" required>
-                        </div>
+                         
+                            <div id="p{{$autoprice->price_key}}" class="form-group">
+                                <label for="{{$autoprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $autoprice->price_key), 6))}} Auto Ad:</label>
+                                <input class="form-control" type="text" name="{{$autoprice->price_key}}" value="{{$autoprice->price_value}}" required>
+                            </div>
+                            <div id="p{{$autoprice->number_key}}" class="form-group">
+                                <label for="{{$autoprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $autoprice->number_key), 7))}} Auto Ad:</label>
+                                <input class="form-control" type="text" name="{{$autoprice->number_key}}" value="{{$autoprice->number_value}}" required>
+                            </div>
+                            <div id="p{{$autoprice->duration_key}}" class="form-group">
+                                <label for="{{$autoprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $autoprice->duration_key), 9))}} Auto Ad:</label>
+                                <input class="form-control" type="text" name="{{$autoprice->duration_key}}" value="{{$autoprice->duration_value}}" required>
+                            </div>
                         @endforeach
                     </div>
 
@@ -241,7 +195,7 @@
         
         <button type="button" class="action back btn btn-info">Back</button>
         <button type="button" class="action next btn btn-info">Next</button>
-        <button type="submit" class="action submit btn btn-success">Edit Product</button>    
+        <button type="submit" class="action submit btn btn-success">Edit Auto</button>    
     </form>
    
    </div>

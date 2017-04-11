@@ -98,7 +98,7 @@
                     @endforeach
                                        
                     </div>
-                    <div class="form-group"><label for="bslighting">Do you want lighting options on Metro Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="metrolighting" type="radio" @PHP if($metro->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="metrolighting" type="radio" @PHP if($metro->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
+                    <div class="form-group"><label for="bslighting">Do you want lighting options on Metro Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Metro Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="metrolighting" type="radio" @PHP if($metro->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Metro Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="metrolighting" type="radio" @PHP if($metro->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
                     
                     <div class="form-group">
                         <label for="metrodiscount">Discount (%): </label>
@@ -115,34 +115,24 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
+                        <input type="hidden" name="modelname" id="modelname" value="Metro">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$metro->id}}">
                         <input type="hidden" id="tablename" value="metros">
-                        @foreach($metropricemeta as $metroprice)
-                         @PHP 
-                             $p_key = str_replace("_", " ", $metroprice->price_key);
-                             $field_name = explode(' ', $p_key);
-                             
-                             switch($field_name[0]){
-                                case 'price';
-                                    $label_field =  ucfirst(substr($p_key, 6));
-                                    $label = "Price for $label_field Metro Ad:";
-                                break;
-                                case 'number';
-                                    $label_field =  ucfirst(substr($p_key, 7));
-                                    $label = "Number of $label_field Metro Ad:";
-                                break;
-                                case 'duration';
-                                    $label_field =  ucfirst(substr($p_key, 9));
-                                    $label = "Duration for $label_field Metro Ad:";
-                                break;
-                             }
 
-                         @ENDPHP
-                        <div id="p{{$metroprice->price_key}}" class="form-group">
-                            <label for="{{$metroprice->price_key}}">{{$label}}</label>
-                            <input class="form-control" type="text" name="{{$metroprice->price_key}}" value="{{$metroprice->price_value}}" required>
-                        </div>
+                        @foreach($metropricemeta as $metroprice)
+                         <div id="p{{$metroprice->price_key}}" class="form-group">
+                                <label for="{{$metroprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="{{$metroprice->price_key}}" value="{{$metroprice->price_value}}" required>
+                            </div>
+                            <div id="p{{$metroprice->number_key}}" class="form-group">
+                                <label for="{{$metroprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $metroprice->number_key), 7))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="{{$metroprice->number_key}}" value="{{$metroprice->number_value}}" required>
+                            </div>
+                            <div id="p{{$metroprice->duration_key}}" class="form-group">
+                                <label for="{{$metroprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $metroprice->duration_key), 9))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="{{$metroprice->duration_key}}" value="{{$metroprice->duration_value}}" required>
+                            </div>
                         @endforeach
                     </div>
 
@@ -171,7 +161,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice', ['table' => 'Metro'])}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceMetro')}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

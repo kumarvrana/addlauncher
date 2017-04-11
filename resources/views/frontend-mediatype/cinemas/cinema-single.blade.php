@@ -68,7 +68,7 @@
 							} </style>
 		     			<div class="col-md-3 col-sm-3 "> 
 			     			<div class="pro-item"> 
-				     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
+				     			<div class=" cat-opt-img"> </div>
 							    <p class="font-1">{{$name[$i]}}</p>
 							    <p class="font-3"> Duration {{$duration[$i]}} Sec</p>
 							    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{getDiscuntedValue( $new_price[$i], $cinemaad->discount )}}</p>

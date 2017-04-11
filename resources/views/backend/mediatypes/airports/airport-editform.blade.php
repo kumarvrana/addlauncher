@@ -97,7 +97,7 @@
                         @endforeach
                                
                     </div>
-                   <div class="form-group"><label for="bslighting">Do you want lighting options on Airport Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="airportlighting" type="radio" @PHP if($airport->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="airportlighting" type="radio" @PHP if($airport->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
+                   <div class="form-group"><label for="aplighting">Do you want lighting options on Airport Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="aplighting" type="radio" @PHP if($airport->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="aplighting" type="radio" @PHP if($airport->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
 
                     <div class="form-group">
                         <label for="airportsnumber">Numbers Of Airports Display this Ad? : </label>
@@ -121,30 +121,18 @@
                         <input type="hidden" id="tablename" value="airports">
                         
                          @foreach($airportpricemeta as $airportprice)
-                         @PHP 
-                             $p_key = str_replace("_", " ", $airportprice->price_key);
-                             $field_name = explode(' ', $p_key);
-                             
-                             switch($field_name[0]){
-                                case 'price';
-                                    $label_field =  ucfirst(substr($p_key, 6));
-                                    $label = "Price for $label_field Airport Ad:";
-                                break;
-                                case 'number';
-                                    $label_field =  ucfirst(substr($p_key, 7));
-                                    $label = "Number of $label_field Airport Ad:";
-                                break;
-                                case 'duration';
-                                    $label_field =  ucfirst(substr($p_key, 9));
-                                    $label = "Duration for $label_field Airport Ad:";
-                                break;
-                             }
-
-                         @ENDPHP
-                        <div id="p{{$airportprice->price_key}}" class="form-group">
-                            <label for="{{$airportprice->price_key}}">{{$label}}</label>
-                            <input class="form-control" type="text" name="{{$airportprice->price_key}}" value="{{$airportprice->price_value}}" required>
-                        </div>
+                            <div id="p{{$airportprice->price_key}}" class="form-group">
+                                <label for="{{$airportprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $airportprice->price_key), 6))}} Airport Ad:</label>
+                                <input class="form-control" type="text" name="{{$airportprice->price_key}}" value="{{$airportprice->price_value}}" required>
+                            </div>
+                            <div id="p{{$airportprice->number_key}}" class="form-group">
+                                <label for="{{$airportprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $airportprice->number_key), 7))}} Airport Ad:</label>
+                                <input class="form-control" type="text" name="{{$airportprice->number_key}}" value="{{$airportprice->number_value}}" required>
+                            </div>
+                            <div id="p{{$airportprice->duration_key}}" class="form-group">
+                                <label for="{{$airportprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $airportprice->duration_key), 9))}} Airport Ad:</label>
+                                <input class="form-control" type="text" name="{{$airportprice->duration_key}}" value="{{$airportprice->duration_value}}" required>
+                            </div>
                         @endforeach
                     </div>
 

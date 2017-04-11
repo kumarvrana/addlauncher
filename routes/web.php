@@ -17,6 +17,16 @@ Route::get('/', [
 ]);
 /** start admin panel routes **/
 
+Route::get('/contact-us', [
+    'uses' => 'ContactFormController@GetContactForm',
+    'as' => 'Contact.GetContactForm'
+]);
+
+
+Route::post('/contactform', [
+    'uses' => 'ContactFormController@PostContactForm',
+    'as' => 'Contact.PostContactForm'
+]);
 
 
  
@@ -202,36 +212,36 @@ Route::group( ['middleware' => 'admin'], function(){
 
              //start Billboard media type routing
 
-            Route::get('/cat/billboard-list', [
+            Route::get('/cat/outdooradvertisings-list', [
                 'uses' => 'BillboardController@getDashboardBillboardList',
                 'as' => 'dashboard.getBillboardList'
             ]);
 
 
-             Route::get('/cat/add-billboard', [
+             Route::get('/cat/add-outdooradvertising', [
                 'uses' => 'BillboardController@getDashboardBillboardForm',
                 'as' => 'dashboard.getBillboardForm'
             ]);
 
-                Route::post('/cat/add-billboard', [
+                Route::post('/cat/add-outdooradvertising', [
                 'uses' => 'BillboardController@postDashboardBillboardForm',
                 'as' => 'dashboard.postBillboardForm'
             ]);
 
-            Route::get('/cat/delete-billboard/{billboardadID}', [
+            Route::get('/cat/delete-outdooradvertising/{billboardadID}', [
                 'uses' => 'BillboardController@getDeleteBillboardad',
                 'as' => 'dashboard.deleteBillboardad'
             ]);
-            Route::get('/cat/edit-billboard/{ID}', [
+            Route::get('/cat/edit-outdooradvertising/{ID}', [
                 'uses' => 'BillboardController@getUpdateeBillboardad',
                 'as' => 'dashboard.editbillboardsad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions-billboards/', [
+            Route::get('/cat/edit-removeuncheckoptions-outdooradvertisings/', [
                 'uses' => 'BillboardController@getuncheckBillboardadOptions',
                 'as' => 'dashboard.deleteUncheckPriceBillboard'
             ]);
             
-            Route::post('/cat/edit-billboard/{ID}', [
+            Route::post('/cat/edit-outdooradvertising/{ID}', [
                 'uses' => 'BillboardController@postUpdateeBillboardad',
                 'as' => 'dashboard.Postcaresad'
             ]);
@@ -349,9 +359,9 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'CarController@getUpdateeCarad',
                 'as' => 'dashboard.editcarsad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-cars/', [
                 'uses' => 'CarController@getuncheckCaradOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceCar'
             ]);
             
             Route::post('/cat/edit-car/{ID}', [
@@ -431,9 +441,9 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'MetroController@getUpdateeMetroad',
                 'as' => 'dashboard.editmetrosad'
             ]);
-            Route::get('/cat/edit-removeuncheckoptions/', [
+            Route::get('/cat/edit-removeuncheckoptions-metros/', [
                 'uses' => 'MetroController@getuncheckMetroadOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceMetro'
             ]);
             
             Route::post('/cat/edit-metro/{ID}', [
@@ -515,7 +525,7 @@ Route::group( ['middleware' => 'admin'], function(){
             ]);
             Route::get('/cat/edit-removeuncheckoptions/', [
                 'uses' => 'ShoppingmallController@getuncheckShoppingmalladOptions',
-                'as' => 'dashboard.deleteUncheckPrice'
+                'as' => 'dashboard.deleteUncheckPriceShoppingmall'
             ]);
             
             Route::post('/cat/edit-shoppingmall/{ID}', [
@@ -743,18 +753,33 @@ Route::group([ 'prefix' => 'user'], function(){
         'uses' => 'AirportController@getfrontendAllAirportads',
         'as' => 'frontend.getallairports'
     ]);
-    Route::get('/media/airport/{id}', [
+    /*Route::get('/media/airport/{id}', [
         'uses' => 'AirportController@getfrontAirportad',
         'as' => 'frontend.airportsingle'
-    ]);
+    ]);*/
 
     Route::get('/media/airport/add-to-cart/{id}/{variation}', [
         'uses' => 'AirportController@getAddToCart',
         'as' => 'airport.addtocart'
     ]);
+
+    Route::get('/media/airport/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+        'uses' => 'AirportController@getAddToCartBySearch',
+        'as' => 'airport.addtocartAfterSearch'
+    ]);
+
     Route::get('/media/airport/remove-from-cart/{id}/{variation}', [
         'uses' => 'AirportController@getRemoveFromCart',
         'as' => 'airport.removefromcart'
+    ]);
+    Route::get('/media/airport/{airportOption}', [
+        'uses' => 'AirportController@getfrontAirportadByOption',
+        'as' => 'frontend.getfrontAirportadByOption'
+    ]);
+  
+    Route::get('/airport/filter/',[
+        'uses' => 'AirportController@getFilterAirportAds',
+        'as' => 'frontend.getFilterAirportAds'
     ]);
     
     // airport frontend ends
@@ -779,28 +804,42 @@ Route::group([ 'prefix' => 'user'], function(){
         'uses' => 'AutoController@getRemoveFromCart',
         'as' => 'auto.removefromcart'
     ]);
+
+    Route::get('/media/autos/{autotype}', [
+        'uses' => 'AutoController@getfrontAutoadByType',
+        'as' => 'frontend.getfrontAutoadByType'
+    ]);
+
+    Route::get('/media/autos/{autotype}/{autoOption}', [
+        'uses' => 'AutoController@getfrontAutoadByOption',
+        'as' => 'frontend.getfrontAutoadByOption'
+    ]);
     
     // auto frontend ends
 
 // **********************************
 
     // billboard frontend starts
-    Route::get('/media/billboards', [
+    Route::get('/media/outdoor-advertisings', [
         'uses' => 'BillboardController@getfrontendAllBillboardads',
         'as' => 'frontend.getallbillboards'
     ]);
-    Route::get('/media/billboard/{id}', [
+    Route::get('/media/outdooradvertising/{id}', [
         'uses' => 'BillboardController@getfrontBillboardad',
         'as' => 'frontend.billboardsingle'
     ]);
 
-    Route::get('/media/billboard/add-to-cart/{id}/{variation}', [
+    Route::get('/media/outdooradvertising/add-to-cart/{id}/{variation}', [
         'uses' => 'BillboardController@getAddToCart',
         'as' => 'billboard.addtocart'
     ]);
-    Route::get('/media/billboard/remove-from-cart/{id}/{variation}', [
+    Route::get('/media/outdooradvertising/remove-from-cart/{id}/{variation}', [
         'uses' => 'BillboardController@getRemoveFromCart',
         'as' => 'billboard.removefromcart'
+    ]);
+    Route::get('/media/outdoor-advertisings/{billboardOption}', [
+        'uses' => 'BillboardController@getfrontBillboardadByOption',
+        'as' => 'frontend.getfrontBillboardadByOption'
     ]);
     
     // billboard frontend ends
@@ -809,22 +848,37 @@ Route::group([ 'prefix' => 'user'], function(){
 // **********************************
 
         // bus frontend starts
-    Route::get('/media/buses', [
+     Route::get('/media/buses', [
         'uses' => 'BusController@getfrontendAllBusads',
         'as' => 'frontend.getallbuses'
     ]);
-    Route::get('/media/bus/{id}', [
+    /*Route::get('/media/bus/{id}', [
         'uses' => 'BusController@getfrontBusad',
-        'as' => 'frontend.bussingle'
-    ]);
+        'as' => 'frontend.busesingle'
+    ]);*/
 
     Route::get('/media/bus/add-to-cart/{id}/{variation}', [
         'uses' => 'BusController@getAddToCart',
         'as' => 'bus.addtocart'
     ]);
+
+    Route::get('/media/bus/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+        'uses' => 'BusController@getAddToCartBySearch',
+        'as' => 'bus.addtocartAfterSearch'
+    ]);
+
     Route::get('/media/bus/remove-from-cart/{id}/{variation}', [
         'uses' => 'BusController@getRemoveFromCart',
         'as' => 'bus.removefromcart'
+    ]);
+    Route::get('/media/bus/{busOption}', [
+        'uses' => 'BusController@getfrontBusadByOption',
+        'as' => 'frontend.getfrontBusadByOption'
+    ]);
+  
+    Route::get('/bus/filter/',[
+        'uses' => 'BusController@getFilterBusAds',
+        'as' => 'frontend.getFilterBusAds'
     ]);
     
     // bus frontend ends
@@ -871,6 +925,14 @@ Route::group([ 'prefix' => 'user'], function(){
     Route::get('/media/car/remove-from-cart/{id}/{variation}', [
         'uses' => 'CarController@getRemoveFromCart',
         'as' => 'car.removefromcart'
+    ]);
+    Route::get('/media/cars/{cartype}', [
+        'uses' => 'CarController@getfrontCaradByType',
+        'as' => 'frontend.getfrontCaradByType'
+    ]);
+    Route::get('/media/cars/{cartype}/{carOption}', [
+        'uses' => 'CarController@getfrontCaradByOption',
+        'as' => 'frontend.getfrontCaradByOption'
     ]);
     
     // car frontend ends
@@ -964,6 +1026,10 @@ Route::group([ 'prefix' => 'user'], function(){
         'uses' => 'ShoppingmallController@getRemoveFromCart',
         'as' => 'shoppingmall.removefromcart'
     ]);
+    Route::get('/media/shoppingmalls/{shoppingmallOption}', [
+        'uses' => 'ShoppingmallController@getfrontShoppingmalladByOption',
+        'as' => 'frontend.getfrontShoppingmalladByOption'
+    ]);
     
     // shoppingmall frontend ends
 
@@ -1012,18 +1078,29 @@ Route::group(['middleware' => 'user', 'middleware' => 'admin'], function(){
         'as' => 'Cart.removeItemCart',
     ]);
 
+    Route::get('/shop/cart/{id}/{page}', [
+        'uses' => 'CartController@removeItemFromCartpayment',
+        'as' => 'Cart.removeItemCartpayment',
+    ]);
+
      Route::get('/shop/payment', [
         'uses' => 'CheckoutController@getpayment',
         'as' => 'getpayment'
        
     ]);
 
-    Route::post('/shop/payment', [
-        'uses' => 'CheckoutController@postPaymentmethod',
-        'as' => 'postpayment'
+    Route::get('/shop/payment/{paymentMethod}', [
+        'uses' => 'CheckoutController@getPaymentmethod',
+        'as' => 'front.Payment'
        
     ]);
 
+   Route::post('/shop/payment/{paymentMethod}', [
+        'uses' => 'CheckoutController@postCheckoutSwitch',
+        'as' => 'front.PostOrder'
+       
+    ]);
+    
     Route::post('/shop/checkout', [
         'uses' => 'CheckoutController@postCheckout',
         'as' => 'postCheckout'
@@ -1042,7 +1119,7 @@ Route::group(['middleware' => 'user', 'middleware' => 'admin'], function(){
        
     ]);
 
-    Route::get('thank-you/{order}', [
+    Route::get('/shop/thank-you/{order}', [
         'uses' => 'CheckoutController@getThankyoupage',
         'as' => 'order.thankyou'
        

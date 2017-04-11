@@ -2,7 +2,7 @@
 
 @section('title')
 
-    Shopping Mall | Add Launcher
+    Shopping Mall| Media | Add Launcher
 
 @endsection
 
@@ -16,92 +16,66 @@
             </div>
         </div>
         @endif
+
+<section class="sec-banner">
+     <div class="jumbotron jumbo-1 text-center">
+         <h1><span>{{ucwords(str_replace('_', ' ', $shoppingmallOption))}}</span> OPTIONS</h1>
+     </div>
+</section>       
+<section class="main-sec">
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
 				@include('partials.sidebar')
                     
                 </div>
-                @PHP
-                   $variations = unserialize($shoppingmallad->display_options);
-				   
-				   $variation = array();
-                   $price = array();
-				   $passVariation = array();
-                  foreach($shoppingmallprice as $options){
-					$passVariation[] = $options->price_key;
-					$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-					$price[] = $options->price_value;
-				  }
-				  $name_key = array_chunk($passVariation, 3);
-				  $price_values = array_chunk($price, 3);
-				  
-				  $name = array();
-				  $j = 0; 
-				  foreach($name_key as $options){
-					  	$passVariationname[$j] = $options[0];
-						$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-					$j++;
-				  }
-				 
-				 $new_price = array();
-				 $number = array();
-				 $duration = array();
-				 foreach($price_values as $options){
-
-					$new_price[] = $options[0];
-					$number[] = $options[1];
-					$duration[] = $options[2];
-
-
-				 }
-				
-                $i = 0;
-                @ENDPHP
-                <div class="col-md-9">
-					<div class="display-title">
-					  <h2>Display Options</h2>
-				   	</div>
+               
+                <div class="col-md-8">
+					
 					<div class="row">
 
-			     		@foreach($variations as $loop)
-
-			     			<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/shoppingmall/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-							</style>
-			     			<div class="col-md-3 col-sm-3 "> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Shopping Mall for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'shoppingmalls'.'_'.$passVariationname[$i].'_'.$shoppingmallad->id;
-									$printsession = (array) Session::get('cart');
-													
+			     		@if($products)
+							@foreach($products as $product)
+								<div class="col-md-3 col-sm-3 "> 
+									<div class="pro-item"> 
+										<div class="cat-opt-img"> <img src="{{asset('images/shoppingmalls/'.$product[11])}}"></div>
+										<p class="font-1">{{$product[3]}}</p>
+										<p class="font-2">{{$product[5]}} | {{$product[6]}} <br> {{$product[7]}}</p>
+										<p class="font-3">{{$product[23]}} {{ucwords(str_replace('_', ' ', $shoppingmallOption))}} for {{$product[25]}} months</p>
+										<p class="font-2"><del class="lighter">Rs {{$product[19]}} </del>Rs {{$product[19]}} </p>
+										 @PHP
+										$options = $product[21].'+'.$product[20];
+										$session_key = 'shoppingmalls'.'_'.$product[20].'_'.$product[0];
+										$printsession = (array) Session::get('cart');
+														
 									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('shoppingmall.addtocart', ['id' => $shoppingmallad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-							@PHP $i++; @ENDPHP
-						@endforeach
+										<div class="clearfix"> 
+											<a class="glass" href="{{route('shoppingmall.addtocart', ['id' => $product[0], 'variation' => $options])}}"><span class="fa fa-star"></span>
+											
+										 @if(count($printsession) > 0)
+												@if(array_key_exists($session_key, $printsession['items'])) 
+													Remove From Cart 
+												@else
+													Add to Cart 
+												@endif
+												@else
+													Add to Cart
+												@endif
+											
+										</a> 
+										</div>
+									</div>
+								</div>
+							@endforeach
+						@endif
 		            </div><!-- row before style ends here -->
         		</div>
+
+        		<div class="col-md-2">
+            @include('partials.sidebar-cart')
+                
+            </div>
+
     		</div>
     	</div><!-- container fluid 1 ends here -->
            

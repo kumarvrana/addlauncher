@@ -86,71 +86,44 @@
             <div class="step-header">Auto Display Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Auto">
                 @PHP
-                    $auto_options = array('front' => 'Front', 'back' => 'Back', 'hood' => 'Hood', 'interior' => 'Interior');
+                    $auto_type = array('auto_rikshaw' => 'Auto Rikshaw', 'e_rikshaw' => 'E Rikshaw', 'tricycle' => 'Tricycle');
+                    $autorikshawOtions = array('sticker' => 'Sticker', 'auto_hood' => 'Auto Hood', 'backboard' => 'Backboard', 'full_auto' => 'Full Auto');
+                    $e_rickshawOtions = array('back_board' => 'Back Board', 'stepney_tier' => 'Stepney Tier');
+                    
                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Auto Options</h3></div><div class="panel-body">
                     <div class="form-group">
-                        <label for="autodisplay">Auto Ad Display Options: </label>
+                         <label for="autotype">Auto Type:</label>
+                            <select class="form-control" name="autotype" id="autotype" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $auto_type as $key => $value )
+                                <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
+                            
+                            </select>
+                                
+                    </div> 
+                    <div class="form-group autorikshawOtions">
+                        <label for="autodisplay">Auto Rikshaw Ad Display Options: </label>
                              
-                    @foreach($auto_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Auto Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='autodisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @foreach($autorikshawOtions as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Auto Ad Display Options' onclick="addDomToPriceOptionsAuto('{{$value}}', 'autorikshaw_options')" name='autodisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
                     </div> 
 
-                    <div class="form-group">
+                    <div class="form-group e_rickshawOtions">
 
-                    @PHP
-                    $pamphlets_options = array('large_pamphlets' => 'Large Pamphlets', 'medium_pamphlets' => 'Medium Pamphlets', 'small_pamphlets' => 'Small Pamphlets');
-                    @ENDPHP
-                        <label for="autofrontprdisplay">Auto Front Pamphlets/Reactanguler Options: </label>
+                   
+                        <label for="erikshawdisplay">E Rikshaw Ad Display Options: </label>
 
-                         @foreach($pamphlets_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Auto Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='autofrontprdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
+                         @foreach($e_rickshawOtions as $key => $value)
+                            <label class='checkbox-inline'><input data-label='erikshawdisplay' onclick="addDomToPriceOptionsAuto('{{$value}}', 'erikshaw_options')" name='erikshawdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                        @endforeach
 
                     </div>
-
-                    <div class="form-group">
-
-                    @PHP
-                    $front_sticker_options = array('large_front_sticker' => 'Large Front Sticker', 'medium_front_sticker' => 'Medium Front Sticker', 'small_front_sticker' => 'Small Front Sticker');
-                    @ENDPHP
-                        <label for="autostickerdisplay">Auto Front Stickers Options:</label>
-
-                         @foreach($front_sticker_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Auto Front Stickers Options' onclick="addDomToPriceOptions('{{$value}}')" name='autostickerdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-
-                    </div>
-
-                     <div class="form-group">
-
-                    @PHP
-                    $auto_hood_options = array('full_auto_hood' => 'Full Auto Hood', 'left_auto_hood' => 'Left Auto Hood', 'right_auto_hood' => 'Right Auto Hood');
-                    @ENDPHP
-                        <label for="autohooddisplay">Auto Hood Options:</label>
-
-                         @foreach($auto_hood_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Auto Hood Options' onclick="addDomToPriceOptions('{{$value}}')" name='autohooddisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-
-                    </div>
-
-                      <div class="form-group">
-
-                    @PHP
-                    $auto_interior_options = array('roof_interior' => 'Roof Interior', 'driver_seat_interior' => 'Driver Seat Interior');
-                    @ENDPHP
-                        <label for="autointeriordisplay">Auto Interior Options:</label>
-
-                         @foreach($auto_interior_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Auto Interior Options' onclick="addDomToPriceOptions('{{$value}}')" name='autointeriordisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-
-                    </div>
-
+ 
 
                     <div class="form-group"><label for="bslighting">Do you want lighting options on Auto Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="autolighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="autolighting" type="radio" value="1">Yes</label></div>
                     <div class="form-group">
@@ -190,7 +163,7 @@
         
         <button type="button" class="action back btn btn-info">Back</button>
         <button type="button" class="action next btn btn-info">Next</button>
-        <button type="submit" class="action submit btn btn-success">Add Product</button>    
+        <button type="submit" class="action submit btn btn-success">Add Auto</button>    
     </form>
    
    </div>

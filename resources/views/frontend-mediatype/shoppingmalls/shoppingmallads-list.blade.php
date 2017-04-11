@@ -16,98 +16,66 @@
             </div>
         </div>
         @endif
+<section class="sec-banner">
+     <div class="jumbotron jumbo-1 text-center">
+         <h1><span>SHOPPING MALL</span> AD OPTIONS</h1>
+     </div>
+</section>       
+<section class="main-sec">
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
-                <div class="col-md-3">
+                <div class="col-md-2">
                   @include('partials.sidebar')
                 </div>
 
-                <div class="col-md-9">
-                    <h2>Result Found:</h2>
+                <div class="col-md-8">
+                    <h2>Choose Shopping Mall Ad:</h2><hr>
            
 
                   <div class="row"> <!-- row repeater starts here -->
                     
-             @foreach( $products->chunk(3) as $productchunk)
-                       @foreach( $productchunk as $product)
-                        @PHP
-                            if($product->status){
-                                switch($product->status){
-                                    case 1:
-                                        $status = 'Available';
-                                    break;
-                                    case 2:
-                                        $status = 'Sold Out';
-                                    break;
-                                    case 3:
-                                        $status = 'Coming Soon';
-                                    break;
-                                }
-                            }
-                            $st_class= strtolower(str_replace(' ','_', $status));
-                             
-                      if($status!='Available')  {
-                      @ENDPHP
+                @PHP
+                   $shoppingmall_options = array('danglers' => 'Danglers', 'drop_down_banners' => 'Drop Down Banners', 'signage' => 'Signage', 'pillar_branding' => 'Pillar Branding', 'washroom_branding' => 'Washroom Branding', 'wall_branding' => 'Wall Branding', 'popcorn_tub_branding' => 'Popcorn Tub Branding', 'product_kiosk' => 'Product Kiosk', 'standee' => 'Standee');
+                    
+                @ENDPHP
+                    @foreach($shoppingmall_options as $key => $value)
+                    @PHP
+                        $image = $key.".png";
+                    @ENDPHP
                     <div class="col-md-3">
                         <div class="owl-item active">
                             <div class="single-product">
                                 <div class="product-img">
-                                        <img class="second-img" src="{{asset('images/shoppingmalls/'.$product->image)}}" alt="product">
+                                        <img class="second-img {{$key}}" src="{{asset('images/shoppingmalls/'.$image)}}" alt="{{$key}}">
                                 </div>
                                 <div class="products-desc">
                                     
-                                    <div class="product-price"><span>{{$product->title}}</span></div>
+                                    <div class="product-price"><span>{{$value}}</span></div>
                                     <hr>
                                     <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
+                                        Delhi NCR
                                     </div>
                                 </div>
-                                <div class="product-mark {{$st_class}}">{{$status}}</div>
+                                <div class="product-mark"></div>
                                 <div class="product-hover">
-                                    <div class="add-to-cart {{$st_class}}"><span class="fa fa-ban"></span> {{$status}}</div>
+                                    <div class="add-to-cart"><a href="{{ route('frontend.getfrontShoppingmalladByOption', ['shoppingmallOption' => $key]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    @PHP }
-
-                    else { @ENDPHP
-
-                    <div class="col-md-3">
-                        <div class="owl-item active">
-                            <div class="single-product">
-                                <div class="product-img">
-                                        <img class="second-img" src="{{asset('images/shoppingmalls/'.$product->image)}}" alt="product">
-                                </div>
-                                <div class="products-desc">
-                                    
-                                    <div class="product-price"><span>{{$product->title}}</span></div>
-                                    <hr>
-                                    <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
-                                    </div>
-                                </div>
-                                <div class="product-mark {{$st_class}}">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{ route('frontend.shoppingmallsingle', ['id' => $product->id]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @PHP } @ENDPHP
-
-              @endforeach
-        @endforeach
+                    @endforeach
         
           </div> <!-- row repeater ends here -->
            
         </div>
+        <div class="col-md-2">
+            @include('partials.sidebar-cart')
+                
+            </div>
         </div><!-- row ends here -->
         </div><!-- container fluid 1 ends here -->
 
-       
+</section>       
     
 
 @endsection

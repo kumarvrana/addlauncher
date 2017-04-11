@@ -19,6 +19,6 @@ class ProfileController extends Controller
             $order->cart = unserialize($order->cart);
             return $order;
         });
-        return view('user.profile', ['orders' => $orders]);
+        return view('shop.user.profile', ['orders' => $orders]);
     }
 }

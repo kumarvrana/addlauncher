@@ -32,11 +32,9 @@
         <div class="container-fluid">
              
             <div class="row cart-body">
-                <div class="col-md-3">
-                    @include('partials.sidebar-cart')
-                </div>
+               
 
-                <div class="col-md-9 wrapper">
+                <div class="col-md-8 col-md-offset-2 wrapper">
                     <div class="section-title">
                         <h2>Checkout</h2>
                     </div>
@@ -47,9 +45,9 @@
 
                     <div id="charge-error-payment"> </div>
 
-                    <form action="{{route('postCheckout')}}" method="post" id="checkout-form" class="form-horizontal">
+                    <form action="{{route('front.PostOrder', ['paymentMethod' => 'cirtus-payment'])}}" method="post" id="checkout-form" class="form-horizontal">
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
-
+<input type="hidden" name="paymentMethod" value="cirtus-payment">
                         @PHP 
 
                             $setting = unserialize($settings->payment_secret);

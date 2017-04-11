@@ -27,6 +27,16 @@ class OrderController extends Controller
         return view("backend.admin.orderSingle", ['orders' => $orders, 'orderStatus' => $enumorder_status, 'paymentStatus' => $enumpayment_status]);
     }
 
+    //delete order by id
+
+    public function deleteOrder($id)
+    {
+        $order = Order::where('id', $id)->first();
+        $order->delete();
+        
+        return redirect()->back()->with(['message' => 'Order is Sccessfully Deleted']);;
+    }
+    
     public function getChangeStatus()
     {
         

@@ -14,9 +14,9 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
      public function getSignin()
-    {
-        return view('shop.user.signin');
-    }
+     {
+         return view('shop.user.signin');
+     }
 
      public function postSignin(Request $request)
      {

@@ -16,422 +16,70 @@
             </div>
         </div>
         @endif
+
+<section class="sec-banner">
+     <div class="jumbotron jumbo-1 text-center">
+         <h1><span>{{ucwords(str_replace('_', ' ', $autotype))}} {{ucwords(str_replace('_', ' ', $autoOption))}}</span> AD OPTIONS</h1>
+     </div>
+</section>       
+<section class="main-sec">        
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
 				@include('partials.sidebar')
                     
                 </div>
-                @PHP
-                   $variations = unserialize($autoad->display_options);
-				   
-				   $variation = array();
-                   $price = array();
-				   $passVariation = array();
-					foreach($auto_display as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
+               
+			
+		<div class="col-md-8">
 					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-                @ENDPHP
-				
-        
-		<div class="col-md-9">
-				
 					
 		<div class="row">
-		@if($variations)
-						<div class="display-title">
-					  <h2>Display Options</h2>
-				   	</div>
-			     		@foreach($variations as $loop)
-			     			<style type="text/css">
-			     			.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-							background-image: url('../../images/display/auto/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} </style>
+			     	
+			     		@if($products)
+							@foreach($products as $product)
 			     			<div class="col-md-3 col-sm-3 "> 
 				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Airport for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'autos'.'_'.$passVariationname[$i].'_'.$autoad->id;
-									$printsession = (array) Session::get('cart');
-													
+					     			<div class=" cat-opt-img "><img src="{{asset('images/autos/'.$product[14])}}"> </div>
+								    <p class="font-1">{{$product[6]}}</p>
+									<p class="font-2">{{$product[8]}} | {{$product[9]}} | {{$product[10]}}</p>
+								    <p class="font-3"> {{$product[23]}} {{ucwords(str_replace('_', ' ', $autoOption))}} for {{$product[25]}} months</p>
+								    <p class="font-2"><del class="lighter">Rs {{$product[21]}} </del>Rs {{$product[21]}}</p>
+								    @PHP
+										$options = $product[21].'+'.$product[20];
+										$session_key = 'autos'.'_'.$product[20].'_'.$product[0];
+										$printsession = (array) Session::get('cart');
+														
 									@ENDPHP
 								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('auto.addtocart', ['id' => $autoad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
+								    	<a class="glass" href="{{route('auto.addtocart', ['id' => $product[0], 'variation' => $options])}}"><span class="fa fa-star"></span>
+									      @if(count($printsession) > 0)
+												@if(array_key_exists($session_key, $printsession['items'])) 
+													Remove From Cart 
+												@else
+													Add to Cart 
+												@endif
+												@else
+													Add to Cart
+												@endif
 								      </a> 
 								    </div>
 							    </div>
 						    </div>
-							@PHP $i++; @ENDPHP
-						@endforeach
-					@endif
+							@endforeach
+						@endif
+						
 		            </div><!-- row before style ends here -->
 
-
-        			
-					
-					<div class="row">
-				@PHP
-					$variations1 = unserialize($autoad->front_pamphlets_reactanguler_options);
-					$variation = array();
-					$price = array();
-					$passVariation = array();
-					foreach($auto_frontprdisplay as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
-					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-				@ENDPHP
-				@if($variations1)
-				<div class="display-title">
-					  <h2>Auto Front Pamphlets/Reactanguler Options:</h2>
-				   	</div>
-		     	@foreach($variations1 as $loop)
-			 		
-				<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/auto/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-							</style>
-			     			<div class="col-md-3 col-sm-3 "> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Auto for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'autos'.'_'.$passVariationname[$i].'_'.$autoad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('auto.addtocart', ['id' => $autoad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-					
-					 @PHP
-					 	$i++;
-					 @ENDPHP
-					 @endforeach
-					@endif
-		            </div>
-        		
-        		
-					
-					<div class="row">
-				@PHP
-					$variations2 = unserialize($autoad->front_stickers_options);
-					$variation = array();
-					$price = array();
-					$passVariation = array();
-					foreach($auto_stickerdisplay as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
-					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-				@ENDPHP
-				@if($variations2)
-				<div class="display-title">
-					  <h2>Auto Front Stickers Options:</h2>
-				</div>
-		     	@foreach($variations2 as $loop)
-			 		
-				<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/auto/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-							</style>
-			     			<div class="col-md-3 col-sm-3 "> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Airport for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'autos'.'_'.$passVariationname[$i].'_'.$autoad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('auto.addtocart', ['id' => $autoad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-					
-					 @PHP
-					 	$i++;
-					 @ENDPHP
-					 @endforeach
-					 @endif
-		            </div>
-        			
-					<div class="row">
-				@PHP
-					$variations3 = unserialize($autoad->hood_options);
-					$variation = array();
-					$price = array();
-					$passVariation = array();
-					foreach($auto_hooddisplay as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
-					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-				@ENDPHP
-				@if($variations3)
-				<div class="display-title">
-					  <h2>Auto Hood Options:</h2>
-					</div>
-					
-		     	@foreach($variations3 as $loop)
-			 		
-				<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/auto/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-							</style>
-			     			<div class="col-md-3 col-sm-3 "> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Airport for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'autos'.'_'.$passVariationname[$i].'_'.$autoad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('auto.addtocart', ['id' => $autoad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-					
-					 @PHP
-					 	$i++;
-					 @ENDPHP
-					 @endforeach
-					 @endif
-		            </div>
-
-		            
-		            
-					<div class="row">
-				@PHP
-					$variations4 = unserialize($autoad->interior_options);
-					$variation = array();
-					$price = array();
-					$passVariation = array();
-					foreach($auto_interiordisplay as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
-					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-				@ENDPHP
-				@if($variations4)
-				<div class="display-title">
-					  <h2>Auto Interior Options:</h2>
-					</div>
-		     	@foreach($variations4 as $loop)
-			 		
-				<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/auto/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-							</style>
-			     			<div class="col-md-3 col-sm-3 "> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Airport for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'autos'.'_'.$passVariationname[$i].'_'.$autoad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('auto.addtocart', ['id' => $autoad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-					
-					 @PHP
-					 	$i++;
-					 @ENDPHP
-					 @endforeach
-					 @endif
-		            </div>
-
-
         		</div>
+
+        		<div class="col-md-2">
+            		@include('partials.sidebar-cart')
+        		</div>
+
     		</div>
     	</div><!-- container fluid 1 ends here -->
-           
+ </section>          
 	
        
 

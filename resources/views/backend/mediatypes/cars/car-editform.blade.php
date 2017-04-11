@@ -84,22 +84,35 @@
 		<div class="step">
             <div class="step-header">Cars Ad Options</div>
                 @PHP
-                    $car_options = array('full' => 'Full', 'full_outside_outside' => 'Full Outside only');
+                     $carType = array('micro_and_mini' => 'Micro And Mini', 'sedan' => 'Sedan', 'suv' => 'Suv', 'large' => 'Large');
+                     $car_options = array('bumper' => 'Bumper', 'rear_window_decals' => 'Rear Window Decals', 'doors' => 'Doors');
                      $cardisplayData = unserialize($car->display_options);
                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Car Options</h3></div>
                     <div class="panel-body">
                     <div class="form-group">
-                        <label for="cardisplayData">Cars Ad Display Options: </label>
+                            <label for="cartype">Choose Car Type:</label>
+                            <select class="form-control" name="cartype" disabled id="status" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $carType as $key => $value )
+                                <option value="{{$key}}" @PHP if($car->cartype == $key){
+                            echo "Selected";
+                        } @ENDPHP>{{$value}}</option>
+                                @endforeach
+                            
+                            </select>
+                        </div>
+                    <div class="form-group">
+                        <label for="cardisplay">Cars Ad Display Options: </label>
                           
                     @foreach($car_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Cars Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='cardisplay[]' type='checkbox'  @PHP if(in_array($key, $cardisplayData)){echo "checked"; } @ENDPHP value="{{$key}}">{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Cars Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='cardisplay[]' type='checkbox'  @PHP if($cardisplayData){if(in_array($key, $cardisplayData)){echo "checked"; } }@ENDPHP value="{{$key}}">{{$value}}</label>
                     @endforeach
                                        
                     </div>
 
-                      <div class="form-group"><label for="bslighting">Do you want lighting options on Car Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="carlighting" type="radio" @PHP if($car->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="carlighting" type="radio" @PHP if($car->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
+                      <!-- <div class="form-group"><label for="bslighting">Do you want lighting options on Car Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Car Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="carlighting" type="radio" @PHP if($car->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Car Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="carlighting" type="radio" @PHP if($car->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div> -->
 
                        <div class="form-group">
                         <label for="cardiscount">Discount (%): </label>
@@ -120,18 +133,25 @@
                     <div id="light-content" class="alert alert-info">
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
-                    <div id="pricing-options-step">
+                     <div id="pricing-options-step">
+                         <input type="hidden" name="modelname" id="modelname" value="Car">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$car->id}}">
                         <input type="hidden" id="tablename" value="cars">
+
                          @foreach($carpricemeta as $carprice)
-                         @PHP $p_key = str_replace("_", " ", $carprice->price_key);
-                             $label =  ucfirst(substr($p_key, 6));
-                         @ENDPHP
-                        <div id="p{{$carprice->price_key}}" class="form-group">
-                            <label for="{{$carprice->price_key}}">Price for {{$label}} Car Ad:</label>
-                            <input class="form-control" type="text" name="{{$carprice->price_key}}" value="{{$carprice->price_value}}" required>
-                        </div>
+                          <div id="p{{$carprice->price_key}}" class="form-group">
+                                <label for="{{$carprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $carprice->price_key), 6))}} Car Ad:</label>
+                                <input class="form-control" type="text" name="{{$carprice->price_key}}" value="{{$carprice->price_value}}" required>
+                            </div>
+                            <div id="p{{$carprice->number_key}}" class="form-group">
+                                <label for="{{$carprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $carprice->number_key), 7))}} Car Ad:</label>
+                                <input class="form-control" type="text" name="{{$carprice->number_key}}" value="{{$carprice->number_value}}" required>
+                            </div>
+                            <div id="p{{$carprice->duration_key}}" class="form-group">
+                                <label for="{{$carprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $carprice->duration_key), 9))}} Car Ad:</label>
+                                <input class="form-control" type="text" name="{{$carprice->duration_key}}" value="{{$carprice->duration_value}}" required>
+                            </div>
                         @endforeach
                     </div>
 
@@ -152,7 +172,7 @@
 		
 		<button type="button" class="action back btn btn-info">Back</button>
 		<button type="button" class="action next btn btn-info">Next</button>
-		<button type="submit" class="action submit btn btn-success">Add Product</button>	
+		<button type="submit" class="action submit btn btn-success">Add Car</button>	
   	</form>
    
    </div>
@@ -160,7 +180,7 @@
 
 @section('scripts')
 <script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPrice', ['table' => 'Car'])}}";
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceCar')}}";
 </script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

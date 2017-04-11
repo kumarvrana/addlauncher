@@ -97,9 +97,6 @@
                     @endforeach
                                        
                     </div>
-
-                     <div class="form-group"><label for="bslighting">Do you want lighting options on Busstop Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" @PHP if($busstop->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="bslighting" type="radio" @PHP if($busstop->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
-
                     <div class="form-group">
                         <label for="busstopsnumber">Numbers Of Busstops Display this Ad? : </label>
                         <input class="form-control" type="text" name="busstopsnumber" value="{{$busstop->stopinnumber}}" required></div>
@@ -116,35 +113,24 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
+                        <input type="hidden" name="modelname" id="modelname" value="Busstop">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$busstop->id}}">
                         <input type="hidden" id="tablename" value="busstops">
 
                          @foreach($busstoppricemeta as $busstopprice)
-                         @PHP 
-                             $p_key = str_replace("_", " ", $busstopprice->price_key);
-                             $field_name = explode(' ', $p_key);
-                             
-                             switch($field_name[0]){
-                                case 'price';
-                                    $label_field =  ucfirst(substr($p_key, 6));
-                                    $label = "Price for $label_field Busstop Ad:";
-                                break;
-                                case 'number';
-                                    $label_field =  ucfirst(substr($p_key, 7));
-                                    $label = "Number of $label_field Busstop Ad:";
-                                break;
-                                case 'duration';
-                                    $label_field =  ucfirst(substr($p_key, 9));
-                                    $label = "Duration for $label_field Busstop Ad:";
-                                break;
-                             }
-
-                         @ENDPHP
-                        <div id="p{{$busstopprice->price_key}}" class="form-group">
-                            <label for="{{$busstopprice->price_key}}">{{$label}}</label>
-                            <input class="form-control" type="text" name="{{$busstopprice->price_key}}" value="{{$busstopprice->price_value}}" required>
-                        </div>
+                         <div id="p{{$busstopprice->price_key}}" class="form-group">
+                                <label for="{{$busstopprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $busstopprice->price_key), 6))}} Busstop Ad:</label>
+                                <input class="form-control" type="text" name="{{$busstopprice->price_key}}" value="{{$busstopprice->price_value}}" required>
+                            </div>
+                            <div id="p{{$busstopprice->number_key}}" class="form-group">
+                                <label for="{{$busstopprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $busstopprice->number_key), 7))}} Busstop Ad:</label>
+                                <input class="form-control" type="text" name="{{$busstopprice->number_key}}" value="{{$busstopprice->number_value}}" required>
+                            </div>
+                            <div id="p{{$busstopprice->duration_key}}" class="form-group">
+                                <label for="{{$busstopprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $busstopprice->duration_key), 9))}} Busstop Ad:</label>
+                                <input class="form-control" type="text" name="{{$busstopprice->duration_key}}" value="{{$busstopprice->duration_value}}" required>
+                            </div>
                         @endforeach
                     </div>
 

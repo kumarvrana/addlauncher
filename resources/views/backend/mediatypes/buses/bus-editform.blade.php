@@ -38,7 +38,7 @@
                 </div>
                 <div class="form-group">
                     <label for="location">Location:</label>
-                    <input type="text" id="location" name="location" placeholder="example: saket metro/ IGI Airport" value="{{$bus->location}}" class="form-control" required>
+                    <input type="text" id="location" name="location" placeholder="example: saket metro/ IGI Bus" value="{{$bus->location}}" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="city">City:</label>
@@ -114,34 +114,24 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
+                         <input type="hidden" name="modelname" id="modelname" value="Bus">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$bus->id}}">
                         <input type="hidden" id="tablename" value="buses">
-                          @foreach($buspricemeta as $busprice)
-                         @PHP 
-                             $p_key = str_replace("_", " ", $busprice->price_key);
-                             $field_name = explode(' ', $p_key);
-                             
-                             switch($field_name[0]){
-                                case 'price';
-                                    $label_field =  ucfirst(substr($p_key, 6));
-                                    $label = "Price for $label_field Bus Ad:";
-                                break;
-                                case 'number';
-                                    $label_field =  ucfirst(substr($p_key, 7));
-                                    $label = "Number of $label_field Bus Ad:";
-                                break;
-                                case 'duration';
-                                    $label_field =  ucfirst(substr($p_key, 9));
-                                    $label = "Duration for $label_field Bus Ad:";
-                                break;
-                             }
 
-                         @ENDPHP
-                        <div id="p{{$busprice->price_key}}" class="form-group">
-                            <label for="{{$busprice->price_key}}">{{$label}}</label>
-                            <input class="form-control" type="text" name="{{$busprice->price_key}}" value="{{$busprice->price_value}}" required>
-                        </div>
+                        @foreach($buspricemeta as $busprice)
+                          <div id="p{{$busprice->price_key}}" class="form-group">
+                                <label for="{{$busprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $busprice->price_key), 6))}} Bus Ad:</label>
+                                <input class="form-control" type="text" name="{{$busprice->price_key}}" value="{{$busprice->price_value}}" required>
+                            </div>
+                            <div id="p{{$busprice->number_key}}" class="form-group">
+                                <label for="{{$busprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $busprice->number_key), 7))}} Bus Ad:</label>
+                                <input class="form-control" type="text" name="{{$busprice->number_key}}" value="{{$busprice->number_value}}" required>
+                            </div>
+                            <div id="p{{$busprice->duration_key}}" class="form-group">
+                                <label for="{{$busprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $busprice->duration_key), 9))}} Bus Ad:</label>
+                                <input class="form-control" type="text" name="{{$busprice->duration_key}}" value="{{$busprice->duration_value}}" required>
+                            </div>
                         @endforeach
                     </div>
 

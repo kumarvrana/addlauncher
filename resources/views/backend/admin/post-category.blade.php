@@ -26,6 +26,10 @@
                 <input type="text" id="category-name" name="title" class="form-control" value="{{old('title')}}" onkeyup="makeSlug()" required>
             </div>
             <div class="form-group">
+                <label for="label">Category Label:</label>
+                <input type="text" id="label-name" name="label" class="form-control" value="{{old('label')}}"  required>
+            </div>
+            <div class="form-group">
                 <label for="slug">Category Slug:</label>
                 <input type="text" id="category-slug" name="slug" class="form-control" readonly value="{{old('slug')}}" required>
             </div>

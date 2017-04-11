@@ -34,7 +34,15 @@
                 <td>{{$order['id']}}</td>
                 <td><ul>
                  @foreach( $order->cart->items as $item)
-                    <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b>|{{$item['qty']}}</li>
+                    @PHP
+                        $key = array_search($item, $order->cart->items);
+                        $category = explode('_', $key);
+                    @ENDPHP
+                    @if($category[1] == 'tricycle')
+                    <li>{{$item['item']['title']}}|<b> Tricycle </b>|{{$item['qty']}}</li>
+                    @else
+                        <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b>|{{$item['qty']}}</li>
+                    @endif
                  @endforeach
                  </ul></td>
                  <td><ul>

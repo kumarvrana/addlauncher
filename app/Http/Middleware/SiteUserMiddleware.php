@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+
+class SiteUserMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+         if(Sentinel::check() && Sentinel::getUser()->roles()->first()->slug == 'site-user'){
+             dd($next($request));
+            return $next($request);
+         }else
+            return redirect()->route('user.signin');
+    }
+}

@@ -7,11 +7,9 @@
 @section('content')
         <div class="container-fluid">
             <div class="row cart-body">
-                <div class="col-md-3">
-                    @include('partials.sidebar-cart')
-                </div>
+                
 
-                <div class="col-md-9 wrapper">
+                <div class="col-md-8 col-md-offset-2 wrapper">
                     <div class="section-title">
                         <h2>Checkout</h2>
                     </div>
@@ -20,7 +18,7 @@
                         {{ Session::get('error') }}
                     </div>
 
-                    <form action="{{ route('postpayment') }}" method="post" id="checkout-form" class="form-horizontal">
+                    <form action="#" method="post" id="checkout-form" class="form-horizontal">
                         
                             <!--REVIEW ORDER-->
                              @if($products)
@@ -35,8 +33,42 @@
                                         $key = array_search($product, $products);
                                         $imagefolder = explode('_', $key);
                                     @ENDPHP
+                                    @if($imagefolder[1] == 'tricycle')
                                     <div class="form-group">
                                         <div class="col-sm-3 col-xs-3">
+                                            <img class="img-responsive cart-img" src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }}" />
+                                        </div>
+                                        <div class="col-sm-6 col-xs-6">
+                                            <div class="row">
+                                                <div class="col-xs-12 c-title">
+                                                <h3>
+                                                {{ $product['item']['title'] }}
+                                                </h3>
+                                                <hr>
+                                                </div>
+
+                                                <div class="col-xs-12 c-quant">
+                                                    <h4>Quantity :<small> {{$product['qty']}}</small></h4> 
+                                                </div>
+                                                <div class="col-xs-12 c-detail">
+                                                <h4>Product Details : <small> {{ strip_tags($product['item']['description']) }}</small></h4></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 col-xs-3 text-right c-price">
+                                            <h4>Rs. {{$product['item']['price']}}</h4>
+                                            <h5><a href="{{route('Cart.removeItemCartpayment', ['id' => $key, 'page' => 'payment'])}}" >Delete Product From Cart</a> </h5>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <hr>
+                                    </div>
+                                    @else
+                                        <div class="form-group">
+                                        <div class="col-sm-3 col-xs-3">
+                                        @PHP
+                                    if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
+                                @ENDPHP
                                             <img class="img-responsive cart-img" src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}" />
                                         </div>
                                         <div class="col-sm-6 col-xs-6">
@@ -49,7 +81,7 @@
                                                 </div>
 
                                                 <div class="col-xs-12 c-quant">
-                                                    <h4>Quantity :<small> 1</small></h4> 
+                                                    <h4>Quantity :<small> {{$product['qty']}}</small></h4> 
                                                 </div>
                                                 <div class="col-xs-12 c-detail">
                                                 <h4>Product Details : <small> {{ strip_tags($product['item']['description']) }}</small></h4></div>
@@ -57,13 +89,14 @@
                                         </div>
                                         <div class="col-sm-3 col-xs-3 text-right c-price">
                                             <h4>Rs. {{$product['item']['price_value']}}</h4>
-                                            <h5><a href="{{route('Cart.removeItemCart', ['id' => $key])}}" >Delete Product From Cart</a> </h5>
+                                            <h5><a href="{{route('Cart.removeItemCartpayment', ['id' => $key, 'page' => 'payment'])}}" >Delete Product From Cart</a> </h5>
                                         </div>
                                         
                                     </div>
                                     <div class="form-group">
                                         <hr>
                                     </div>
+                                    @endif
                                     @endforeach
 
                                     <div class="form-group">
@@ -88,32 +121,32 @@
                                 </div>  
                                 <div class="method">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <input type="radio" name="payment-method" checked="checked" data-paymentform="cash-transfer" value="Transfer Money" id="transfer" class="payment-method-btn cash-transfer input-hidden cart-rad" />
+                                        <div class="col-md-3 col-md-offset-3">
+                                            <a href="{{route('front.Payment', ['paymentMethod' => 'transfer-money'])}}" id="transfer" class="payment-method-btn cash-transfer cart-rad">
                                             <label for="transfer">
-                                                <img  src="{{asset('images/logo/m-transfer.jpg')}}" alt="I'm sad" />
-                                            </label>
+                                                <img  src="{{asset('images/logo/moneytransfer.png')}}" class="img-responsive" alt="I'm sad" />
+                                            </label></a>
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <input  type="radio" name="payment-method" data-paymentform="stripe-payment-form" value="Stripe Payment"  id="stripe" class="payment-method-btn stripe input-hidden cart-rad" />
+                                        <div class="col-md-3">
+                                            <a href="{{route('front.Payment', ['paymentMethod' => 'stripe-payment'])}}" id="stripe" class="payment-method-btn stripe cart-rad">
                                             <label for="stripe">
-                                                <img  src="{{asset('images/logo/Stripe.png')}}" alt="I'm happy" />
-                                            </label>
+                                                <img  src="{{asset('images/logo/stripepay.png')}}" class="img-responsive" alt="I'm happy" />
+                                            </label></a>
                                         </div>
                                         
-                                        <div class="col-md-4">
-                                           <input   type="radio" name="payment-method" data-paymentform="cirtus-payment-form" value="Cirtus Payment" id="citrus" class="payment-method-btn cirtus input-hidden cart-rad" />
+                                        <!-- <div class="col-md-4">
+                                           <a href="{{route('front.Payment', ['paymentMethod' => 'cirtus-payment'])}}" id="citrus" class="payment-method-btn cirtus cart-rad">
                                             <label for="citrus">
                                                 <img src="{{asset('images/logo/cirtus.jpg')}}" alt="I'm happy" />
-                                            </label> 
-                                        </div>
+                                            </label></a>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
                             <hr/>
-                            {{csrf_field()}}
-                        <input type="submit" class="btn btn-primary pull-right" name="stepCheckout-1" value="Procced To Payment">
+                            
+                        <!--input type="submit" class="btn btn-primary pull-right" name="stepCheckout-1" value="Procced To Payment"-->
                         </br>
                     </form>  
                 </div>

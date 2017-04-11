@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\File;
 class ProductContoller extends Controller
 {
 
+
     public function getIndex(){
         $ad_cats = Mainaddtype::orderBy('title')->get();
         return view( 'shop.main-categories-page', ['mediacats' => $ad_cats]);

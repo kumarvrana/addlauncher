@@ -1,21 +1,4 @@
 
-  <!-- Top Bar starts here -->
-<div class="topbar"><div class="container">
-      <ul class="list-inline pull-left">
-        <li><a href="#"><span class="fa fa-facebook"></span></a></li>
-  <li><a href="#"><span class="fa fa-twitter"></span></a></li>
-  <li><a href="#"><span class="fa fa-linkedin"></span></a></li>
-  <li><a href="#"><span class="fa fa-google-plus"></span></a></li>
-  <li><a href="#"><span class="fa fa-instagram"></span></a></li>
-        
-        </ul>
-  <ul class="list-inline pull-right">
-  <li><a href="callto:011-41557685"><span class="fa fa-phone"></span>&emsp;011-41557685</a></li>
-  <li><a href="mailto:info@addlauncher.com"><span class="fa fa-envelope"></span>&emsp;info@addlauncher.com</a></li>
-
-        </ul>
-      </div>
-  </div>  <!-- Top Bar ends here -->
 
 @PHP
 $printsession = (array) Session::get('cart');
@@ -23,68 +6,134 @@ $printsession = (array) Session::get('cart');
 @ENDPHP
 
 
-<nav class="navbar navbar-default menu-bg">
-  <div class="container">
-    <div class="main-head">
-      <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="{{env('APP_URL')}}"><img src="{{asset('images/logo/addlogo2.png')}}" class="img-responsive logo"></a>
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right main-right-menu">
-            
-            @if(Sentinel::check())
-              @if(Sentinel::getUser()->roles()->first()->slug == 'admin')
-                <li><a href="{{route('dashboard')}}">Dashboard <i class="fa fa-tachometer" aria-hidden="true"></i></a></li>
-              @endif
-            @endif
-           
-            <li><a href="{{ route('cart.shoppingCart') }}">Shop Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-            @if(count($printsession) > 0)
-              @if( $printsession['totalQty'] != 0 )
-              <span class="badge">{{$printsession['totalQty']}}</span>
-              @endif
-            @endif
-            </a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i>@if(Sentinel::check()) Hi {{ Sentinel::getUser()->first_name }} @else User @endif <span class="caret"></span></a>
-              <ul class="dropdown-menu">
+<div class="header-content">
+  <nav id="top">
+    <div class="container">
+      <div class="container-ink">
+        <div class="row">
+          <div class="col-md-6 col-sm-6 col-xs-12">
+             <div class="top-links-left">
+                <div class="dropdown top-account">
+
+                  <a href="#" title="" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class=""><em class="lnr lnr-user"></em> 
+                      @if(Sentinel::check()) 
+                        Hi {{ Sentinel::getUser()->first_name }} 
+                      @else 
+                        My Account 
+                      @endif
+                    </span><i class="fa fa-angle-down "></i>
+                  </a>
+
+
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    @if(Sentinel::check())
+                          <li><a href="{{route('user.profile')}}"> Profile</a></li>
+                          <li><form action="{{ route('user.postsignout') }}" method="POST" id="logout-form">{{csrf_field()}}<a href="#" onclick="document.getElementById('logout-form').submit()">Logout</a></form></li>
+                          @else
+                          <li><a data-name="Register Here" href="{{route('user.signup')}}" id="register">Register</a></li>
+                          <li><a data-name="Login Form" href="{{route('user.signin')}}" id="login">Login</a></li>
+                    @endif
+                  </ul>
+                  
                   @if(Sentinel::check())
-                  <li><a href="{{route('user.profile')}}"><i class="fa fa-user-md" aria-hidden="true"></i> Profile</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><form action="{{ route('user.postsignout') }}" method="POST" id="logout-form">{{csrf_field()}}<a href="#" onclick="document.getElementById('logout-form').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a></form></li>
-                  @else
-                  <li><a data-name="Register Here" href="{{route('user.signup')}}" id="register"><i class="fa fa-user-plus" aria-hidden="true"></i>SignUp</a></li>
-                  <li><a data-name="Login Form" href="{{route('user.signin')}}" id="login"><i class="fa fa-sign-in" aria-hidden="true"></i>SignIn</a></li>
+                    @if(Sentinel::getUser()->roles()->first()->slug == 'admin') 
+                      <a href="{{route('dashboard')}}" class="head-link" >
+                        <em class="lnr lnr-cog"></em>
+                           Dashboard 
+                      </a>
                   @endif
-              </ul>
-            </li>
-            <!-- search form -->
-            <li class="s-icon">
-              <a href="#" id="addClass"><span class="glyphicon glyphicon-search"></span></a>
-            </li>
+                  @endif
+                 
+                  
+                </div>
 
-          </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- main-head close -->
-    
-  </div><!-- /.container-fluid -->
-</nav>
-
-<div id="qnimate" class="off">
-            <div id="search" class="open">
-            <button data-widget="remove" id="removeClass" class="close" type="button">×</button>
-            <form action="" method="" autocomplete="off">
-                    <input type="text" placeholder="Type search keywords here" value="" name="term" id="term">
-                    <button class="btn btn-lg btn-site" type="submit"><span class="glyphicon glyphicon-search"></span> Search</button>
-            </form>
-           
             </div>
+          </div>
+         
+          <div class="col-md-6 col-xs-12 col-sm-6">
+            <div class="top-links-right">
+              <div class="top-wishlist">
+                <a href="callto:011-41557685" id="wishlist-total" >
+                  <em class="lnr lnr-phone-handset"></em>
+                    <span class="text-top-wishlist"> 011-41557685 </span>
+                </a>
+              </div>
+              <div class="top-checkout">
+                <a href="mailto:info@addlauncher.com" title="info@addlauncher.com">
+                  <em class="lnr lnr-envelope"></em> 
+                  <span class="text-top-checkout">info@addlauncher.com</span>
+                </a>
+
+
+              </div> 
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+  </nav>
+
+<div class="fixed-div"> <!-- fixed-div starts here -->
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-3 col-sms-12">
+          <div id="logo">
+            <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/addlogo3.png')}}" title="Add Launcher" alt="Add Launcher" class="img-responsive" /></a>
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-sms-12">
+          <div id="cmsblock-30" class="cmsblock">
+            <div class="description">
+                  <div class="header-icon">
+                    <div class="col col1">
+                      <em class="lnr lnr-phone"></em>
+                      <div class="header-content">
+                        <h2>Free shipping</h2>
+                        <p>Free shipping on all order</p>
+                      </div>
+                      
+                      
+                    </div>
+                    <div class="col col2">
+                      <em class="lnr lnr-rocket"></em>
+                      <div class="header-content">
+                        <h2>Suppost 24/7</h2>
+                        <p>We support online 24 hours a day</p>
+                      </div>
+
+                    </div>
+                  </div>                                    
+              </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 col-sms-12">
+          <div class="">
+            <div class="button-link-top">
+               <div id="cart" class="btn-group btn-block">
+                <a href="{{ route('cart.shoppingCart') }}" class="btn btn-inverse btn-block btn-lg">
+                  <span id="cart-total">
+                    @if(count($printsession) > 0)
+                        @if( $printsession['totalQty'] != 0 )
+                          <span class="item-top-cart"><span class="cartQuantity">{{$printsession['totalQty']}}</span> <span class="cart-item">item(s) -</span>
+                        @endif
+
+                        @if( $printsession['totalPrice'] != 0 )
+                          <span class="fa fa-inr"><span class="cartTotal"> {{$printsession['totalPrice']}}</span></span>
+                          @else
+                          <span class="fa fa-inr"><span class="cartTotal"> 0.00</span></span>
+                        @endif
+                    
+                    @endif
+
+                    </span>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>

@@ -24,6 +24,31 @@ class CinemaController extends Controller
        $cinema_ads = Cinemas::all();
        return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads]);
     }
+
+    public function getfrontCinemaadByOption($cinemaOption)
+    {
+       
+        $cinema_ads = Cinemas::all()->toArray();
+       
+        $cinemaOption1 = '%'.$cinemaOption.'%';
+        $cinemas = array();
+        foreach($cinema_ads as $cinema){
+            $count = Cinemasprice::where([
+                                    ['cinemas_id', '=', $cinema['id']],
+                                    ['price_key', 'LIKE', $cinemaOption1],
+                                   ])->get()->count();
+            if($count > 0){
+                 $cinemapriceOptions = Cinemasprice::where([
+                                    ['cinemas_id', '=', $cinema['id']],
+                                    ['price_key', 'LIKE', $cinemaOption1],
+                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+                array_push($cinema, $cinemapriceOptions);
+                $cinemas[] = array_flatten($cinema);
+            }
+       }
+       
+        return view('frontend-mediatype.cinemas.cinema-single', ['products' => $cinemas, 'cinemaOption' => $cinemaOption]);
+    }
     
     public function getfrontCinemaad($id)
     {
@@ -107,29 +132,20 @@ class CinemaController extends Controller
 
         //cinema display prices insertion
 
-   	  
-   	   if($request->has('price_rate_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_rate_per_week', $request->input('price_rate_per_week'));
+      
+       if($request->has('price_rate_per_week')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_rate_per_week', $request->input('price_rate_per_week'), 'duration_rate_per_week', $request->input('duration_rate_per_week'));
         }
       
-       if($request->has('duration_rate_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'duration_rate_per_week', $request->input('duration_rate_per_week'));
-        }
 
        if($request->has('price_trailor_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'));
+            $this->addCinemaPrice($lastinsert_ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'), 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
         } //can be used as no of seats or no of screens
 
-        if($request->has('duration_trailor_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
-        }
+       
         if($request->has('price_mute_slide_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'));
+            $this->addCinemaPrice($lastinsert_ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'), 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
         }
-        if($request->has('duration_mute_slide_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
-        }
-
        
 
        
@@ -138,13 +154,15 @@ class CinemaController extends Controller
     }
 
     //insert price data to cinema price table
-    public function addCinemaPrice($id, $key, $value)
+    public function addCinemaPrice($id, $pricekey, $pricevalue, $durkey, $durvalue)
     {
         $insert = new Cinemasprice();
 
-        $insert->cinemas_id = $id;
-        $insert->price_key = $key;
-        $insert->price_value = $value;
+       $insert->cinemas_id = $id;
+        $insert->price_key = $pricekey;
+        $insert->price_value = $pricevalue;
+        $insert->duration_key = $durkey;
+        $insert->duration_value = $durvalue;
        
         $insert->save();
 
@@ -169,17 +187,10 @@ class CinemaController extends Controller
         $cinemapriceData = Cinemasprice::where('cinemas_id', $ID)->get();
         $fieldData = array();
         foreach($cinemapriceData as $pricecinema){
-           $fieldData[] = $pricecinema->price_key;
+            $fieldData[] = ucwords(str_replace('_', ' ', substr($pricecinema->price_key, 6)));
         }
 
-        $name_key = array_chunk($fieldData, 2);
-        $datta = array();
-         $j = 0; 
-		foreach($name_key as $options){
-			$datta[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-			$j++;
-		}
-       $fieldDatas = serialize($datta);
+       $fieldDatas = serialize($fieldData);
         return view('backend.mediatypes.cinemas.cinema-editform', ['cinema' => $cinemaData, 'cinemapricemeta' => $cinemapriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
@@ -188,9 +199,9 @@ class CinemaController extends Controller
         $displayoptions = json_decode($request['displayoptions']);
         $datta = array();
         foreach($displayoptions as $options){
-			$datta[] = strtolower(str_replace(' ', '_', $options));
-		
-		}
+            $datta[] = strtolower(str_replace(' ', '_', $options));
+        
+        }
         $count = Cinemasprice::where([
                                     ['cinemas_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
@@ -202,16 +213,12 @@ class CinemaController extends Controller
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
             $cinemas->delete();
-             $cinemasduration = Cinemasprice::where([
-                                    ['cinemas_id', '=', $request['id']],
-                                    ['price_key', '=', $request['duration_key']],
-                                ])->first();
-            $cinemasduration->delete();
+             
             return response(['msg' => 'price deleted'], 200);
-        }
+        }else{
               
             return response(['msg' => 'Value not present in db!'], 200);
-        
+        }
     }
 
     public function postUpdateeCinemaad(Request $request, $ID)
@@ -264,46 +271,150 @@ class CinemaController extends Controller
 
         //cinema display prices insertion
 
-   	   if($request->has('price_rate_per_week')){
-            $this->updateCinemaPrice($ID, 'price_rate_per_week', $request->input('price_rate_per_week'));
-        }
-      
-       if($request->has('duration_rate_per_week')){
-            $this->updateCinemaPrice($ID, 'duration_rate_per_week', $request->input('duration_rate_per_week'));
+       if($request->has('price_rate_per_week')){
+            $this->updateCinemaPrice($ID, 'price_rate_per_week', $request->input('price_rate_per_week'), 'duration_rate_per_week', $request->input('duration_rate_per_week'));
         }
 
        if($request->has('price_trailor_per_week')){
-            $this->updateCinemaPrice($ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'));
+            $this->updateCinemaPrice($ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'), 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
         } //can be used as no of seats or no of screens
 
-        if($request->has('duration_trailor_per_week')){
-            $this->updateCinemaPrice($ID, 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
-        }
+       
         if($request->has('price_mute_slide_per_week')){
-            $this->updateCinemaPrice($ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'));
+            $this->updateCinemaPrice($ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'), 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
         }
-        if($request->has('duration_mute_slide_per_week')){
-            $this->updateCinemaPrice($ID, 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
-        }
+        
 
         //return to cinema product list
        return redirect()->route('dashboard.getCinemaList')->with('message', 'Successfully Edited!');
     }
 
-    public function updateCinemaPrice( $id, $meta_key, $meta_value){
+    public function updateCinemaPrice( $id, $pricekey, $pricevalue, $durkey, $durvalue){
         $count = Cinemasprice::where([
                                     ['cinemas_id', '=', $id],
-                                    ['price_key', '=', $meta_key],
+                                    ['price_key', '=', $pricekey],
                                 ])->count();
         if($count < 1){
-            $this->addCinemaPrice($id, $meta_key, $meta_value);
+            $this->addCinemaPrice($id, $pricekey, $pricevalue, $durkey, $durvalue);
         }else{
             $update = Cinemasprice::where([
                                     ['cinemas_id', '=', $id],
-                                    ['price_key', '=', $meta_key],
-                                ])->update(['price_value' => $meta_value]);
+                                    ['price_key', '=', $pricekey],
+                                ])->update(['price_value' => $pricevalue, 'duration_value' => $durvalue]);
         }
         
+   }
+
+   //Fliter Functions
+   public function getFilterCinemaAds(Request $request){
+       $params = array_filter($request->all());
+       foreach($params as $key=>$value){
+            if($key == 'pricerange'){
+                
+                $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $value); // comparion operator
+                if($filter_priceCamparsion != '<>'){
+                     $filter_price = preg_replace('/[^0-9]/', '', $value);
+                     $cinemapriceOptions = Cinemasprice::where([
+                                    ['price_key', 'LIKE', 'price_%'],                                    
+                                    ['price_value', $filter_priceCamparsion, $filter_price],
+                                    ])->get()->toArray();
+                }else{
+                     $filter_price = preg_replace('/[^0-9]/', '_', $value);
+                     $filter_price = explode('_', $filter_price);
+                    
+                     $cinemapriceOptions = Cinemasprice::where([
+                                    ['price_key', 'LIKE', 'price_%'],                                    
+                                    ['price_value', '>=', $filter_price[0]],
+                                    ['price_value', '<=', $filter_price[2]],
+                                    ])->get()->toArray();   
+                }
+                if(count($cinemapriceOptions)>0){
+                
+                foreach($cinemapriceOptions as $key => $value){
+                    $cinema_ads = Cinemas::find($value['cinemas_id'])->get()->toArray();
+                    $filterLike = substr($value['price_key'], 6);
+                    $cinemaOption1 = '%'.$filterLike;
+                    $cinemas = array();
+                    
+                    $cinemapriceOptions = Cinemasprice::where([
+                                ['cinemas_id', '=', $value['cinemas_id']],
+                                ['price_key', 'LIKE', $cinemaOption1],
+                                //['price_value', $filter_priceCamparsion, $filter_price],
+                                ])->get(array('price_key', 'price_value','duration_key', 'duration_value'))->toArray();
+                        
+                    array_push($cinema_ads, $cinemapriceOptions);
+                    $cinemas[] = array_flatten($cinema_ads);
+                     
+                   
+               
+                }
+                if(count($cinemas)>0){
+                    echo "<pre>";
+                    print_r($cinemas);
+                    echo "</pre>";
+                    foreach($cinemas as $searchCinema){
+                       $this->cinema_ads($searchCinema);
+                    }
+                
+                    }else{
+                        echo "<b>No results to display!</b>";
+                }
+
+            }else{
+                echo "<b>No results to display!</b>";
+            }
+                
+            
+            }
+            
+           
+            
+            if($key == 'locationFilter'){
+                
+            }
+
+            
+       }
+        $content = ob_get_contents();
+        ob_get_clean();
+        return $content;
+       
+       
+   }
+   public function cinema_ads($searchCinema)
+   {
+       ?>
+       <div class="col-md-3 col-sm-3 "> 
+        <div class="pro-item"> 
+            <div class=" cat-opt-img "> <img src="<?= asset('images/cinemas/'.$searchCinema[11]) ?>"> </div>
+            <p class="font-1"><?= $searchCinema[3] ?></p>
+            <p class="font-2"><?= $searchCinema[5] ?> | <?= $searchCinema[6] ?> | <?= $searchCinema[7] ?></p>
+            <p class="font-3"><?= $searchCinema[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchCinema[18]), 6))?> for <?= $searchCinema[23]?> months</p>
+            <p class="font-2"><del class="lighter">Rs <?= $searchCinema[19]?> </del>Rs <?= $searchCinema[19]?> </p>
+            <?php
+            $options = $searchCinema[19].'+'.$searchCinema[18];
+            $session_key = 'cinemas'.'_'.$searchCinema[18].'_'.$searchCinema[0];
+            $printsession = (array) Session::get('cart');
+                            
+           ?>
+            <div class="clearfix"> 
+                <a class="glass" href="<?= route('cinema.addtocart', ['id' => $searchCinema[0], 'variation' => $options]) ?>"><span class="fa fa-star"></span>
+                <?php
+                    if(count($printsession) > 0){
+                     if(array_key_exists($session_key, $printsession['items'])){
+                       echo "Remove From Cart"; 
+                    }else{
+                        echo "Add to Cart"; 
+                    }
+                    }else{
+                        echo "Add to Cart";
+                    }
+                ?>
+            </a> 
+            </div>
+        </div>
+    </div>
+    <?php
    }
 
     //cart functions
@@ -315,42 +426,12 @@ class CinemaController extends Controller
         $selectDisplayOpt = explode("+", $variation);
 
         $main_key = substr($selectDisplayOpt[1], 6);
-        
-        $duration_key = "duration_".$main_key;
 
         $cinema_price = Cinemasprice::where([
                                     ['cinemas_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
-
         
-        $cinema_duration = Cinemasprice::where([
-                                    ['cinemas_id', '=', $id],
-                                    ['price_key', '=', $duration_key],
-                                ])->first()->toArray();
-        $cinema_change_price = array();
-        foreach($cinema_price as $key => $value){
-            if($key == 'price_key'){
-                $cinema_change_price[$key] = $value;
-            }
-            if($key == 'price_value'){
-               $cinema_change_price[$key] = $value;
-            }
-        }
-       
-        $cinema_change_duration = array();
-        foreach($cinema_duration as $key => $value){
-            if($key == 'price_key'){
-                $key = 'duration_key';
-                $cinema_change_duration[$key] = $value;
-            }
-            if($key == 'price_value'){
-                $key = 'duration_value';
-                $cinema_change_duration[$key] = $value;
-            }
-        }
-       
-        $cinema_price = array_merge($cinema_change_price, $cinema_change_duration);
         
         $cinema_Ad = array_merge($cinema_ad, $cinema_price);
        
@@ -358,7 +439,7 @@ class CinemaController extends Controller
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($cinema_Ad, $cinema_ad['id'], 'cinemas'); //pass full cinema details, id and model name like "cinemas"
+        $cart->addorRemove($cinema_Ad, $cinema_ad['id'], 'cinemas', $flag=true); //pass full cinema details, id and model name like "cinemas"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');

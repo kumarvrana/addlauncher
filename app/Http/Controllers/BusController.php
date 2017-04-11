@@ -22,14 +22,49 @@ class BusController extends Controller
     {
        $bus_ads = Buses::all();
        return view('frontend-mediatype.buses.busads-list', ['products' => $bus_ads]);
+
+    }
+
+     public function getfrontBusadByOption($busOption)
+    {
+       
+        $bus_ads = Buses::all()->toArray();
+       
+        $busOption1 = '%'.$busOption.'%';
+        $buses = array();
+        foreach($bus_ads as $bus){
+            $count = Busesprice::where([
+                                    ['buses_id', '=', $bus['id']],
+                                    ['price_key', 'LIKE', $busOption1],
+                                   ])->get()->count();
+            if($count > 0){
+                 $buspriceOptions = Busesprice::where([
+                                    ['buses_id', '=', $bus['id']],
+                                    ['price_key', 'LIKE', $busOption1],
+                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+                array_push($bus, $buspriceOptions);
+                $buses[] = array_flatten($bus);
+            }
+       }
+       
+        return view('frontend-mediatype.buses.bus-single', ['products' => $buses, 'busOption' => $busOption]);
     }
     
     public function getfrontBusad($id)
     {
         $busad = Buses::find($id);
+        if($busad){
+            if($busad->status === "3" || $busad->status === "2"){
+                return redirect()->back();
+            }else{
         $busprice = Busesprice::where('buses_id', $id)->get();
         return view('frontend-mediatype.buses.bus-single', ['busad' => $busad, 'busprice' => $busprice]);
     }
+    }else{
+            return redirect()->back();
+        }
+        
+     }
     
     
     // frontend functions ends
@@ -100,124 +135,64 @@ class BusController extends Controller
         //bus display prices insertion
 
         if($request->has('price_full')){
-            $this->addBusPrice($lastinsert_ID, 'price_full', $request->input('price_full'));
+            $this->addBusPrice($lastinsert_ID, 'price_full', $request->input('price_full'), 'number_full', $request->input('number_full'), 'duration_full', $request->input('duration_full'));
         }
-        if($request->has('number_full')){
-            $this->addBusPrice($lastinsert_ID, 'number_full', $request->input('number_full'));
-        }
-
-       if($request->has('duration_full')){
-            $this->addBusPrice($lastinsert_ID, 'duration_full', $request->input('duration_full'));
-        }
-
+       
 
         if($request->has('price_both_side')){
-            $this->addBusPrice($lastinsert_ID, 'price_both_side', $request->input('price_both_side'));
+            $this->addBusPrice($lastinsert_ID, 'price_both_side', $request->input('price_both_side'), 'number_both_side', $request->input('number_both_side'), 'duration_both_side', $request->input('duration_both_side'));
         }
-        if($request->has('number_both_side')){
-            $this->addBusPrice($lastinsert_ID, 'number_both_side', $request->input('number_both_side'));
-        }
-
-       if($request->has('duration_both_side')){
-            $this->addBusPrice($lastinsert_ID, 'duration_both_side', $request->input('duration_both_side'));
-        }
+        
 
         if($request->has('price_left_side')){
-            $this->addBusPrice($lastinsert_ID, 'price_left_side', $request->input('price_left_side'));
+            $this->addBusPrice($lastinsert_ID, 'price_left_side', $request->input('price_left_side'), 'number_left_side', $request->input('number_left_side'), 'duration_left_side', $request->input('duration_left_side'));
         }
-        if($request->has('number_left_side')){
-            $this->addBusPrice($lastinsert_ID, 'number_left_side', $request->input('number_left_side'));
-        }
-
-       if($request->has('duration_left_side')){
-            $this->addBusPrice($lastinsert_ID, 'duration_left_side', $request->input('duration_left_side'));
-        }
-
+       
 
         if($request->has('price_right_side')){
-            $this->addBusPrice($lastinsert_ID, 'price_right_side', $request->input('price_right_side'));
+            $this->addBusPrice($lastinsert_ID, 'price_right_side', $request->input('price_right_side'), 'number_right_side', $request->input('number_right_side'), 'duration_right_side', $request->input('duration_right_side'));
         }
-        if($request->has('number_right_side')){
-            $this->addBusPrice($lastinsert_ID, 'number_right_side', $request->input('number_right_side'));
-        }
-
-       if($request->has('duration_right_side')){
-            $this->addBusPrice($lastinsert_ID, 'duration_right_side', $request->input('duration_right_side'));
-        }
-
+        
 
         if($request->has('price_back_side')){
-            $this->addBusPrice($lastinsert_ID, 'price_back_side', $request->input('price_back_side'));
+            $this->addBusPrice($lastinsert_ID, 'price_back_side', $request->input('price_back_side'), 'number_back_side', $request->input('number_back_side'), 'duration_back_side', $request->input('duration_back_side'));
         }
-        if($request->has('number_back_side')){
-            $this->addBusPrice($lastinsert_ID, 'number_back_side', $request->input('number_back_side'));
-        }
-
-       if($request->has('duration_back_side')){
-            $this->addBusPrice($lastinsert_ID, 'duration_back_side', $request->input('duration_back_side'));
-        }
-
+        
 
         if($request->has('price_back_glass')){
-            $this->addBusPrice($lastinsert_ID, 'price_back_glass', $request->input('price_back_glass'));
+            $this->addBusPrice($lastinsert_ID, 'price_back_glass', $request->input('price_back_glass'), 'number_back_glass', $request->input('number_back_glass'), 'duration_back_glass', $request->input('duration_back_glass'));
         }
-        if($request->has('number_back_glass')){
-            $this->addBusPrice($lastinsert_ID, 'number_back_glass', $request->input('number_back_glass'));
-        }
-
-       if($request->has('duration_back_glass')){
-            $this->addBusPrice($lastinsert_ID, 'duration_back_glass', $request->input('duration_back_glass'));
-        }
-
+       
 
         if($request->has('price_internal_ceiling')){
-            $this->addBusPrice($lastinsert_ID, 'price_internal_ceiling', $request->input('price_internal_ceiling'));
-        }
-        if($request->has('number_internal_ceiling')){
-            $this->addBusPrice($lastinsert_ID, 'number_internal_ceiling', $request->input('number_internal_ceiling'));
-        }
-
-       if($request->has('duration_internal_ceiling')){
-            $this->addBusPrice($lastinsert_ID, 'duration_internal_ceiling', $request->input('duration_internal_ceiling'));
+            $this->addBusPrice($lastinsert_ID, 'price_internal_ceiling', $request->input('price_internal_ceiling'), 'number_internal_ceiling', $request->input('number_internal_ceiling'), 'duration_internal_ceiling', $request->input('duration_internal_ceiling'));
         }
 
 
         if($request->has('price_bus_grab_handles')){
-            $this->addBusPrice($lastinsert_ID, 'price_bus_grab_handles', $request->input('price_bus_grab_handles'));
+            $this->addBusPrice($lastinsert_ID, 'price_bus_grab_handles', $request->input('price_bus_grab_handles'), 'number_bus_grab_handles', $request->input('number_bus_grab_handles'), 'duration_bus_grab_handles', $request->input('duration_bus_grab_handles'));
         }
-        if($request->has('number_bus_grab_handles')){
-            $this->addBusPrice($lastinsert_ID, 'number_bus_grab_handles', $request->input('number_bus_grab_handles'));
-        }
-
-       if($request->has('duration_bus_grab_handles')){
-            $this->addBusPrice($lastinsert_ID, 'duration_bus_grab_handles', $request->input('duration_bus_grab_handles'));
-        }
-
 
         if($request->has('price_inside_billboards')){
-            $this->addBusPrice($lastinsert_ID, 'price_inside_billboards', $request->input('price_inside_billboards'));
+            $this->addBusPrice($lastinsert_ID, 'price_inside_billboards', $request->input('price_inside_billboards'), 'number_inside_billboards', $request->input('number_inside_billboards'), 'duration_inside_billboards', $request->input('duration_inside_billboards'));
         }
-        if($request->has('number_inside_billboards')){
-            $this->addBusPrice($lastinsert_ID, 'number_inside_billboards', $request->input('number_inside_billboards'));
-        }
-
-       if($request->has('duration_inside_billboards')){
-            $this->addBusPrice($lastinsert_ID, 'duration_inside_billboards', $request->input('duration_inside_billboards'));
-        }
-
        
         //return to bus product list
        return redirect()->route('dashboard.getBusList')->with('message', 'Successfully Added!');
     }
 
     //insert price data to bus price table
-    public function addBusPrice($id, $key, $value)
+    public function addBusPrice($id, $pricekey, $pricevalue, $numkey, $numvalue, $durkey, $durvalue)
     {
         $insert = new Busesprice();
 
         $insert->buses_id = $id;
-        $insert->price_key = $key;
-        $insert->price_value = $value;
+        $insert->price_key = $pricekey;
+        $insert->price_value = $pricevalue;
+        $insert->number_key = $numkey;
+        $insert->number_value = $numvalue;
+        $insert->duration_key = $durkey;
+        $insert->duration_value = $durvalue;
        
         $insert->save();
 
@@ -242,16 +217,10 @@ class BusController extends Controller
         $buspriceData = Busesprice::where('buses_id', $ID)->get();
         $fieldData = array();
         foreach($buspriceData as $pricebus){
-           $fieldData[] = $pricebus->price_key;
+           $fieldData[] = ucwords(str_replace('_', ' ', substr($pricebus->price_key, 6)));
         }
-       $name_key = array_chunk($fieldData, 3);
-        $datta = array();
-         $j = 0; 
-		foreach($name_key as $options){
-			$datta[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-			$j++;
-		}
-       $fieldDatas = serialize($datta);
+      
+       $fieldDatas = serialize($fieldData);
         return view('backend.mediatypes.buses.bus-editform', ['bus' => $busData, 'buspricemeta' => $buspriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
@@ -274,21 +243,12 @@ class BusController extends Controller
                                     ['price_key', '=', $request['price_key']],
                                 ])->first();
             $buses->delete();
-            $busesnumber = Busesprice::where([
-                                    ['buses_id', '=', $request['id']],
-                                    ['price_key', '=', $request['number_key']]
-                                ])->first();
-            $busesnumber->delete();
-            $busesduration = Busesprice::where([
-                                    ['buses_id', '=', $request['id']],
-                                    ['price_key', '=', $request['duration_key']]
-                                ])->first();
-            $busesduration->delete();
+
             return response(['msg' => 'price deleted'], 200);
-        }
+        }else{
               
             return response(['msg' => 'Value not present in db!'], 200);
-        
+        }
     }
 // this fnction updste busads 
 // $id ad id
@@ -336,134 +296,177 @@ class BusController extends Controller
         //bus display prices insertion
 
         if($request->has('price_full')){
-            $this->updateBusPrice($ID, 'price_full', $request->input('price_full'));
+            $this->updateBusPrice($ID, 'price_full', $request->input('price_full'), 'number_full', $request->input('number_full'), 'duration_full', $request->input('duration_full'));
         }
-        if($request->has('number_full')){
-            $this->updateBusPrice($ID, 'number_full', $request->input('number_full'));
-        }
-
-       if($request->has('duration_full')){
-            $this->updateBusPrice($ID, 'duration_full', $request->input('duration_full'));
-        }
-
-
+       
 
         if($request->has('price_both_side')){
-            $this->updateBusPrice($ID, 'price_both_side', $request->input('price_both_side'));
-        }
-
-        if($request->has('number_both_side')){
-            $this->updateBusPrice($ID, 'number_both_side', $request->input('number_both_side'));
-        }
-
-       if($request->has('duration_both_side')){
-            $this->updateBusPrice($ID, 'duration_both_side', $request->input('duration_both_side'));
+            $this->updateBusPrice($ID, 'price_both_side', $request->input('price_both_side'), 'number_both_side', $request->input('number_both_side'), 'duration_both_side', $request->input('duration_both_side'));
         }
 
 
         if($request->has('price_left_side')){
-            $this->updateBusPrice($ID, 'price_left_side', $request->input('price_left_side'));
+            $this->updateBusPrice($ID, 'price_left_side', $request->input('price_left_side'), 'number_left_side', $request->input('number_left_side'), 'duration_left_side', $request->input('duration_left_side'));
         }
-        if($request->has('number_left_side')){
-            $this->updateBusPrice($ID, 'number_left_side', $request->input('number_left_side'));
-        }
-
-       if($request->has('duration_left_side')){
-            $this->updateBusPrice($ID, 'duration_left_side', $request->input('duration_left_side'));
-        }
-
 
         if($request->has('price_right_side')){
-            $this->updateBusPrice($ID, 'price_right_side', $request->input('price_right_side'));
+            $this->updateBusPrice($ID, 'price_right_side', $request->input('price_right_side'),'number_right_side', $request->input('number_right_side'), 'duration_right_side', $request->input('duration_right_side'));
         }
-        if($request->has('number_right_side')){
-            $this->updateBusPrice($ID, 'number_right_side', $request->input('number_right_side'));
-        }
-
-       if($request->has('duration_right_side')){
-            $this->updateBusPrice($ID, 'duration_right_side', $request->input('duration_right_side'));
-        }
-
-
+        
         if($request->has('price_back_side')){
-            $this->updateBusPrice($ID, 'price_back_side', $request->input('price_back_side'));
+            $this->updateBusPrice($ID, 'price_back_side', $request->input('price_back_side'), 'number_back_side', $request->input('number_back_side'), 'duration_back_side', $request->input('duration_back_side'));
         }
-        if($request->has('number_back_side')){
-            $this->updateBusPrice($ID, 'number_back_side', $request->input('number_back_side'));
-        }
-
-       if($request->has('duration_back_side')){
-            $this->updateBusPrice($ID, 'duration_back_side', $request->input('duration_back_side'));
-        }
-
+        
 
         if($request->has('price_back_glass')){
-            $this->updateBusPrice($ID, 'price_back_glass', $request->input('price_back_glass'));
+            $this->updateBusPrice($ID, 'price_back_glass', $request->input('price_back_glass'), 'number_back_glass', $request->input('number_back_glass'), 'duration_back_glass', $request->input('duration_back_glass'));
         }
-        if($request->has('number_back_glass')){
-            $this->updateBusPrice($ID, 'number_back_glass', $request->input('number_back_glass'));
-        }
-
-       if($request->has('duration_back_glass')){
-            $this->updateBusPrice($ID, 'duration_back_glass', $request->input('duration_back_glass'));
-        }
-
 
         if($request->has('price_internal_ceiling')){
-            $this->updateBusPrice($ID, 'price_internal_ceiling', $request->input('price_internal_ceiling'));
+            $this->updateBusPrice($ID, 'price_internal_ceiling', $request->input('price_internal_ceiling'), 'number_internal_ceiling', $request->input('number_internal_ceiling'), 'duration_internal_ceiling', $request->input('duration_internal_ceiling'));
         }
-        if($request->has('number_internal_ceiling')){
-            $this->updateBusPrice($ID, 'number_internal_ceiling', $request->input('number_internal_ceiling'));
-        }
-
-       if($request->has('duration_internal_ceiling')){
-            $this->updateBusPrice($ID, 'duration_internal_ceiling', $request->input('duration_internal_ceiling'));
-        }
-
+       
 
         if($request->has('price_bus_grab_handles')){
-            $this->updateBusPrice($ID, 'price_bus_grab_handles', $request->input('price_bus_grab_handles'));
+            $this->updateBusPrice($ID, 'price_bus_grab_handles', $request->input('price_bus_grab_handles'), 'number_bus_grab_handles', $request->input('number_bus_grab_handles'), 'duration_bus_grab_handles', $request->input('duration_bus_grab_handles'));
         }
-        if($request->has('number_bus_grab_handles')){
-            $this->updateBusPrice($ID, 'number_bus_grab_handles', $request->input('number_bus_grab_handles'));
-        }
-
-       if($request->has('duration_bus_grab_handles')){
-            $this->updateBusPrice($ID, 'duration_bus_grab_handles', $request->input('duration_bus_grab_handles'));
-        }
-
+        
 
         if($request->has('price_inside_billboards')){
-            $this->updateBusPrice($ID, 'price_inside_billboards', $request->input('price_inside_billboards'));
+            $this->updateBusPrice($ID, 'price_inside_billboards', $request->input('price_inside_billboards'), 'number_inside_billboards', $request->input('number_inside_billboards'), 'duration_inside_billboards', $request->input('duration_inside_billboards'));
         }
-        if($request->has('number_inside_billboards')){
-            $this->updateBusPrice($ID, 'number_inside_billboards', $request->input('number_inside_billboards'));
-        }
-
-       if($request->has('duration_inside_billboards')){
-            $this->updateBusPrice($ID, 'duration_inside_billboards', $request->input('duration_inside_billboards'));
-        }
-
-        
+       
 
         //return to bus product list
        return redirect()->route('dashboard.getBusList')->with('message', 'Successfully Edited!');
     }
 
-    public function updateBusPrice( $id, $meta_key, $meta_value){
+    public function updateBusPrice( $id, $pricekey, $pricevalue, $numkey, $numvalue, $durkey, $durvalue){
         $count = Busesprice::where([
                                     ['buses_id', '=', $id],
-                                    ['price_key', '=', $meta_key],
+                                    ['price_key', '=', $pricekey],
                                 ])->count();
         if($count < 1){
-            $this->addBusPrice($id, $meta_key, $meta_value);
+            $this->addBusPrice($id, $pricekey, $pricevalue, $numkey, $numvalue, $durkey, $durvalue);
         }else{
             $update = Busesprice::where([
                                     ['buses_id', '=', $id],
-                                    ['price_key', '=', $meta_key],
-                                ])->update(['price_value' => $meta_value]);
+                                    ['price_key', '=', $pricekey],
+                                ])->update(['price_value' => $pricevalue, 'number_value' => $numvalue, 'duration_value' => $durvalue]);
         }
         
+   }
+
+   //Fliter Functions
+   public function getFilterBusAds(Request $request){
+       $params = array_filter($request->all());
+       foreach($params as $key=>$value){
+            if($key == 'pricerange'){
+                
+                $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $value); // comparion operator
+                if($filter_priceCamparsion != '<>'){
+                     $filter_price = preg_replace('/[^0-9]/', '', $value);
+                     $buspriceOptions = Busesprice::where([
+                                    ['price_key', 'LIKE', 'price_%'],                                    
+                                    ['price_value', $filter_priceCamparsion, $filter_price],
+                                    ])->get()->toArray();
+                }else{
+                     $filter_price = preg_replace('/[^0-9]/', '_', $value);
+                     $filter_price = explode('_', $filter_price);
+                    
+                     $buspriceOptions = Busesprice::where([
+                                    ['price_key', 'LIKE', 'price_%'],                                    
+                                    ['price_value', '>=', $filter_price[0]],
+                                    ['price_value', '<=', $filter_price[2]],
+                                    ])->get()->toArray();   
+                }
+                if(count($buspriceOptions)>0){
+                
+                foreach($buspriceOptions as $key => $value){
+                    $bus_ads = Buses::find($value['buses_id'])->get()->toArray();
+                    $filterLike = substr($value['price_key'], 6);
+                    $busOption1 = '%'.$filterLike;
+                    $buses = array();
+                    
+                    $buspriceOptions = Busesprice::where([
+                                ['buses_id', '=', $value['buses_id']],
+                                ['price_key', 'LIKE', $busOption1],
+                                //['price_value', $filter_priceCamparsion, $filter_price],
+                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+                        
+                    array_push($bus_ads, $buspriceOptions);
+                    $buses[] = array_flatten($bus_ads);
+                     
+                   
+               
+                }
+                if(count($buses)>0){
+                    echo "<pre>";
+                    print_r($buses);
+                    echo "</pre>";
+                    foreach($buses as $searchBus){
+                       $this->bus_ads($searchBus);
+                    }
+                
+                    }else{
+                        echo "<b>No results to display!</b>";
+                }
+
+            }else{
+                echo "<b>No results to display!</b>";
+            }
+                
+            
+            }
+            
+           
+            
+            if($key == 'locationFilter'){
+                
+            }
+
+            
+       }
+        $content = ob_get_contents();
+        ob_get_clean();
+        return $content;
+       
+       
+   }
+   public function bus_ads($searchBus)
+   {
+       ?>
+       <div class="col-md-3 col-sm-3 "> 
+        <div class="pro-item"> 
+            <div class=" cat-opt-img "> <img src="<?= asset('images/buses/'.$searchBus[11]) ?>"> </div>
+            <p class="font-1"><?= $searchBus[3] ?></p>
+            <p class="font-2"><?= $searchBus[5] ?> | <?= $searchBus[6] ?> | <?= $searchBus[7] ?></p>
+            <p class="font-3"><?= $searchBus[20]?> <?= ucwords(substr(str_replace('_', ' ', $searchBus[18]), 6))?> for <?= $searchBus[22]?> months</p>
+            <p class="font-2"><del class="lighter">Rs <?= $searchBus[19]?> </del>Rs <?= $searchBus[19]?> </p>
+            <?php
+            $options = $searchBus[19].'+'.$searchBus[18];
+            $session_key = 'buses'.'_'.$searchBus[18].'_'.$searchBus[0];
+            $printsession = (array) Session::get('cart');
+                            
+           ?>
+            <div class="clearfix"> 
+                <a class="glass" href="<?= route('bus.addtocart', ['id' => $searchBus[0], 'variation' => $options]) ?>"><span class="fa fa-star"></span>
+                <?php
+                    if(count($printsession) > 0){
+                     if(array_key_exists($session_key, $printsession['items'])){
+                       echo "Remove From Cart"; 
+                    }else{
+                        echo "Add to Cart"; 
+                    }
+                    }else{
+                        echo "Add to Cart";
+                    }
+                ?>
+            </a> 
+            </div>
+        </div>
+    </div>
+    <?php
    }
 
     //cart functions
@@ -474,57 +477,13 @@ class BusController extends Controller
         
         $selectDisplayOpt = explode("+", $variation);
         $main_key = substr($selectDisplayOpt[1], 6);
-        
-        $number_key = "number_".$main_key;
-        $duration_key = "duration_".$main_key;
 
         $bus_price = Busesprice::where([
                                     ['buses_id', '=', $id],
                                     ['price_key', '=', $selectDisplayOpt[1]],
                                 ])->first()->toArray();
 
-        $billboard_number = Busesprice::where([
-                                    ['buses_id', '=', $id],
-                                    ['price_key', '=', $number_key],
-                                ])->first()->toArray();
-        $billboard_duration = Busesprice::where([
-                                    ['buses_id', '=', $id],
-                                    ['price_key', '=', $duration_key],
-                                ])->first()->toArray();
-        $bus_change_price = array();
-        foreach($bus_price as $key => $value){
-            if($key == 'price_key'){
-                $bus_change_price[$key] = $value;
-            }
-            if($key == 'price_value'){
-               $bus_change_price[$key] = $value;
-            }
-        }
-        $bus_change_num = array();
-        foreach($bus_number as $key => $value){
-            if($key == 'price_key'){
-                $key = 'number_key';
-                $bus_change_num[$key] = $value;
-            }
-            if($key == 'price_value'){
-                $key = 'number_value';
-                $bus_change_num[$key] = $value;
-            }
-        }
-        $bus_change_duration = array();
-        foreach($bus_duration as $key => $value){
-            if($key == 'price_key'){
-                $key = 'duration_key';
-                $bus_change_duration[$key] = $value;
-            }
-            if($key == 'price_value'){
-                $key = 'duration_value';
-                $bus_change_duration[$key] = $value;
-            }
-        }
-        $bus_merge = array_merge($bus_change_num, $bus_change_duration);
-        
-        $bus_price = array_merge($bus_change_price, $bus_merge);
+       
         
         $bus_Ad = array_merge($bus_ad, $bus_price);
        
@@ -532,7 +491,7 @@ class BusController extends Controller
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($bus_Ad, $bus_ad['id'], 'buses'); //pass full bus details, id and model name like "buses"
+        $cart->addorRemove($bus_Ad, $bus_ad['id'], 'buses', $flag=true); //pass full bus details, id and model name like "buses"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');

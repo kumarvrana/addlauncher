@@ -98,7 +98,7 @@
                     @endforeach
                                        
                     </div> 
-                    <div class="form-group"><label for="bslighting">Do you want lighting options on airport Stops?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="airport Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="aplighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="airport Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="aplighting" type="radio" value="1">Yes</label></div>
+                    <div class="form-group"><label for="aplighting">Do you want lighting options on airport Stops?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="airport Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="aplighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="airport Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="aplighting" type="radio" value="1">Yes</label></div>
                     <div class="form-group">
                         <label for="airportsnumber">Numbers Of airport Stops Display this Ad? : </label>
                         <input class="form-control" type="text" name="airportsnumber" required>
@@ -136,7 +136,7 @@
         
         <button type="button" class="action back btn btn-info">Back</button>
         <button type="button" class="action next btn btn-info">Next</button>
-        <button type="submit" class="action submit btn btn-success">Add Product</button>    
+        <button type="submit" class="action submit btn btn-success">Add Airport</button>    
     </form>
    
    </div>

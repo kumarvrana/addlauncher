@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\File;
 class MainaddtypeController extends Controller
 {
      public function getAddList(){
-        $cat_list  = Mainaddtype::all();
+        $cat_list  = Mainaddtype::orderBy('title')->get();
         return view('backend.admin.add-cat-list', ['categories' => $cat_list]);
     }
 
@@ -28,6 +28,7 @@ class MainaddtypeController extends Controller
         
          $this->validate( $request, [
             'title' => 'required|unique:mainaddtypes',
+            'label' => 'required|unique:mainaddtypes',
             'description' => 'required',
             'image' => 'required|image',
             'slug' => 'required'
@@ -44,6 +45,7 @@ class MainaddtypeController extends Controller
         $cat = new Mainaddtype([
             'image' => $filename,
             'title' => $request->input('title'),
+            'label' => $request->input('label'),
             'description' => $request->input('description'),
             'slug' => $request->input('slug')
         ]);
@@ -84,6 +86,7 @@ class MainaddtypeController extends Controller
        
         $this->validate( $request, [
            'title' => 'required',
+           'label' => 'required',
            'description' => 'required',
            'slug' => 'required',
            'image' => 'image'
@@ -92,6 +95,7 @@ class MainaddtypeController extends Controller
         $cat = Mainaddtype::find($editcatID);
         $cat->description = $request->input('description');
         $cat->slug = $request->input('slug');
+        $cat->label = $request->input('label');
       
        if($request->hasFile('image')){
            $file = $request->file('image');

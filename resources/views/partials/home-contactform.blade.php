@@ -12,7 +12,8 @@
                 <div class="col-md-8">
                     <!-- START CONTACT FORM DESIGN AREA -->
                     <div class="contact-form">
-                        <form id="contact-form" method="post" enctype="multipart/form-data">
+                        <form id="contact-form">
+                            <div id="form-errors"></div>
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <input type="text" name="name" class="form-control" id="first-name" placeholder="Name" required="required">
@@ -21,11 +22,14 @@
                                     <input type="email" name="email" class="form-control" id="email" placeholder="Email" required="required">
                                 </div>
                                 <div class="form-group col-md-12">
+                                    <input type="tel" name="phone" class="form-control" id="phone" placeholder="Mobile Number" required="required">
+                                </div>
+                                <div class="form-group col-md-12">
                                     <textarea rows="6" name="message" class="form-control" id="description" placeholder="Your Message" required="required"></textarea>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="actions wow fadeInDown" data-wow-delay=".4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInDown;">
-                                        <input type="submit" value="send message" name="submit" id="submitButton" class="btn btn-lg btn-contact-bg" title="Submit Your Message!">
+                                        <input type="submit" value="send message" name="submit" id="submitButton" class="btn btn-lg btn-contact-bg" title="Submit Your Message!"><span class="csc-spin"></span>
                                     </div>
                                 </div>
                             </div>

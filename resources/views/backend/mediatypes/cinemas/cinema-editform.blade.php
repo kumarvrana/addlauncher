@@ -138,32 +138,21 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
+                        <input type="hidden" name="modelname" id="modelname" value="Cinema">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
                         <input type="hidden" id="uncheckID" value="{{$cinema->id}}">
                         <input type="hidden" id="tablename" value="cinemas">
 
                         @foreach($cinemapricemeta as $cinemaprice)
-                         @PHP 
-                             $p_key = str_replace("_", " ", $cinemaprice->price_key);
-                             $field_name = explode(' ', $p_key);
-                             
-                             switch($field_name[0]){
-                                case 'price';
-                                    $label_field =  ucfirst(substr($p_key, 6));
-                                    $label = "Price for $label_field Cinema Ad:";
-                                break;
-                               
-                                case 'duration';
-                                    $label_field =  ucfirst(substr($p_key, 9));
-                                    $label = "Duration for $label_field Cinema Ad (in Sec):";
-                                break;
-                             }
-
-                         @ENDPHP
-                        <div id="p{{$cinemaprice->price_key}}" class="form-group">
-                            <label for="{{$cinemaprice->price_key}}">{{$label}}</label>
-                            <input class="form-control" type="text" name="{{$cinemaprice->price_key}}" value="{{$cinemaprice->price_value}}" required>
-                        </div>
+                            <div id="p{{$cinemaprice->price_key}}" class="form-group">
+                                    <label for="{{$cinemaprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $cinemaprice->price_key), 6))}} Cinema Ad:</label>
+                                    <input class="form-control" type="text" name="{{$cinemaprice->price_key}}" value="{{$cinemaprice->price_value}}" required>
+                                </div>
+                                <div id="p{{$cinemaprice->duration_key}}" class="form-group">
+                                    <label for="{{$cinemaprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $cinemaprice->duration_key), 9))}} Cinema Ad:</label>
+                                    <input class="form-control" type="text" name="{{$cinemaprice->duration_key}}" value="{{$cinemaprice->duration_value}}" required>
+                                </div>
+                            
                         @endforeach
                     </div>
 

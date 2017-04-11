@@ -7,17 +7,15 @@
 @section('content')
 <div class="container-fluid">
 	<div class="row cart-body">
-		<div class="col-md-3">
-                    @include('partials.sidebar-cart')
-        </div>
+		
 
-        <div class="col-md-9 wrapper">
+        <div class="col-md-8 col-md-offset-2 wrapper">
             <div class="section-title">
                 <h2>Shopping Cart</h2>
             </div>
 
 			@if(Session::has('cart'))
-   				@if($products)
+   				@if(count($products) > 0)
 				<table id="cart" class="table table-cart">
     				<thead>
 						<tr>
@@ -35,15 +33,55 @@
 					<tbody>
 					@PHP
 						$i = 1;
+						
 					@ENDPHP
                      @foreach( $products as $product)
 						<tr >
                         @PHP
                             $key = array_search($product, $products);
                             $imagefolder = explode('_', $key);
+							
                         @ENDPHP
+						@if($imagefolder[1] === 'tricycle')
                         	<td data-th="Number" class="sr">@PHP echo	$i; @ENDPHP </td>
                         	<td data-th="Image" class="im">
+                        		<img src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }}" class="img-responsive"/>
+                        	</td>
+							<td data-th="Product" class="pn">
+								<div class="row">
+									
+									<div class="col-sm-12 c-title">
+										<h4 class="nomargin">{{ $product['item']['title'] }}</h4>
+									</div>
+									<div class="col-sm-12 c-detail">
+                                        <h5>Product Details : <small> {{substr (strip_tags($product['item']['description']), 0,100)}}</small></h5>
+                                    </div>
+								</div>
+							</td>
+							@if($imagefolder[0] == 'cinemas')
+							<td data-th="Quantity" class="qt">1								
+							</td>
+							@else
+							<td data-th="Quantity" class="qt">
+								<input type="number" id="quantity" data-index="{{$i}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['auto_number']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$i}}" style="display:none;color:red;">Max Limit Is {{$product['item']['auto_number']}}</span>
+								<input type="hidden" id="quantity-hidden-{{$i}}" name="quantity-hidden" value="{{$product['item']['auto_number']}}">
+							</td>
+							@endif
+							
+                            <td data-th="Price" class="pr">Rs.{{$product['item']['price']}}</td>
+							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}}</h4></td>
+							<td class="actions rm" data-th="">
+								<!-- <a href="{{route('cart.shoppingCart')}}" class="btn btn-info btn-block"><i class="fa fa-refresh"></i></a> -->
+								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
+							</td>
+						</tr>
+						@else
+							<td data-th="Number" class="sr">@PHP echo	$i; @ENDPHP </td>
+                        	<td data-th="Image" class="im">
+								@PHP
+									if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
+								@ENDPHP
+								
                         		<img src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}" class="img-responsive"/>
                         	</td>
 							<td data-th="Product" class="pn">
@@ -77,6 +115,7 @@
 								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
 							</td>
 						</tr>
+						@endif
 						@PHP
 							$i++;
 						@ENDPHP
@@ -96,7 +135,7 @@
 											<h4>GRAND TOTAL</h4>
 										</div>
 										<div class="col-md-6">
-											<h4>Rs {{ $totalPrice }}</h4>
+											<h4 class="cart-total">Rs. {{ $totalPrice }}</h4>
 										</div>
 										<div class="col-md-12">
 											<a href="{{ route('getpayment') }}" class="btn btn-info btn-block btn-cart">PROCESS TO CHECKOUT <i class="fa fa-angle-right"></i></a>

@@ -27,8 +27,14 @@
                 <th>Order Address</th>
                 <th>Payment method</th>
                 <th>View Order</th>
+                <th>Action</th>
             </tr>
            
+            @if(Session::has('message'))
+            <div class="alert alert-success">
+                <p>{{Session::get('message')}}</p>
+            </div>
+            @endif
             @foreach($orders as $order)
             <tr>
                 <td>{{$loop->iteration}}</td>
@@ -58,6 +64,7 @@
                 <td>{{$order['address']}}</td>
                 <td>{{$order['payment_method']}}</td>
                 <td><a href="{{route('dashboard.viewOrder', ['id' => $order['id']])}}" class="btn btn-primary">View Order</a></td>
+                <td><a href="{{route('dashboard.deleteOrder', ['id' => $order['id']])}}" class="btn btn-danger">Delete Order</a></td>
             </tr>
             @endforeach
         </table>

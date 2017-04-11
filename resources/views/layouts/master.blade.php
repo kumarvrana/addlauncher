@@ -6,20 +6,42 @@
     <title>@yield('title')</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="{{ URL::to( 'linearicons/font/style.css' ) }}">
     <link rel="stylesheet" href="{{ URL::to( 'css/shop.css' ) }}">
+    <link rel="stylesheet" href="{{ URL::to( 'css/animate.css' ) }}">
+    <link rel="stylesheet" href="{{ URL::to( 'css/owl.carousel.min.css' ) }}">
+    <link rel="stylesheet" href="{{ URL::to( 'css/owl.transitions.css' ) }}">
+    <link rel="stylesheet" href="{{ URL::to( 'css/owl.theme.default.min.css' ) }}">
+     <!-- REVOLUTION STYLE SHEETS -->
+    <link rel="stylesheet" type="text/css" href="{{ URL::to( 'revolution/css/settings.css' ) }}">
+    <!-- REVOLUTION LAYERS STYLES -->
+    <link rel="stylesheet" type="text/css" href="{{ URL::to( 'revolution/css/layers.css' ) }}">
+    <!-- REVOLUTION NAVIGATION STYLES -->
+    <link rel="stylesheet" type="text/css" href="{{ URL::to( 'revolution/css/navigation.css' ) }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::to( 'css/jquery.fancybox.css' ) }}">
     @yield('styles')
-
+    <link rel="icon"  href="{{asset('images/logo/addlogo3.png')}}">
 
 </head>
 <body>
     @include('partials.header')
+    @include('partials.menu')
+    
+    @include('partials.searchform')
     <div class="container-fluid main-con">
+        
+        
         @yield('content')
-         @include('partials.home-contactform')
+        
         @include('partials.footer')
-    </div>  
-   <!-- model section start -->
 
+        <a href="#" class="scrollToTop"></a>
+    </div>  
+
+   <!-- model section start -->
+<!--
     <div class="modal fade" tabindex="-1" role="dialog" id="register-model">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -122,19 +144,16 @@
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
-	<script src="js/app.js"></script>
+	<!--script src="js/app.js"></script-->
     <script>
         //var registerURL = "{{ route('user.postsignup') }}";
        // var loginURL = "{{ route('user.postsignin') }}";
+       var contactFormURL = "{{ route('Contact.PostContactForm') }}";
+       var airportFilterURL = "{{ route('frontend.getFilterAirportAds')}}";
     </script>
     <script type="text/javascript">
         
-      $(function(){
-           /* $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+       $(function(){
             $("#addClass").click(function () {
                 $('#qnimate').addClass('popup-box-on');
             });
@@ -142,7 +161,13 @@
             $("#removeClass").click(function () {
                 $('#qnimate').removeClass('popup-box-on');
             });
-            let $login = $('#login');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+           
+            /*let $login = $('#login');
             $login.on('click', function(event){
                 event.preventDefault();
                 $('#login-model').modal('show');
@@ -169,10 +194,134 @@
                     });
                     
                 });
+            });*/
+            let $contactFormID = $('#contact-form');
+            $contactFormID.submit(function(event){
+                event.preventDefault();
+                $('#submitButton').attr('disabled', 'disabled');
+                $('.csc-spin').css('display', 'inline');
+                var postData = {
+                        'email': $('#email').val(),
+                        'name': $('#first-name').val(),
+                        'phone': $('#phone').val(),
+                        'message': $('#description').val()
+                }
+                $.ajax({
+                        method: 'POST',
+                        url: contactFormURL,
+                        data: postData,
+                        success: function(response){
+                            $('#email').val('');
+                            $('#first-name').val('');
+                            $('#phone').val('');
+                            $('#description').val('');
+                            errorsHtml = '<div class="alert alert-success">';
+                            errorsHtml += response.msg;
+                            errorsHtml += '</div>';
+                            $( '#form-errors' ).html( errorsHtml );
+                            $('.csc-spin').css('display', '');
+                            setTimeout(function(){
+                                $( '#form-errors' ).fadeOut();
+                                }, 5000);
+                            $('#submitButton').removeAttr('disabled');
+                        },
+                        error: function(response){
+                            //debugger;
+                            errorsHtml = '<div class="alert alert-danger"><ul>';
+                            if (response.status == 422)
+                            {
+                                $.each(response.responseJSON, function (key, value) {
+                                    errorsHtml += '<li>' + value[0] + '</li>';
+                                });
+                                 errorsHtml += '</ul></div>';
+                                 $( '#form-errors' ).html( errorsHtml );
+                                 $('.csc-spin').css('display', '');
+                                setTimeout(function(){
+                                $( '#form-errors' ).fadeOut();
+                                }, 5000);
+                                $('#submitButton').removeAttr('disabled');
+                            }
+                        }
+                });
             });
-        });*/
+
+            //filter script starts
+            let $mainElementFilter = $('.adfilter');
+            let $loaderImage = $('.loader');
+            let working = false;
+            $mainElementFilter.on('click', function(){
+                $loaderImage.show();
+                let isChecked = $(this).is(':checked');
+                
+               // if(isChecked){
+                if (working) {
+                    xhr.abort();
+                }
+
+                working = true;
+
+                xhr = $.ajax({
+
+                url : airportFilterURL,
+                method : "GET",
+                async : true,
+                data : $("#matchup-filter").serialize(),
+                success : function(response) {
+                    $("#table-results").html(response);
+                    //console.log(response);
+                    $loaderImage.hide();
+                    working = false;
+                    }
+               }); 
+               // }
+            });
+
+        });
+
   </script>  
+    <script src="{{ URL::to( 'js/owl.carousel.min.js' ) }}"></script>
+  
+    <script type="text/javascript">
+       var owl = $('.owl-carousel');
+        owl.owlCarousel({
+            items:1,
+            loop:true,
+            margin:10,
+            autoplay:true,
+            autoplayTimeout:4000,
+            autoHeight:true,
+            autoplayHoverPause:false
+        });
+
+        $(document).ready(function(){
+    
+    //Check to see if the window is top if not then display button
+    $(window).scroll(function(){
+        if ($(this).scrollTop() > 100) {
+            $('.scrollToTop').fadeIn(500);
+        } else {
+            $('.scrollToTop').fadeOut(500);
+        }
+    });
+    
+    //Click event to scroll to top
+    $('.scrollToTop').click(function(){
+        $('html, body').animate({scrollTop : 0},800);
+        return false;
+    });
+    
+});
+        
+    </script>
+
+
+    <script src="{{ URL::to( 'js/jquery.parallax-1.1.3.js') }}"></script>
+    <script src="{{ URL::to( 'js/jquery.easing.js') }}"></script>
+    <script src="{{ URL::to( 'js/SmoothScroll.js') }}"></script>
+    <script src="{{ URL::to( 'js/jquery.fancybox.pack.js') }}"></script>
+
     <script src="{{ URL::to( 'js/shop.js' ) }}"></script>
+
       
 @yield('scripts')
 </body>

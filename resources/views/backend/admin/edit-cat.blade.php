@@ -25,7 +25,11 @@
         
             <div class="form-group">
                 <label for="title">Category Name:</label>
-                <input type="text" id="category-name" name="title"class="form-control" value="{{$categorycontent->title}}" required>
+                <input type="text" id="category-name" name="title" class="form-control" value="{{$categorycontent->title}}" required>
+            </div>
+            <div class="form-group">
+                <label for="label">Category Label:</label>
+                <input type="text" id="label-name" name="label" class="form-control" value="{{$categorycontent->label}}"  required>
             </div>
             <div class="form-group">
                 <label for="slug">Category Slug:</label>

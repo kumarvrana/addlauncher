@@ -881,7 +881,7 @@ class NewspaperController extends Controller
                 
         $cart = new Cart($oldNewspaper);
 
-        $cart->addorRemove($newspaper_Ad, $newspaper_ad['id'], 'newspapers'); //pass full newspaper details, id and model name like "newspapers"
+        $cart->addorRemove($newspaper_Ad, $newspaper_ad['id'], 'newspapers', $flag=true); //pass full newspaper details, id and model name like "newspapers"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');

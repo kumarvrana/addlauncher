@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Products Form</h1>
+          <h1 class="page-header">Shopping Mall Ads Form</h1>
    
         <div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
@@ -83,10 +83,11 @@
 
                
                 
-            <div class="step-header">Shoppingmall Display Options</div>
+            <div class="step-header">Shopping Malls Display Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Shoppingmall">
                 @PHP
-                    $shoppingmall_options = array('drop_down_banners' => 'Drop Down Banners', 'free_stand_display' => 'Free Stand Display','walls' => 'Walls','poles_or_pillar' => 'Poles_or_Pillar','signage' => 'Signage');
+                    $shoppingmall_options = array('danglers' => 'Danglers', 'drop_down_banners' => 'Drop Down Banners', 'signage' => 'Signage', 'pillar_branding' => 'Pillar Branding', 'washroom_branding' => 'Washroom Branding', 'wall_branding' => 'Wall Branding', 'popcorn_tub_branding' => 'Popcorn Tub Branding', 'product_kiosk' => 'Product Kiosk', 'standee' => 'Standee');
+
                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Shoppingmall Options</h3></div><div class="panel-body">
@@ -136,7 +137,7 @@
         
         <button type="button" class="action back btn btn-info">Back</button>
         <button type="button" class="action next btn btn-info">Next</button>
-        <button type="submit" class="action submit btn btn-success">Add Product</button>    
+        <button type="submit" class="action submit btn btn-success">Add Shopping Mall</button>    
     </form>
    
    </div>

@@ -2,7 +2,7 @@
 
 @section('title')
 
-    Bus | Add Launcher
+   Bus | Add Launcher
 
 @endsection
 
@@ -16,98 +16,73 @@
             </div>
         </div>
         @endif
+
+<section class="sec-banner">
+     <div class="jumbotron jumbo-1 text-center">
+         <h1><span>{{ucwords(str_replace('_', ' ', $busOption))}}</span> OPTIONS</h1>
+     </div>
+</section>  
+
+<section class="main-sec">
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
 				@include('partials.sidebar')
                     
                 </div>
-                @PHP
-                   $variations = unserialize($busad->display_options);
-				   
-				   $variation = array();
-                   $price = array();
-				   $passVariation = array();
-                  foreach($busprice as $options){
-					$passVariation[] = $options->price_key;
-					$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-					$price[] = $options->price_value;
-				  }
-				  $name_key = array_chunk($passVariation, 3);
-				  $price_values = array_chunk($price, 3);
-				  
-				  $name = array();
-				  $j = 0; 
-				  foreach($name_key as $options){
-					  	$passVariationname[$j] = $options[0];
-						$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-					$j++;
-				  }
-				 
-				 $new_price = array();
-				 $number = array();
-				 $duration = array();
-				 foreach($price_values as $options){
-
-				 
+                
+                <div class="col-md-8">
 					
-					$new_price[] = $options[0];
-					$number[] = $options[1];
-					$duration[] = $options[2];
-					
-				 }
-				  
-                $i = 0;
-                @ENDPHP
-                <div class="col-md-9">
-					<div class="display-title">
-					  <h2>Display Options</h2>
-				   	</div>
 					<div class="row">
-					@if($variations)
-
-			     		@foreach($variations as $loop)
-			     			<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/bus/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-							</style>
-			     			<div class="col-md-3 col-sm-3 "> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Bus for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'buses'.'_'.$passVariationname[$i].'_'.$busad->id;
-									$printsession = (array) Session::get('cart');
-													
+						
+						@if($products)
+							@foreach($products as $product)
+								<div class="col-md-3 col-sm-3 "> 
+									<div class="pro-item"> 
+										<div class=" cat-opt-img "> <img src="{{asset('images/buss/'.$product[11])}}"> </div>
+										<p class="font-1">{{$product[3]}}</p>
+										<p class="font-2">{{$product[5]}} | {{$product[6]}} <br> {{$product[7]}}</p>
+										<p class="font-3">{{$product[20]}} {{ucwords(str_replace('_', ' ', $busOption))}} for {{$product[22]}} months</p>
+										<p class="font-2"><del class="lighter">Rs {{$product[18]}} </del>Rs {{$product[18]}} </p>
+									@PHP
+										$options = $product[18].'+'.$product[17];
+										$session_key = 'buss'.'_'.$product[17].'_'.$product[0];
+										$printsession = (array) Session::get('cart');
+														
 									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('bus.addtocart', ['id' => $busad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-							@PHP $i++; @ENDPHP
-						@endforeach
+										<div class="clearfix"> 
+											<a class="glass" href="{{route('bus.addtocart', ['id' => $product[0], 'variation' => $options])}}"><span class="fa fa-star"></span>
+											
+										 @if(count($printsession) > 0)
+												@if(array_key_exists($session_key, $printsession['items'])) 
+													Remove From Cart 
+												@else
+													Add to Cart 
+												@endif
+												@else
+													Add to Cart
+												@endif
+											
+										</a> 
+										</div>
+									</div>
+								</div>
+							@endforeach
 						@endif
+							
 		            </div><!-- row before style ends here -->
+
+
+        		</div><!-- col-md-8 ends here -->
+        		<div class="col-md-2">
+            @include('partials.sidebar-cart')
+   					
+        			
         		</div>
     		</div>
     	</div><!-- container fluid 1 ends here -->
            
-	
+</section>	
        
 
 @endsection
