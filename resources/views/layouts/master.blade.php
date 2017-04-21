@@ -199,7 +199,7 @@
             $contactFormID.submit(function(event){
                 event.preventDefault();
                 $('#submitButton').attr('disabled', 'disabled');
-                $('.csc-spin').css('display', 'inline');
+                $('.loader').css('display', 'block');
                 var postData = {
                         'email': $('#email').val(),
                         'name': $('#first-name').val(),
@@ -219,7 +219,7 @@
                             errorsHtml += response.msg;
                             errorsHtml += '</div>';
                             $( '#form-errors' ).html( errorsHtml );
-                            $('.csc-spin').css('display', '');
+                            $('.loader').css('display', 'none');
                             setTimeout(function(){
                                 $( '#form-errors' ).fadeOut();
                                 }, 5000);
@@ -235,7 +235,7 @@
                                 });
                                  errorsHtml += '</ul></div>';
                                  $( '#form-errors' ).html( errorsHtml );
-                                 $('.csc-spin').css('display', '');
+                                 $('.loader').css('display', 'none');
                                 setTimeout(function(){
                                 $( '#form-errors' ).fadeOut();
                                 }, 5000);
@@ -319,10 +319,10 @@
     <script src="{{ URL::to( 'js/jquery.easing.js') }}"></script>
     <script src="{{ URL::to( 'js/SmoothScroll.js') }}"></script>
     <script src="{{ URL::to( 'js/jquery.fancybox.pack.js') }}"></script>
-
+@yield('scripts')
     <script src="{{ URL::to( 'js/shop.js' ) }}"></script>
 
       
-@yield('scripts')
+
 </body>
 </html>

@@ -1,5 +1,6 @@
 
 $(function(){
+    $('[data-toggle="tooltip"]').tooltip();
     /*$(".error-div").hide();
     $("#register").on('click', function(){
         var title = $(this).data('name');
@@ -7,7 +8,9 @@ $(function(){
         $("#register-model").modal();
        
     });*/
-   $("#cart").on("change", ".change-cart", function(){
+
+   $("#adl-cart-table").on("change", ".change-cart", function(){
+       
        $(".error").hide();
        var index = $(this).attr("data-index");
        var itemTD = $(this).attr("data-itemkey");
@@ -31,15 +34,15 @@ $(function(){
                $(".quantity-error-"+index).show();
            }
        }
-       /*if(id === 'duration'){
+       if(id === 'duration'){
            var dbValue = $("#duration-hidden-"+index).val();
            if(maxValue <= dbValue){
                  
-                //var subTotal = Number(subTotalTD.attr("data-subtotal"));
-                //var subTotal = Number(subTotalTD.text());
-                //var changeSubtotal =  maxValue * subTotal;
-                //subTotalTD.attr("data-subtotal", changeSubtotal);
-                //subTotalTD.text(changeSubtotal);
+                var subTotal = Number(subTotalTD.attr("data-subtotal"));
+                var subTotal = Number(subTotalTD.text());
+                var changeSubtotal =  maxValue * subTotal;
+                subTotalTD.attr("data-subtotal", changeSubtotal);
+                subTotalTD.text(changeSubtotal);
                 $.ajax({
 					method: 'GET',
 					url: updateCartUrl,
@@ -51,7 +54,7 @@ $(function(){
            }else{
                 $(".duration-error-"+index).show();
            }
-       }*/
+       }
 
    });
 
@@ -78,7 +81,7 @@ $(document).ready(function(){
  
     
   $(window).scroll(function () {
-    if ($(this).scrollTop() > 165) {
+    if ($(this).scrollTop() > 250) {
     $('.fixed-div').addClass("fix-nav");
     } else {
     $('.fixed-div').removeClass("fix-nav");

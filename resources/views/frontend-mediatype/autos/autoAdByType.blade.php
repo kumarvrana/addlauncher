@@ -48,7 +48,7 @@
                         
                         @foreach($options as $key => $value)
                             @PHP
-                                $image = $key.".png";
+                                $image = $key.".jpg";
                             @ENDPHP
                         <div class="col-md-3">
                                 <div class="owl-item active">
@@ -82,7 +82,7 @@
                             @foreach($products as $product)
                             <div class="col-md-3 col-sm-3 "> 
                                     <div class="pro-item"> 
-                                        <div class="cat-opt-img"><img class="second-img" src="{{asset('images/display/auto/tricycle.png')}}" alt="{{$product->title}}"></div>
+                                        <div class="cat-opt-img"><img class="second-img" src="{{asset('images/display/auto/tricycle.jpg')}}" alt="{{$product->title}}"></div>
                                         <p class="font-1">{{$product->title}} in {{$product->location}}</p>
                                         <p class="font-3">{{$product->auto_number}} Tricycles for 1 months</p>
                                         <p class="font-2"><del class="lighter">Rs {{$product->price}}</del>Rs {{$product->price}}</p>

@@ -467,9 +467,17 @@ class AirportController extends Controller
         <div class="pro-item"> 
             <div class=" cat-opt-img "> <img src="<?= asset('images/airports/'.$searchAirport[11]) ?>"> </div>
             <p class="font-1"><?= $searchAirport[3] ?></p>
-            <p class="font-2"><?= $searchAirport[5] ?> | <?= $searchAirport[6] ?> | <?= $searchAirport[7] ?></p>
-            <p class="font-3"><?= $searchAirport[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchAirport[18]), 6))?> for <?= $searchAirport[23]?> months</p>
-            <p class="font-2"><del class="lighter">Rs <?= $searchAirport[19]?> </del>Rs <?= $searchAirport[19]?> </p>
+            <p class="font-2"><?= $searchAirport[5] ?>, <?= $searchAirport[6] ?>, <?= $searchAirport[7] ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchAirport[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchAirport[18]), 6))?> <br>for <br> <?= $searchAirport[23]?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchAirport[19]?> </del><br>Rs <?= $searchAirport[19]?> </p>
+                </div>
+            
+            </div>
+
             <?php
             $options = $searchAirport[19].'+'.$searchAirport[18];
             $session_key = 'airports'.'_'.$searchAirport[18].'_'.$searchAirport[0];

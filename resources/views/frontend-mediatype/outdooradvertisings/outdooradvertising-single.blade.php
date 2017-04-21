@@ -41,8 +41,15 @@
 										<div class=" cat-opt-img "><img src="{{asset('images/outdooradvertising/'.$product[11])}}"> </div>
 										<p class="font-1">{{$product[3]}}</p>
 										<p class="font-2">{{$product[5]}} | {{$product[6]}} | {{$product[7]}}</p>
-										
-										<p class="font-2"><del class="lighter">Rs {{$product[19]}} </del>Rs {{$product[19]}} </p>
+										<hr>
+										<div class="row">
+											<div class="col-md-6">
+												<p class="font-3">{{$product[17]}} {{ucwords(str_replace('_', ' ', $billboardOption))}}<br> for <br> {{$product[15]}} months</p>
+											</div>
+											<div class="col-md-6">
+												<p class="font-2"><del class="lighter">Rs {{$product[19]}} <br> </del>Rs {{$product[19]}} </p>
+											</div>
+										</div>
 										 @PHP
 										$options = $product[19].'+'.$product[18];
 										$session_key = 'billboards'.'_'.$product[18].'_'.$product[0];
@@ -50,16 +57,16 @@
 												
 									@ENDPHP
 										<div class="clearfix"> 
-											<a class="glass" href="{{route('billboard.addtocart', ['id' => $product[0], 'variation' => $options])}}"><span class="fa fa-star"></span>
+											<a class="glass" href="{{route('billboard.addtocart', ['id' => $product[0], 'variation' => $options])}}">
 											
-										 @if(count($printsession) > 0)
+										  @if(count($printsession) > 0)
 												@if(array_key_exists($session_key, $printsession['items'])) 
-													Remove From Cart 
+													<span class="fa fa-minus-circle"></span> Remove From Cart 
 												@else
-													Add to Cart 
+													<span class="fa fa-star"></span> Add to Cart 
 												@endif
 												@else
-													Add to Cart
+													<span class="fa fa-star"></span> Add to Cart
 												@endif
 											
 										</a> 

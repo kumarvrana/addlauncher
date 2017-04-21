@@ -13,7 +13,6 @@
 @section('content')
 
 
-
     <!-- Contact -->
                 <section id="section8">
                     <div class="container">
@@ -22,18 +21,18 @@
                             <div class="col-sm-5">
                                 <h5>Contact Address</h5>
                                 <ul class="list-icons list-unstyled">
-                                    <li><i class="fa fa-map-marker"></i>1307, Best Sky Tower, F-5<br />Netaji Subhash Place, Pitampura,<br>New Delhi-110034</li>
-                                    <li><i class="fa fa-phone"></i>Phone: 011-41557685 , 011-41558205</li>
-                                    <li><i class="fa fa-envelope"></i>Email: <a href="mailto:example@gmail.com">example@gmail.com</a></li>
-                                    <li><i class="fa fa-globe"></i>Website: <a href="">info@addlauncher.com</a></li>
+                                    <li><i class="fa fa-map-marker"></i>{{strip_tags($general->address)}}</li>
+                                    <li><i class="fa fa-phone"></i>Phone: {{$general->firstphone}} , {{$general->secondphone}}</li>
+                                    <li><i class="fa fa-envelope"></i>Email: <a href="mailto:{{$general->firstemail}}">{{$general->firstemail}}</a></li>
+                                    <li><i class="fa fa-envelope"></i>Email: <a href="mailto:{{$general->secondemail}}">{{$general->secondemail}}</a></li>
                                 </ul>
                                 <div class="spacer"></div>
                                 <div class="social-icons">
-                                    <a href="" class="social-icon"><i class="fa fa-facebook"></i></a>
-                                    <a href="" class="social-icon"><i class="fa fa-twitter"></i></a>
-                                    <a href="" class="social-icon"><i class="fa fa-google-plus"></i></a>
-                                    <a href="" class="social-icon"><i class="fa fa-behance"></i></a>
-                                    <a href="" class="social-icon"><i class="fa fa-dribbble"></i></a>
+                                    <a href="{{$general->facebook}}" class="social-icon"><i class="fa fa-facebook"></i></a>
+                                    <a href="{{$general->twitter}}" class="social-icon"><i class="fa fa-twitter"></i></a>
+                                    <a href="{{$general->google}}" class="social-icon"><i class="fa fa-google-plus"></i></a>
+                                    <a href="{{$general->instagram}}" class="social-icon"><i class="fa fa-instagram"></i></a>
+                                    <a href="{{$general->youtube}}" class="social-icon"><i class="fa fa-youtube"></i></a>
                                 </div> <!-- end .social-icons -->
                                 <div class="spacer"></div>
                             </div>
@@ -66,7 +65,9 @@
                                     </div> <!-- end .form-group -->
                                     <div class="form-group">
                                         <div class="col-sm-10 col-sm-offset-2">
-                                            <button type="submit" name="submit" id="submitButton" class="button solid-button purple" title="Send Message">Send Message</button><span class="csc-spin"></span>
+                                            <button type="submit" name="submit" id="submitButton" class="button solid-button purple" title="Send Message">Send Message</button>
+                <div class="loader" style="display:none"></div>
+                                            
                                             
                                         </div> <!-- end .col-sm-10 -->
                                     </div> <!-- end .form-group -->

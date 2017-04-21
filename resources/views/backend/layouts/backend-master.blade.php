@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ URL::to( 'css/app.css' ) }}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ URL::to( 'css/adminstyle.css' ) }}">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="{{ URL::to( 'css/admin-panel.css' ) }}">
      <link rel="stylesheet" href="{{ URL::to( 'css/dashboard/dashboard.css' ) }}">

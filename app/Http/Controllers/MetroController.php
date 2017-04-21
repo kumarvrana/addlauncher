@@ -25,7 +25,7 @@ class MetroController extends Controller
        return view('frontend-mediatype.metros.metroads-list', ['products' => $metro_ads]);
     }
 
-    public function getfrontMetroadByOption($metroOption)
+    /*public function getfrontMetroadByOption($metroOption)
     {
        $metro_ads = Metros::all()->toArray();
        
@@ -47,14 +47,15 @@ class MetroController extends Controller
        }
        
         return view('frontend-mediatype.metros.metro-single', ['products' => $metros, 'metroOption' => $metroOption]);
-    }
+    }*/
     
     public function getfrontMetroad($id)
     {
-        $metroad = Metros::find($id);
-       
-        $metroprice = Metrosprice::where('metros_id', $id)->get();
-        return view('frontend-mediatype.metros.metro-single', ['metroad' => $metroad, 'metroprice' => $metroprice]);
+        $metroad = Metros::where('id', '=', $id)->get()->toArray();
+        $metroad = array_flatten($metroad);
+        $metropriceOptions = Metrosprice::where('metros_id', '=', $id)->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+            
+        return view('frontend-mediatype.metros.metro-single', ['products' => $metroad, 'productOptions' => $metropriceOptions]);
     }
     
     

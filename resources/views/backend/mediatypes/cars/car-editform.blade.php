@@ -107,7 +107,7 @@
                         <label for="cardisplay">Cars Ad Display Options: </label>
                           
                     @foreach($car_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Cars Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='cardisplay[]' type='checkbox'  @PHP if($cardisplayData){if(in_array($key, $cardisplayData)){echo "checked"; } }@ENDPHP value="{{$key}}">{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Cars Ad Display Options' onclick="addDomToPriceOptionsAuto('{{$value}}', 'display_options')" name='cardisplay[]' type='checkbox'  @PHP if($cardisplayData){ if(in_array($key, $cardisplayData)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
                     </div>

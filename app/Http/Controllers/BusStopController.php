@@ -24,35 +24,14 @@ class BusstopController extends Controller
        $busstop_ads = Busstops::all();
        return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads]);
     }
-    public function getfrontBusstopadByOption($busstopOption)
-    {
-       $busstop_ads = Busstops::all()->toArray();
-       
-        $busstopOption1 = '%'.$busstopOption.'%';
-        $busstops = array();
-        foreach($busstop_ads as $busstop){
-            $count = Busstopsprice::where([
-                                    ['busstops_id', '=', $busstop['id']],
-                                    ['price_key', 'LIKE', $busstopOption1],
-                                   ])->get()->count();
-            if($count > 0){
-                 $busstoppriceOptions = Busstopsprice::where([
-                                    ['busstops_id', '=', $busstop['id']],
-                                    ['price_key', 'LIKE', $busstopOption1],
-                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                array_push($busstop, $busstoppriceOptions);
-                $busstops[] = array_flatten($busstop);
-            }
-       }
-       
-        return view('frontend-mediatype.busstops.busstop-single', ['products' => $busstops, 'busstopOption' => $busstopOption]);
-    }
     
     public function getfrontBusstopad($id)
     {
-        $busstopad = Busstops::find($id);
-        $busstopprice = Busstopsprice::where('busstops_id', $id)->get();
-        return view('frontend-mediatype.busstops.busstop-single', ['busstopad' => $busstopad, 'busstopprice' => $busstopprice]);
+        $busstopad = Busstops::where('id', '=', $id)->get()->toArray();
+        $busstopad = array_flatten($busstopad);
+        $busstoppriceOptions = Busstopsprice::where('busstops_id', '=', $id)->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+            
+        return view('frontend-mediatype.busstops.busstop-single', ['products' => $busstopad, 'productOptions' => $busstoppriceOptions]);
     }
     
     

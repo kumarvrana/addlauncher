@@ -56,7 +56,7 @@
                 <td>{{$billboardad->state}}</td>
                 <td>
                
-                    <img src="{{asset('images/billboards/'.$billboardad->image)}}" alt="{{$billboardad->title}}" width="50px" height="50px" class="img-responsive">
+                    <img src="{{asset('images/outdooradvertising/'.$billboardad->image)}}" alt="{{$billboardad->title}}" width="50px" height="50px" class="img-responsive">
                 
                 </td>
                 @PHP

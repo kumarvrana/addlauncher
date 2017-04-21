@@ -40,7 +40,7 @@
                         
                         @foreach($car_options as $key => $value)
                             @PHP
-                                $image = $key.".png";
+                                $image = $key.".jpg";
                             @ENDPHP
                         <div class="col-md-3">
                                 <div class="owl-item active">

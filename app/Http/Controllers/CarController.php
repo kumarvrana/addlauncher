@@ -48,7 +48,7 @@ class CarController extends Controller
                                     ['cars_id', '=', $car['id']],
                                     ['price_key', 'LIKE', $carOption1],
                                     ['option_type', '=', $cartype],
-                                ])->get(array('price_key', 'price_value'))->toArray();
+                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
                 array_push($car, $carpriceOptions);
                 $cars[] = array_flatten($car);
             }
@@ -221,7 +221,7 @@ class CarController extends Controller
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
         if($count > 0){
-            Cars::where('id', $request['id'])->update(['option_type' => serialize($datta)]);
+            Cars::where('id', $request['id'])->update([$request['option_type'] => serialize($datta)]);
             $cars = Carsprice::where([
                                     ['cars_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
@@ -229,10 +229,10 @@ class CarController extends Controller
             $cars->delete();
 
             return response(['msg' => 'price deleted'], 200);
-        }else{
+        }
               
             return response(['msg' => 'Value not present in db!'], 200);
-        }
+        
     }
 
     public function postUpdateeCarad(Request $request, $ID)
@@ -279,18 +279,18 @@ class CarController extends Controller
         //car display prices insertion
 
         if($request->has('price_bumper')){
-            $this->updateCarPrice($ID, 'price_bumper', $request->input('price_bumper'),'number_bumper', $request->input('number_bumper'), 'duration_bumper', $request->input('duration_bumper'), $request->input('cartype'));
+            $this->updateCarPrice($ID, 'price_bumper', $request->input('price_bumper'),'number_bumper', $request->input('number_bumper'), 'duration_bumper', $request->input('duration_bumper'), $editcar->cartype);
         }
       
        
 
         if($request->has('price_rear_window_decals')){
-            $this->updateCarPrice($ID, 'price_rear_window_decals', $request->input('price_rear_window_decals'),'number_rear_window_decals', $request->input('number_rear_window_decals'),'duration_rear_window_decals', $request->input('duration_rear_window_decals'), $request->input('cartype'));
+            $this->updateCarPrice($ID, 'price_rear_window_decals', $request->input('price_rear_window_decals'),'number_rear_window_decals', $request->input('number_rear_window_decals'),'duration_rear_window_decals', $request->input('duration_rear_window_decals'), $editcar->cartype);
         }
        
       
         if($request->has('price_doors')){
-            $this->updateCarPrice($ID, 'price_doors', $request->input('price_doors'), 'number_doors', $request->input('number_doors'),'duration_doors', $request->input('duration_doors'), $request->input('cartype'));
+            $this->updateCarPrice($ID, 'price_doors', $request->input('price_doors'), 'number_doors', $request->input('number_doors'),'duration_doors', $request->input('duration_doors'), $editcar->cartype);
         }
        
 
@@ -302,7 +302,6 @@ class CarController extends Controller
         $count = Carsprice::where([
                                     ['cars_id', '=', $id],
                                     ['price_key', '=', $pricekey],
-                                    ['option_type', '=', $type],
                                 ])->count();
         if($count < 1){
             $this->addCarPrice($id, $pricekey, $pricevalue, $numkey, $numvalue, $durkey, $durvalue, $type);
@@ -310,124 +309,12 @@ class CarController extends Controller
             $update = Carsprice::where([
                                     ['cars_id', '=', $id],
                                     ['price_key', '=', $pricekey],
-                                    ['option_type', '=', $type],
                                 ])->update(['price_value' => $pricevalue, 'number_value' => $numvalue, 'duration_value' => $durvalue]);
         }
         
    }
 
-    //Fliter Functions
-   public function getFilterCarAds(Request $request){
-       $params = array_filter($request->all());
-       foreach($params as $key=>$value){
-            if($key == 'pricerange'){
-                
-                $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $value); // comparion operator
-                if($filter_priceCamparsion != '<>'){
-                     $filter_price = preg_replace('/[^0-9]/', '', $value);
-                     $carpriceOptions = Carsprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', $filter_priceCamparsion, $filter_price],
-                                    ])->get()->toArray();
-                }else{
-                     $filter_price = preg_replace('/[^0-9]/', '_', $value);
-                     $filter_price = explode('_', $filter_price);
-                    
-                     $carpriceOptions = Carsprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', '>=', $filter_price[0]],
-                                    ['price_value', '<=', $filter_price[2]],
-                                    ])->get()->toArray();   
-                }
-                if(count($carpriceOptions)>0){
-                
-                foreach($carpriceOptions as $key => $value){
-                    $car_ads = Cars::find($value['cars_id'])->get()->toArray();
-                    $filterLike = substr($value['price_key'], 6);
-                    $carOption1 = '%'.$filterLike;
-                    $cars = array();
-                    
-                    $carpriceOptions = Carsprice::where([
-                                ['cars_id', '=', $value['cars_id']],
-                                ['price_key', 'LIKE', $carOption1],
-                                //['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                        
-                    array_push($car_ads, $carpriceOptions);
-                    $cars[] = array_flatten($car_ads);
-                     
-                   
-               
-                }
-                if(count($cars)>0){
-                    echo "<pre>";
-                    print_r($cars);
-                    echo "</pre>";
-                    foreach($cars as $searchCar){
-                       $this->car_ads($searchCar);
-                    }
-                
-                    }else{
-                        echo "<b>No results to display!</b>";
-                }
-
-            }else{
-                echo "<b>No results to display!</b>";
-            }
-                
-            
-            }
-            
-           
-            
-            if($key == 'locationFilter'){
-                
-            }
-
-            
-       }
-        $content = ob_get_contents();
-        ob_get_clean();
-        return $content;
-       
-       
-   }
-   public function car_ads($searchCar)
-   {
-       ?>
-       <div class="col-md-3 col-sm-3 "> 
-        <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/cars/'.$searchCar[11]) ?>"> </div>
-            <p class="font-1"><?= $searchCar[3] ?></p>
-            <p class="font-2"><?= $searchCar[5] ?> | <?= $searchCar[6] ?> | <?= $searchCar[7] ?></p>
-            <p class="font-3"><?= $searchCar[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchCar[18]), 6))?> for <?= $searchCar[23]?> months</p>
-            <p class="font-2"><del class="lighter">Rs <?= $searchCar[19]?> </del>Rs <?= $searchCar[19]?> </p>
-            <?php
-            $options = $searchCar[19].'+'.$searchCar[18];
-            $session_key = 'cars'.'_'.$searchCar[18].'_'.$searchCar[0];
-            $printsession = (array) Session::get('cart');
-                            
-           ?>
-            <div class="clearfix"> 
-                <a class="glass" href="<?= route('car.addtocart', ['id' => $searchCar[0], 'variation' => $options]) ?>"><span class="fa fa-star"></span>
-                <?php
-                    if(count($printsession) > 0){
-                     if(array_key_exists($session_key, $printsession['items'])){
-                       echo "Remove From Cart"; 
-                    }else{
-                        echo "Add to Cart"; 
-                    }
-                    }else{
-                        echo "Add to Cart";
-                    }
-                ?>
-            </a> 
-            </div>
-        </div>
-    </div>
-    <?php
-   }
-
+ 
     //cart functions
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)

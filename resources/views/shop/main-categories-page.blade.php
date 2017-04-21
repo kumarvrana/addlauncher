@@ -113,10 +113,16 @@
         </div>
 
         <div class="package-tabs-section">
-            <div class="container-fluid">
+            <div class="container">
                 <div class="row">
+                @PHP
+                    $count = count($mediacats);
+                    $remainder = $count % 4;
+                    $i = 1;
+                    $variate = array(5, 6, 7);
+                @ENDPHP
                     @foreach($mediacats as $mediacat)  
-                    <div class="col-md-3">
+                    <div class="@PHP if($remainder != 0){if(in_array($i, $variate)){ echo 'col-md-4'; }else{ echo 'col-md-3'; } }else{ echo 'col-md-3';}@ENDPHP">
                         <div class="package-box width-439-226">
                                 <div class="destination-box">
                                     <a href="{{$mediacat->slug}}" class="similar-destination banner">
@@ -128,6 +134,9 @@
                                 </div>
                         </div>
                     </div>
+                    @PHP
+                        $i++;
+                    @ENDPHP
                     @endforeach
                 </div>
             </div>

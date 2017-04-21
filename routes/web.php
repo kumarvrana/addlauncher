@@ -36,6 +36,16 @@ Route::group( ['middleware' => 'admin'], function(){
     'as' => 'dashboard'
     ]);
 
+    Route::get('/dashboard/users', [
+    'uses' => 'UserController@getUsers',
+    'as' => 'users'
+    ]);
+
+    Route::get('/dashboard/users/history/{ID}', [
+    'uses' => 'HistoryController@getHistory',
+    'as' => 'history'
+    ]);
+
 
         Route::group([ 'prefix' => 'dashboard'], function(){
 
@@ -56,7 +66,23 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'PaymentSettingsController@UpdateCashPayment',
                 'as' => 'dashboard.updatecashtransfer'
             ]); 
+
+
+             //General setting routes
+            Route::get('/general-settings',[
+                'uses' => 'GeneralSettingsController@getGeneralSettings',
+                'as'  => 'dashboard.generalsettings'
+            ]);
             
+            Route::post('/general-settings',[
+                'uses' => 'GeneralSettingsController@postGeneralSettings',
+                'as'  => 'dashboard.postgeneralsettings'
+            ]);
+
+            Route::post('/general-settings', [
+                'uses' => 'GeneralSettingsController@UpdateGeneralSettings',
+                'as' => 'dashboard.updategeneralsettings'
+            ]); 
             
 
 
@@ -108,6 +134,11 @@ Route::group( ['middleware' => 'admin'], function(){
                 'uses' => 'OrderController@getChangeStatus',
                 'as'  => 'order.statusChange'
             ]);
+            Route::get('/delete-order/{id}',[
+                'uses' => 'OrderController@deleteOrder',
+                'as'  => 'dashboard.deleteOrder'
+            ]);
+            
             //end order dashboard
 
             //start Adevertising Consolution media type routing
@@ -534,6 +565,47 @@ Route::group( ['middleware' => 'admin'], function(){
             ]);
 
             //End Shoppingmall media type routing
+
+    
+            // *************************************  //
+
+            //start Television media type routing
+
+            Route::get('/cat/television-list', [
+                'uses' => 'TelevisionController@getDashboardTelevisionList',
+                'as' => 'dashboard.getTelevisionList'
+            ]);
+
+
+             Route::get('/cat/add-television', [
+                'uses' => 'TelevisionController@getDashboardTelevisionForm',
+                'as' => 'dashboard.getTelevisionForm'
+            ]);
+
+             Route::post('/cat/add-television', [
+                'uses' => 'TelevisionController@postDashboardTelevisionForm',
+                'as' => 'dashboard.postTelevisionForm'
+            ]);
+
+            Route::get('/cat/delete-television/{televisionadID}', [
+                'uses' => 'TelevisionController@getDeleteTelevisionad',
+                'as' => 'dashboard.deleteTelevisionad'
+            ]);
+            Route::get('/cat/edit-television/{ID}', [
+                'uses' => 'TelevisionController@getUpdateeTelevisionad',
+                'as' => 'dashboard.edittelevisionsad'
+            ]);
+            Route::get('/cat/edit-removeuncheckoptions-televisions/', [
+                'uses' => 'TelevisionController@getuncheckTelevisionadOptions',
+                'as' => 'dashboard.deleteUncheckPriceTelevision'
+            ]);
+            
+            Route::post('/cat/edit-television/{ID}', [
+                'uses' => 'TelevisionController@postUpdateeTelevisionad',
+                'as' => 'dashboard.Posttelevisionsad'
+            ]);
+
+            //End Television media type routing
 
      // *************************************  //
 
@@ -1066,7 +1138,7 @@ Route::group([ 'prefix' => 'user'], function(){
 
 
     // Cart options start
-Route::group(['middleware' => 'user', 'middleware' => 'admin'], function(){    
+//Route::group(['middleware' => ['siteuser', 'admin']], function(){    
    
     Route::get('/shop/cart', [
         'uses' => 'CartController@getCart',
@@ -1083,12 +1155,16 @@ Route::group(['middleware' => 'user', 'middleware' => 'admin'], function(){
         'as' => 'Cart.removeItemCartpayment',
     ]);
 
-     Route::get('/shop/payment', [
+     /*Route::get('/shop/payment', [
+        'uses' => 'CheckoutController@getpayment',
+        'as' => 'getpayment'
+       
+    ]);*/
+    Route::get('/shop/checkout', [
         'uses' => 'CheckoutController@getpayment',
         'as' => 'getpayment'
        
     ]);
-
     Route::get('/shop/payment/{paymentMethod}', [
         'uses' => 'CheckoutController@getPaymentmethod',
         'as' => 'front.Payment'
@@ -1102,7 +1178,7 @@ Route::group(['middleware' => 'user', 'middleware' => 'admin'], function(){
     ]);
     
     Route::post('/shop/checkout', [
-        'uses' => 'CheckoutController@postCheckout',
+        'uses' => 'CheckoutController@postCheckoutSwitch',
         'as' => 'postCheckout'
        
     ]);
@@ -1124,5 +1200,5 @@ Route::group(['middleware' => 'user', 'middleware' => 'admin'], function(){
         'as' => 'order.thankyou'
        
     ]);
-});
+//});
       

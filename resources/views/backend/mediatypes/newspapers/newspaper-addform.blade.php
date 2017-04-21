@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Products Form</h1>
+          <h1 class="page-header">Print Media Add Form</h1>
    
         <div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
@@ -27,6 +27,7 @@
             @endif
   <form class="form" action="{{route('dashboard.postNewspaperForm')}}" method="post" enctype="multipart/form-data">
         <div class="step">
+        
             <div class="step-header">General Options</div>
             <div class="form-group">
                     <label for="title">Ad Name:</label>
@@ -81,27 +82,79 @@
         </div>
         <div class="step">
 
-               
+               @PHP 
+                    $printMedia_type = array('newspaper' => 'Newspaper', 'magazine' => 'Magazine');
+                   
+
+                    $newspaper_options = array('page1' => 'Page1', 'page3' => 'Page3','last_page' => 'Last Page','any_page' => 'Any Page',);
+                    
+                    $indianExpress_display_options = array('full_page' => 'Full Page', 'half_page' => 'Half Page', 'mini_a4' => 'Mini A4', 'full_page_centre_spread' => 'Full Page Centre Spread', 'mini_a4_centre_spread' => 'Mini A4 Centre Spread', 'horizontal_strip' => 'Horizontal Strip', 'vertical_strip' => 'Vertical Strip');
+
+                    $indianExpress_premium_position_options = array('page_3_horizontal_solus' => 'Page 3 Horizontal Solus', 'inside_front_cover' => 'Inside Front Cover', 'inside_back_cover' => 'Inside_Back_Cover', 'back_page' => 'Back Page');
+
+                    $indianExpress_innovations_options = array('front_false_cover' => 'Front False Cover', 'front_and_back_false_cover' => 'Front And Back False Cover', 'front_gate_fold' => 'Front Gate Fold', 'reverse_gate_fold' => 'Reverse Gate Fold', 'front_and_back_tab' => 'Front And Back Tab', 'front_tab' => 'Front Tab');
+
+                    $indianExpress_businessAven_options = array('full_page' => 'Full Page', 'half_page' => 'Half Page', 'quarter_page' => 'Quarter Page');
+                @ENDPHP
                 
-            <div class="step-header">Newspaper General Options</div>
+            <div class="step-header">Newspaper/Magazine General Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Newspaper">
+
+                                 
                
                 <div class="panel panel-primary">
-                    <div class="panel-heading "><h3 class="panel-title">Newspaper Options</h3></div><div class="panel-body">
-
+                    <div class="panel-heading "><h3 class="panel-title">Newspaper/Magazine General Options</h3></div><div class="panel-body">
+                     <div class="form-group">
+                         <label for="printmedia_type">Print Media Ad Type (Delhi):</label>
+                            <select class="form-control" name="printmedia_type" id="printmedia_type" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $printMedia_type as $key => $value )
+                                <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
+                            
+                            </select>
+                                
+                    </div> 
+                    <div class="form-group">
+                         <label for="newspaperlist">News Paper List (Delhi):</label>
+                            <select class="form-control" name="newspaperlist" id="newspaperlist" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $newspapers_list as $newspaper )
+                                <option value="{{$newspaper->name}}">{{$newspaper->name}}</option>
+                                @endforeach
+                            
+                            </select>
+                                
+                    </div>
+                     <div class="form-group">
+                         <label for="magazinelist">Magazines List (Delhi):</label>
+                            <select class="form-control" name="magazinelist" id="magazinelist" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $magazine_list as $magazine )
+                                <option value="{{$magazine->name}}">{{$magazine->name}}</option>
+                                @endforeach
+                            
+                            </select>
+                                
+                    </div> 
+                    
                     <div class="form-group">
                         <label for="circulation">Circulation: </label>
                         <input class="form-control" type="text" name="circulation" placeholder="Enter Circulation">
                     </div>
 
                     <div class="form-group">
-                            <label for="language">Languages:</label><input type="hidden" id="languagekey" name="languagekey" value="language" class="form-control"><select class="form-control" name="language" id="language" required=""><option value="0">English</option><option value="1">Hindi</option><option value="2">Punjabi</option><option value="3">Sanskrit</option></select>
+                            <label for="language">Languages:</label>
+                            <select class="form-control" name="language" id="language" required="">
+                                <option value="">--Language--</option>
+                                @foreach( $languages as $language )
+                                    <option value="{{$language->name}}">{{$language->name}}</option>
+                                @endforeach
+                            </select>
                     </div>
 
-                @PHP 
-                    $newspaper_options = array('page1' => 'Page1', 'page3' => 'Page3','last_page' => 'Last Page','any_page' => 'Any Page',);
-                @ENDPHP
-
+                
+                    
                     <div class="form-group">
                         <label for="newspaperdisplay">Newspaper Display Options: </label>
                              

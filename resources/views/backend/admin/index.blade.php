@@ -6,16 +6,13 @@
 
 @section('content')
    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
-        <div class="panel panel-default">
+          <h1 class="well text-center">Dashboard</h1>
+        <div class="panel panel-primary">
         <!-- Default panel contents -->
-        <div class="panel-heading">Orders</div>
-        <div class="panel-body">
-            <p>Recent 10 orders</p>
-        </div>
-
+        <div class="panel-heading">Recent 10 orders</div>
+       
         <!-- Table -->
-        <table class="table">
+        <table class="table table-hover table-striped">
             <tr>
                 <th>#</th>
                 <th>Order ID</th>

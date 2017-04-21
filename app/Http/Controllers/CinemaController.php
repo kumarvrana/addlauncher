@@ -25,36 +25,15 @@ class CinemaController extends Controller
        return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads]);
     }
 
-    public function getfrontCinemaadByOption($cinemaOption)
-    {
-       
-        $cinema_ads = Cinemas::all()->toArray();
-       
-        $cinemaOption1 = '%'.$cinemaOption.'%';
-        $cinemas = array();
-        foreach($cinema_ads as $cinema){
-            $count = Cinemasprice::where([
-                                    ['cinemas_id', '=', $cinema['id']],
-                                    ['price_key', 'LIKE', $cinemaOption1],
-                                   ])->get()->count();
-            if($count > 0){
-                 $cinemapriceOptions = Cinemasprice::where([
-                                    ['cinemas_id', '=', $cinema['id']],
-                                    ['price_key', 'LIKE', $cinemaOption1],
-                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                array_push($cinema, $cinemapriceOptions);
-                $cinemas[] = array_flatten($cinema);
-            }
-       }
-       
-        return view('frontend-mediatype.cinemas.cinema-single', ['products' => $cinemas, 'cinemaOption' => $cinemaOption]);
-    }
+    
     
     public function getfrontCinemaad($id)
     {
-        $cinemaad = Cinemas::find($id);
-        $cinemaprice = Cinemasprice::where('cinemas_id', $id)->get();
-        return view('frontend-mediatype.cinemas.cinema-single', ['cinemaad' => $cinemaad, 'cinemaprice' => $cinemaprice]);
+        $cinemaad = Cinemas::where('id', '=', $id)->get()->toArray();
+        $cinemaad = array_flatten($cinemaad);
+        $cinemapriceOptions = Cinemasprice::where('cinemas_id', '=', $id)->get(array('price_key', 'price_value', 'duration_key', 'duration_value'))->toArray();
+            
+        return view('frontend-mediatype.cinemas.cinema-single', ['products' => $cinemaad, 'productOptions' => $cinemapriceOptions]);
     }
     
     

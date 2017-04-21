@@ -1,8 +1,8 @@
 </div>
 
-    <footer>
+    <footer class="animated fadeInUp">
                 <div class="pre-footer"></div>
-                
+
                 <div class="b-footer-body container">
                     <div class="row">
                         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
@@ -29,34 +29,27 @@
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center wow fadeIn">
                             <div class="b-logo">
-                                 <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/addlogo3.png')}}" title="Add Launcher" alt="Add Launcher"  style="width: 150px" /></a>
+                                 <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/'.$general->logo)}}" title="Add Launcher" alt="Add Launcher"  style="width: 150px" /></a>
                             </div>
                             <div class="b-footer-contacts">
                                 <div class="footer-contacts-list">
                                     <ul class="list-unstyled">
                                         <li>
-                                            1307, Best Sky Tower, F-5
+                                           {{strip_tags($general->address)}}
                                         </li>
-                                        <li>
-                                           Netaji Subhash Place, Pitampura,
-                                        </li>
-                                        <li>
-                                            New Delhi-110034
-                                        </li>
-                                        <li>
-                                            Monday to Saturday: 10:00 am - 6:00 pm
+                                        
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="b-socials clearfix">
                                 <ul class="list-inline">
-                                    <li><a href="https://twitter.com/"><i class="fa fa-twitter fa-fw"></i></a></li>
-                                    <li><a href="https://www.facebook.com/"><i class="fa fa-facebook fa-fw"></i></a></li>
-                                    <li><a href="https://www.linkedin.com/"><i class="fa fa-linkedin fa-fw"></i></a></li>
-                                    <li><a href="https://vimeo.com/"><i class="fa fa-vimeo fa-fw"></i></a></li>
-                                    <li><a href="https://www.rss.com/"><i class="fa fa-rss fa-fw"></i></a></li>
-                                    <li><a href="https://plus.google.com/"><i class="fa fa-google-plus fa-fw"></i></a></li>
+                                    <li><a href="{{$general->twitter}}"><i class="fa fa-twitter fa-fw"></i></a></li>
+                                    <li><a href="{{$general->facebook}}"><i class="fa fa-facebook fa-fw"></i></a></li>
+                                    <li><a href="{{$general->linkedin}}"><i class="fa fa-linkedin fa-fw"></i></a></li>
+                                    <li><a href="{{$general->instagram}}"><i class="fa fa-instagram fa-fw"></i></a></li>
+                                    <li><a href="{{$general->rss}}"><i class="fa fa-rss fa-fw"></i></a></li>
+                                    <li><a href="{{$general->google}}"><i class="fa fa-google-plus fa-fw"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -87,7 +80,7 @@
                                 <div class="clearfix">
                                     <div class="b-copy pull-left">
                                         <p>
-                                            © Copyright 2017 <a href="#">Add Launcher.</a> All Rights Reserved.
+                                            © Copyright {{ date('Y')}} <a href="{{env('APP_URL')}}">{{$general->sitename}}.</a> All Rights Reserved.
                                         </p>
                                     </div>
                                     <div class="b-payments pull-right">

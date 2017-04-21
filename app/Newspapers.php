@@ -10,4 +10,8 @@ class Newspapers extends Model
         'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'circulations', 'language', 'general_options', 'other_options', 'classified_options', 'pricing_options', 'numberofnewspapers','discount'
     ];
 
+    public function languages()
+    {
+        return $this->hasMany('App\Language');
+    }
 }

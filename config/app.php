@@ -165,6 +165,10 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
         Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
+        App\Providers\ComposerLanguagesProvider::class,
+        App\Providers\ComposerNewspaperProvider::class,
+        App\Providers\ComposerMagazineProvider::class,
+
         /*
          * Package Service Providers...
          */

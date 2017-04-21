@@ -1,5 +1,24 @@
+$(document).ready(function() {
+    $('.dropdown-menu li a').click(function(event) {
+        var option = $(event.target).text();
+        $(event.target).parents('.btn-group').find('.dropdown-toggle').html(option+' <span class="caret"></span>');
+    });
+});
+
+ function ConfirmDelete()
+  {
+  var x = confirm("Are you sure you want to delete?");
+  if (x)
+    return true;
+  else
+    return false;
+  }
+
 
 $(function(){
+	$(".tip-left").tooltip({
+        placement : 'left',
+    }); 
 	$("#light-content").hide();
 	var category_id = 0;
 	var descriptionTD;

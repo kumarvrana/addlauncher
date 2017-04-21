@@ -3,15 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Http\Response;
 use App\Http\Requests;
-
 use App\User;
-
+use App\Order;
 use Auth;
+use Image;
+use App\Mainaddtype;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
+    public function getUsers()
+    {
+        
+        $users = User::latest()->limit(10)->offset(0)->get();
+       $users->transform(function($user, $key){
+            $user->cart = unserialize($user->cart);
+            return $user;
+        });
+       
+        return view('backend.admin.users', ['users' => $users]);
+    }
+    
     public function getSignup(){
         return view('user.signup');
     }

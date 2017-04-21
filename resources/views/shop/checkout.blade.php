@@ -3,156 +3,180 @@
 @section('title')
     Checkout|Add Launcher 
 @endsection
+@section('styles')
 
+    <link rel="stylesheet" type="text/css" href="{{ URL::to( 'css/checkout.css' ) }}">
+
+
+@endsection
 @section('content')
         <div class="container-fluid">
             <div class="row cart-body">
                 
 
                 <div class="col-md-8 col-md-offset-2 wrapper">
-                    <div class="section-title">
-                        <h2>Checkout</h2>
-                    </div>
                 
                     <div id="charge-error" class="alert alert-danger {{ !Session::has('error') ? 'hidden' : '' }}">
                         {{ Session::get('error') }}
                     </div>
 
-                    <form action="#" method="post" id="checkout-form" class="form-horizontal">
+                   
+                               
+                   
+
+                    <!-- ==================checkout-content========== -->
+        <section id="checkout-content">
+         <form action="{{route('postCheckout')}}" method="post" id="checkout-form" class="form-horizontal">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 left-checkout" style="padding-left:0px;">
+                        <div class="section-title">
+                            <h2>billing details</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding-left:0px;">
+                                <label>First Name <span>*</span></label>
+                                <input type="text" placeholder="First Name" name="first-name" required>
+                            </div>
+                            <div class="col-lg-6 left_position_fix">
+                                <label>Last Name <span>*</span></label>
+                                <input type="text" placeholder="Last Name" name="last-name" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12" style="padding-left:0px;">
+                                <label>Company Name</label>
+                                <input type="text" placeholder="Company Name" name="company-name" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12" style="padding-left:0px;">
+                                <label>Address <span>*</span></label>
+                                <input type="text" placeholder="Street address" name="street" required>
+                                <input type="text" placeholder="Apartment, Suit unit etc (optional)" name="address" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12" style="padding-left:0px;">
+                                <label>Town / City <span>*</span></label>
+                                <input type="text" placeholder="Town / City" name="city" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding-left:0px;">
+                                <label>State / Country <span>*</span></label>
+                                <input type="text" placeholder="State / Country" name="country" required>
+                            </div>
+                            <div class="col-lg-6 left_position_fix">
+                                <label>Postcode / Zip <span>*</span></label>
+                                <input type="text" placeholder="Postcode / Zip" name="zip-code" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6" style="padding-left:0px;">
+                                <label>Email Address <span>*</span></label>
+                                <input type="email" placeholder="Email Address" name="email" required>
+                            </div>
+                            <div class="col-lg-6 left_position_fix">
+                                <label>Phone <span>*</span></label>
+                                <input type="text" placeholder="Phone" name="phone" required>
+                            </div>
+                        </div>
                         
-                            <!--REVIEW ORDER-->
-                             @if($products)
-                            <div class="panel panel-cart">
-                                <div class="panel-heading">
-                                    Review Order <div class="pull-right"><small><a class="afix-1" href="{{route('cart.shoppingCart')}}"><span class="fa fa-edit"></span> Edit Cart</a></small></div>
-                                </div>
-                                <div class="panel-body">
-                                   
+                        <div class="row">
+                            <div class="col-lg-12" style="padding-left:0px;">
+                                <label>Order Notes</label>
+                                <textarea placeholder="Note about your order. e.g. special note for delivery"></textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                        <div class="section-title">
+                            <h2>your order</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 order-box">
+                                <ul>
+                                <li><strong>PRODUCT <span>TOTAL</span></strong></li>
+                                @if($products)
                                     @foreach( $products as $product)
-                                    @PHP
-                                        $key = array_search($product, $products);
-                                        $imagefolder = explode('_', $key);
-                                    @ENDPHP
-                                    @if($imagefolder[1] == 'tricycle')
-                                    <div class="form-group">
-                                        <div class="col-sm-3 col-xs-3">
-                                            <img class="img-responsive cart-img" src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }}" />
-                                        </div>
-                                        <div class="col-sm-6 col-xs-6">
-                                            <div class="row">
-                                                <div class="col-xs-12 c-title">
-                                                <h3>
-                                                {{ $product['item']['title'] }}
-                                                </h3>
-                                                <hr>
-                                                </div>
-
-                                                <div class="col-xs-12 c-quant">
-                                                    <h4>Quantity :<small> {{$product['qty']}}</small></h4> 
-                                                </div>
-                                                <div class="col-xs-12 c-detail">
-                                                <h4>Product Details : <small> {{ strip_tags($product['item']['description']) }}</small></h4></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 col-xs-3 text-right c-price">
-                                            <h4>Rs. {{$product['item']['price']}}</h4>
-                                            <h5><a href="{{route('Cart.removeItemCartpayment', ['id' => $key, 'page' => 'payment'])}}" >Delete Product From Cart</a> </h5>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <hr>
-                                    </div>
-                                    @else
-                                        <div class="form-group">
-                                        <div class="col-sm-3 col-xs-3">
                                         @PHP
-                                    if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
-                                @ENDPHP
-                                            <img class="img-responsive cart-img" src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}" />
-                                        </div>
-                                        <div class="col-sm-6 col-xs-6">
-                                            <div class="row">
-                                                <div class="col-xs-12 c-title">
-                                                <h3>
-                                                {{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}
-                                                </h3>
-                                                <hr>
-                                                </div>
+                                            $key = array_search($product, $products);
+                                            $imagefolder = explode('_', $key);
+                                        @ENDPHP
 
-                                                <div class="col-xs-12 c-quant">
-                                                    <h4>Quantity :<small> {{$product['qty']}}</small></h4> 
-                                                </div>
-                                                <div class="col-xs-12 c-detail">
-                                                <h4>Product Details : <small> {{ strip_tags($product['item']['description']) }}</small></h4></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 col-xs-3 text-right c-price">
-                                            <h4>Rs. {{$product['item']['price_value']}}</h4>
-                                            <h5><a href="{{route('Cart.removeItemCartpayment', ['id' => $key, 'page' => 'payment'])}}" >Delete Product From Cart</a> </h5>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="form-group">
-                                        <hr>
-                                    </div>
-                                    @endif
+                                        @if($imagefolder[1] == 'tricycle')
+                                        <li>{{ $product['item']['title'] }} <span><i class="fa fa-inr"></i> {{$product['item']['price']}}</span></li>
+                                        @else
+
+                                        @PHP
+                                        if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
+                                        @ENDPHP
+                                            
+                                            
+                                        <li>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}} <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
+
+                                        @endif
                                     @endforeach
-
-                                    <div class="form-group">
-                                        <div class="col-xs-12">
-                                            <div class="pull-right c-total">
-                                               <h3> <span>Total :</span> Rs.{{ $total }} </h3>
-                                            </div>
+                                    <li class="total">TOTAL <span class="bold"><i class="fa fa-inr"></i> {{ $total }}</span></li>
+                                         
+                                @endif
+                                    <li><input type="radio" name="adl-payment" value="cash-transfer"> Direct Bank Payment
+                                        <div class="note">
+                                            <div class="i fa fa-caret-up"></div>
+                                            Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.
                                         </div>
-                                    </div>
-                                </div>
+                                    </li>
+                                 
+                                    <li><input type="radio" name="adl-payment" value="stripe-payment" id="stripe-button"> Stripe <img src="{{asset('images/stripepayment.png')}}" alt="image" style="margin-left:12px; width: 120px;"> <a href="#"><span>What is Stripe?</span></a></li>
+                                    {{csrf_field()}}
+                                    <hr>
+                                    <li><input type="submit" id="adl-place-order" class="btn btn-primary place-order fa fa-arrow-circle-right" value="Place Order"></li>
+                                </ul>
                             </div>
-                            @endif
-                            <!--REVIEW ORDER END-->
-                        
-
-                       
-                            <div class="payment-methods">
-                                <div class="panel panel-cart">
-                                    <div class="panel-heading">
-                                       Select Payment Method 
-                                    </div>
-                                </div>  
-                                <div class="method">
-                                    <div class="row">
-                                        <div class="col-md-3 col-md-offset-3">
-                                            <a href="{{route('front.Payment', ['paymentMethod' => 'transfer-money'])}}" id="transfer" class="payment-method-btn cash-transfer cart-rad">
-                                            <label for="transfer">
-                                                <img  src="{{asset('images/logo/moneytransfer.png')}}" class="img-responsive" alt="I'm sad" />
-                                            </label></a>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <a href="{{route('front.Payment', ['paymentMethod' => 'stripe-payment'])}}" id="stripe" class="payment-method-btn stripe cart-rad">
-                                            <label for="stripe">
-                                                <img  src="{{asset('images/logo/stripepay.png')}}" class="img-responsive" alt="I'm happy" />
-                                            </label></a>
-                                        </div>
-                                        
-                                        <!-- <div class="col-md-4">
-                                           <a href="{{route('front.Payment', ['paymentMethod' => 'cirtus-payment'])}}" id="citrus" class="payment-method-btn cirtus cart-rad">
-                                            <label for="citrus">
-                                                <img src="{{asset('images/logo/cirtus.jpg')}}" alt="I'm happy" />
-                                            </label></a>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            
-                        <!--input type="submit" class="btn btn-primary pull-right" name="stepCheckout-1" value="Procced To Payment"-->
-                        </br>
-                    </form>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+             </form>  
+        </section>
                 </div>
                  
             </div>
         </div>
        
 @endsection
+<script src="https://checkout.stripe.com/checkout.js"></script>
+@section('scripts')
+<script>
+var handler = StripeCheckout.configure({
+  key: 'pk_test_eNjlkOTxW9sl5bwZQLcjLrav',
+  image: "<?= asset('images/logo/'.$general->logo) ?>",
+  locale: 'auto',
+  currency: 'INR',
+  token: function(token) {
+        $("#checkout-form").append("<input type='hidden' name='stripeToken' value='" + token.id + "' />");
+  }
+});
 
+document.getElementById('stripe-button').addEventListener('click', function(e) {
+  
+  handler.open({
+    name: 'addlauncher.com',
+    description: 'Book your space for ad!',
+    amount: "<?= $total * 100?>"
+  });
+  //e.preventDefault();
+});
+$(".ModalContainer").on('click', '.Header-navClose', function(){
+    alert('343');
+    $("#stripe-button").prop('checked', false);
+});
+// Close Checkout on page navigation:
+window.addEventListener('popstate', function() {
+    
+    handler.close();
+});
+</script>
+@endsection

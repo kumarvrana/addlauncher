@@ -16,7 +16,7 @@
 
 			@if(Session::has('cart'))
    				@if(count($products) > 0)
-				<table id="cart" class="table table-cart">
+				<table id="adl-cart-table" class="table table-cart">
     				<thead>
 						<tr>
 							<th class="sr">#</th>
@@ -62,11 +62,22 @@
 							<td data-th="Quantity" class="qt">1								
 							</td>
 							@else
-							<td data-th="Quantity" class="qt">
-								<input type="number" id="quantity" data-index="{{$i}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['auto_number']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$i}}" style="display:none;color:red;">Max Limit Is {{$product['item']['auto_number']}}</span>
-								<input type="hidden" id="quantity-hidden-{{$i}}" name="quantity-hidden" value="{{$product['item']['auto_number']}}">
-							</td>
+									@if(($imagefolder[1] === 'tricycle'))
+									
+										<td data-th="Quantity" class="qt">
+											<input type="number" id="quantity" data-index="{{$i}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['auto_number']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$i}}" style="display:none;color:red;">Max Limit Is {{$product['item']['auto_number']}}</span>
+											<input type="hidden" id="quantity-hidden-{{$i}}" name="quantity-hidden" value="{{$product['item']['auto_number']}}">
+										</td>
+									@else
+										<td data-th="Quantity" class="qt">
+											<input type="number" id="quantity" data-index="{{$i}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['number_value']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$i}}" style="display:none;color:red;">Max Limit Is {{$product['item']['number_value']}}</span>
+											<input type="hidden" id="quantity-hidden-{{$i}}" name="quantity-hidden" value="{{$product['item']['number_value']}}">
+										</td>
+									@endif
+							
+							
 							@endif
+							
 							
                             <td data-th="Price" class="pr">Rs.{{$product['item']['price']}}</td>
 							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}}</h4></td>
@@ -75,6 +86,7 @@
 								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
 							</td>
 						</tr>
+						
 						@else
 							<td data-th="Number" class="sr">@PHP echo	$i; @ENDPHP </td>
                         	<td data-th="Image" class="im">
@@ -100,9 +112,10 @@
 							</td>
 							@else
 							<td data-th="Quantity" class="qt">
-								<input type="number" id="quantity" data-index="{{$i}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['number_value']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$i}}" style="display:none;color:red;">Max Limit Is {{$product['item']['number_value']}}</span>
-								<input type="hidden" id="quantity-hidden-{{$i}}" name="quantity-hidden" value="{{$product['item']['number_value']}}">
-							</td>
+									<input type="number" id="quantity" data-index="{{$i}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['number_value']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$i}}" style="display:none;color:red;">Max Limit Is {{$product['item']['number_value']}}</span>
+									<input type="hidden" id="quantity-hidden-{{$i}}" name="quantity-hidden" value="{{$product['item']['number_value']}}">
+								</td>
+					
 							@endif
 							<!--td data-th="duration">
 								<input type="number" id="duration" data-index="{{$i}}" data-itemkey="{{$key}}" name="duration" class="form-control text-center change-cart" min="1" max="{{$product['item']['duration_value']}}" value="1"><span class="error duration-error-{{$i}}" style="display:none;color:red;">Max Limit Is {{$product['item']['duration_value']}}</span>

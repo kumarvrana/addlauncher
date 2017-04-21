@@ -86,9 +86,10 @@ class CheckoutController extends Controller
     }
     public function postCheckoutSwitch(Request $request)
     {
-        $paymentMethod = $request->input('paymentMethod');
+       
+        $paymentMethod = $request->input('adl-payment');
         switch($paymentMethod){
-            case 'transfer-money':
+            case 'cash-transfer':
                 $order = $this->postCheckoutCashtransfer($request->all());
             break;
             case 'stripe-payment':
@@ -123,8 +124,8 @@ class CheckoutController extends Controller
        
         $order = new Order();
         $order->cart = serialize($cart);
-        $order->name = $requestForm['firstName'];
-        $order->address = $requestForm['addressStreet1']." ".$requestForm['addressCity']." ".$requestForm['addressState']." ".$requestForm['addressCountry']."-".$requestForm['addressZip'];
+        $order->name = $requestForm['first-name']." ". $requestForm['last-name'];
+        $order->address = $requestForm['address']." ".$requestForm['street']." ".$requestForm['city']." ".$requestForm['country']." INDIA-".$requestForm['zip-code'];
         $order->payment_id = uniqid();
         $order->payment_method = 'cash transfer';
         $order->payment_status = 'Awaiting Payment';
@@ -132,7 +133,7 @@ class CheckoutController extends Controller
         Sentinel::getUser()->orders()->save($order);
        
         $order_data = Order::find($order->id);
-        //$this->sendEmail($user, $order_data);
+        $this->sendEmail($user, $order_data);
        
         Session::forget('cart');
         return $order_data;
@@ -153,7 +154,7 @@ class CheckoutController extends Controller
         if(count($CheckoldCart->items) < 1){
             return redirect()->route('cart.shoppingCart');
         }
-
+     
         $oldcart = Session::get('cart');
         $cart = new Cart($oldcart);
         $settings = PaymentSetting::find(19);
@@ -171,8 +172,8 @@ class CheckoutController extends Controller
 
             $order = new Order();
             $order->cart = serialize($cart);
-            $order->name = $requestForm['name'];
-            $order->address = $requestForm['address']." ".$requestForm['city']." ".$requestForm['state']." ".$requestForm['country']."-".$requestForm['zip_code'];
+            $order->name = $requestForm['first-name']." ". $requestForm['last-name'];
+            $order->address = $requestForm['address']." ".$requestForm['street']." ".$requestForm['city']." ".$requestForm['country']." INDIA-".$requestForm['zip-code'];
             $order->payment_id = $charge->id;
             $order->payment_method = 'stripe';
             $order->payment_status = 'Awaiting Payment';

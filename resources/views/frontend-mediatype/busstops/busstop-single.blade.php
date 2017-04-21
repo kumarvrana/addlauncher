@@ -2,7 +2,7 @@
 
 @section('title')
 
-    Bus Stop | Add Launcher
+    Busstop | Add Launcher
 
 @endsection
 
@@ -16,95 +16,69 @@
             </div>
         </div>
         @endif
+<section class="sec-banner">
+     <div class="jumbotron jumbo-1 text-center">
+         <h1> OPTIONS</h1>
+     </div>
+</section>         
+<section class="main-sec">        
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
 				@include('partials.sidebar')
-				
                     
                 </div>
-                @PHP
-                   $variations = unserialize($busstopad->display_options);
-				  
-				   $variation = array();
-                   $price = array();
-				   $passVariation = array();
-                  foreach($busstopprice as $options){
-					$passVariation[] = $options->price_key;
-					$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-					$price[] = $options->price_value;
-				  }
-				  $name_key = array_chunk($passVariation, 3);
-				  $price_values = array_chunk($price, 3);
-				  
-				  $name = array();
-				  $j = 0; 
-				  foreach($name_key as $options){
-					  	$passVariationname[$j] = $options[0];
-						$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-					$j++;
-				  }
-				 
-				 $new_price = array();
-				 $number = array();
-				 $duration = array();
-				 foreach($price_values as $options){
-					$new_price[] = $options[0];
-					$number[] = $options[1];
-					$duration[] = $options[2];
-				 }
-				 
-                $i = 0;
-                @ENDPHP
-                <div class="col-md-9">
-					
-				<div class="row">
-				@if($variations)
-					<div class="display-title">
-					  <h2>Display Options</h2>
-				   	</div>
-			     		@foreach($variations as $loop)
-			     			<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/busstop/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-							</style>
-			     			<div class="col-md-3 col-sm-3 "> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Bus Stop for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'busstops'.'_'.$passVariationname[$i].'_'.$busstopad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('busstop.addtocart', ['id' => $busstopad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-							@PHP $i++; @ENDPHP
-						@endforeach
+               
+                <div class="col-md-8">
+                <div class="row">
+					@if($products)
+						@foreach($productOptions as $productOption)
+						<div class="col-md-3 col-sm-3 "> 
+							<div class="pro-item"> 
+								<div class=" cat-opt-img"><img src="{{asset('images/busstops/'.$products[11])}}"> </div>
+								<p class="font-1">{{$products[3]}}</p>
+								<p class="font-2">{{$products[5]}} | {{$products[6]}} | {{$products[7]}}</p>
+								<hr>
+								<div class="row">
+									<div class="col-md-6">
+										<p class="font-3">{{$productOption['number_value']}} {{ucwords(str_replace('_', ' ', substr($productOption['price_key'], 6)))}} Ads for {{$productOption['duration_value']}} months</p>
+									</div>
+								<div class="col-md-6">	
+									<p class="font-2"><del class="lighter">Rs {{$productOption['price_value']}} <br></del>Rs {{$productOption['price_value']}}</p>
+								</div>
+								</div>
+								@PHP
+								$options = $productOption['price_value'].'+'.$productOption['price_key'];
+								$session_key = 'busstops'.'_'.$productOption['price_key'].'_'.$products[0];
+								$printsession = (array) Session::get('cart');
+												
+								@ENDPHP
+								<div class="clearfix"> 
+									<a class="glass" href="{{route('busstop.addtocart', ['id' => $products[0], 'variation' => $options])}}">
+										@if(count($printsession) > 0)
+												@if(array_key_exists($session_key, $printsession['items'])) 
+													<span class="fa fa-minus-circle"></span> Remove From Cart 
+												@else
+													<span class="fa fa-star"></span> Add to Cart 
+												@endif
+												@else
+													<span class="fa fa-star"></span> Add to Cart
+												@endif
+									</a> 
+								</div>
+							</div>
+						</div>
+						@endforeach	
 						@endif
 		            </div><!-- row before style ends here -->
         		</div>
-    		</div>
+    		<div class="col-md-2">
+            @include('partials.sidebar-cart')
+            </div>
+            </div>
     	</div><!-- container fluid 1 ends here -->
            
 	
-       
+ </section>      
 
 @endsection

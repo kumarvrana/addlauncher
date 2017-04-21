@@ -12,10 +12,12 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{route('users')}}">Users</a></li>
             <li><a href="{{route('dashboard.orders')}}">Orders<span class="badge">1</span></a></li>
             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i>
  Settings<span class="caret"></span></a>
               <ul class="dropdown-menu">
+              <li><a href="{{route('dashboard.generalsettings')}}">General Options</a></li>
               <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
  Payments
               <ul class="dropdown-menu">
@@ -44,9 +46,7 @@
           </ul>
         </li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
+          
         </div>
       </div>
     </nav>

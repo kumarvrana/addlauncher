@@ -11,7 +11,7 @@
                 <a href="#" class="category-link"> Category <em class="lnr lnr-chevron-right"></em><em class="lnr lnr-chevron-right"></em></a>
                 @if(!empty($mediacats))
                   @foreach($mediacats as $mediacat) 
-                    <a href="{{$mediacat->slug}}"><span class="cat-menu-img {{str_replace(' ','_', strtolower($mediacat->title))}}"></span> {{$mediacat->label}}</a>
+                    <a href="{{env('APP_URL')}}{{$mediacat->slug}}"><span class="cat-menu-img {{str_replace(' ','_', strtolower($mediacat->title))}}"></span> {{$mediacat->label}}</a>
                   @endforeach
                 @endif
                 

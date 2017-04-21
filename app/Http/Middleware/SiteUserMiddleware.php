@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Sentinel;
 
 class SiteUserMiddleware
 {

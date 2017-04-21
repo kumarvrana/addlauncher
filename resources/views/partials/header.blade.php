@@ -38,11 +38,11 @@ $printsession = (array) Session::get('cart');
                   
                   @if(Sentinel::check())
                     @if(Sentinel::getUser()->roles()->first()->slug == 'admin') 
-                      <a href="{{route('dashboard')}}" class="head-link" >
-                        <em class="lnr lnr-cog"></em>
-                           Dashboard 
-                      </a>
-                  @endif
+                        <a href="{{route('dashboard')}}" class="head-link" >
+                          <em class="lnr lnr-cog"></em>
+                            Dashboard 
+                        </a>
+                    @endif
                   @endif
                  
                   
@@ -50,19 +50,20 @@ $printsession = (array) Session::get('cart');
 
             </div>
           </div>
+             
          
           <div class="col-md-6 col-xs-12 col-sm-6">
             <div class="top-links-right">
               <div class="top-wishlist">
-                <a href="callto:011-41557685" id="wishlist-total" >
+                <a href="callto:{{$general->firstphone}}" id="wishlist-total" >
                   <em class="lnr lnr-phone-handset"></em>
-                    <span class="text-top-wishlist"> 011-41557685 </span>
+                    <span class="text-top-wishlist"> {{$general->firstphone}}</span>
                 </a>
               </div>
               <div class="top-checkout">
-                <a href="mailto:info@addlauncher.com" title="info@addlauncher.com">
+                <a href="mailto:{{$general->firstemail}}" title="{{$general->firstemail}}">
                   <em class="lnr lnr-envelope"></em> 
-                  <span class="text-top-checkout">info@addlauncher.com</span>
+                  <span class="text-top-checkout">{{$general->firstemail}}</span>
                 </a>
 
 
@@ -80,7 +81,7 @@ $printsession = (array) Session::get('cart');
       <div class="row">
         <div class="col-md-3 col-sm-3 col-sms-12">
           <div id="logo">
-            <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/addlogo3.png')}}" title="Add Launcher" alt="Add Launcher" class="img-responsive" /></a>
+            <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/'.$general->logo)}}" title="Add Launcher" alt="Add Launcher" class="img-responsive" /></a>
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-sms-12">
@@ -117,16 +118,21 @@ $printsession = (array) Session::get('cart');
                     @if(count($printsession) > 0)
                         @if( $printsession['totalQty'] != 0 )
                           <span class="item-top-cart"><span class="cartQuantity">{{$printsession['totalQty']}}</span> <span class="cart-item">item(s) -</span>
+                        @else
+                          <span class="item-top-cart"><span class="cartQuantity">0</span> <span class="cart-item">item(s) -</span>
                         @endif
 
                         @if( $printsession['totalPrice'] != 0 )
-                          <span class="fa fa-inr"><span class="cartTotal"> {{$printsession['totalPrice']}}</span></span>
+                          <span class="fa fa-inr"><span class="cartTotal">{{$printsession['totalPrice']}} </span></span>
+                          
                           @else
                           <span class="fa fa-inr"><span class="cartTotal"> 0.00</span></span>
                         @endif
                     
-                    @endif
-
+                      @else
+                      <span class="item-top-cart"><span class="cartQuantity">0</span> <span class="cart-item">item(s) -</span>
+                      <span class="fa fa-inr"><span class="cartTotal"> 0.00</span></span>
+                      @endif
                     </span>
                   </span>
                 </a>

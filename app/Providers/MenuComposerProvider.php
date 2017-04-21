@@ -24,10 +24,27 @@ class MenuComposerProvider extends ServiceProvider
     public function register()
     {
         $this->composeMenu();
+        $this->composeTop();
+        $this->composeFooter();
+        $this->composeAll();
     }
 
     public function composeMenu()
     {
         view()->composer('partials.menu', 'App\Http\Composers\MenuComposer');
+    }
+
+    public function composeTop()
+    {
+        view()->composer('partials.header', 'App\Http\Composers\MenuComposer');
+    }
+
+    public function composeFooter()
+    {
+        view()->composer('partials.footer', 'App\Http\Composers\MenuComposer');
+    }
+    public function composeAll()
+    {
+        view()->composer('*', 'App\Http\Composers\MenuComposer');
     }
 }

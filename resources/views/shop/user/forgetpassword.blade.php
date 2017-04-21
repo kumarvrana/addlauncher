@@ -5,12 +5,16 @@
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-md-4 col-md-offset-4">
-        <h1>Forget Password</h1>
-       
-        <form action="{{ route('user.postforgetpassword') }}" method="post">
-            @if(count($errors) > 0 )
+<div class="row form-page">
+
+<div class="main animated fadeInUp">
+    <div class="login-form">
+            <h1>Forget Password?</h1>
+                    <div class="head">
+                        <img src="{{asset('images/user.png')}}" style="width: 132px;" alt="">
+                    </div>
+                <form action="{{ route('user.postforgetpassword') }}" method="post">
+                         @if(count($errors) > 0 )
                 <div class="alert alert-danger">
                     @foreach($errors->all() as $error)
                         <p>{{ $error }}</p>
@@ -31,17 +35,21 @@
                     
                 </div>
             @endif
-            <div class="form-group">
-                <div class="input-group">
-                    <label class="input-group-addon" for="email"><i class="fa fa-envelope"></i></label>
-                    <input type="email" id="email" name="email" placeholder="example@exp.com" value="{{old('email')}}" class="form-control" required>
-                </div>
-              </div> 
-             
-            {{ csrf_field() }}
-              <button type="submit" class="btn btn-primary pull-right">Send Password</button>
-            
-        </form>
-    </div>
+
+
+                        <input type="email" class="text"  id="email" name="email" value="{{old('email')}}" placeholder="Enter Your Email">
+                        
+                        <div class="submit">
+                        {{ csrf_field() }}
+                            <input type="submit" onclick="myFunction()" value="Send Password" required>
+                    </div>  
+                    <p>Or <a href="{{ route('user.signin') }}"><span class="fa fa-user"></span> Login Here</a></p>
+
+                      
+                </form>
+            </div>
+                
+</div>
+  
 </div>
 @endsection

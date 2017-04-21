@@ -15,7 +15,7 @@ class User extends EloquentUser
      * @var array
      */
     protected $fillable = [
-        'email', 'first_name', 'last_name', 'password', 'permissions'
+        'email', 'first_name', 'last_name', 'password', 'phone_number', 'permissions'
     ];
 
     /**
@@ -37,4 +37,5 @@ class User extends EloquentUser
         return $this->hasMany('App\Order');
     }
 
+    
 }

@@ -12,3 +12,7 @@
 	text-align: center;
 	color: #428BCA;
 }
+
+.status {
+    min-height: 400px;
+}

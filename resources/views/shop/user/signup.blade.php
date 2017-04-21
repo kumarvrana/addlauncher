@@ -5,54 +5,38 @@
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-md-4 col-md-offset-4">
-        <h1>Sign Up</h1>
-       
-        <form action="{{ route('user.signup') }}" method="post">
-             @if(count($errors) > 0 )
-            <div class="alert alert-danger">
-                @foreach($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
+<div class="row form-page">
+
+        <div class="main animated fadeInUp">
+             <div class="login-form">
+            <h1>User Registration</h1>
+                    <div class="head">
+                        <img src="{{asset('images/user.png')}}" style="width: 132px;" alt="">
+                    </div>
+                <form action="{{ route('user.signup') }}" method="post" class="">
+                    @if(count($errors) > 0 )
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                    @endif
+                        <input type="email" class="text"  id="email" name="email" value="{{old('email')}}" placeholder="example@exp.com">
+                        <input type="text" class="text"  id="first_name" name="first_name" value="{{old('first_name')}}" placeholder="First Name">
+                        <input type="text" class="text"  id="last_name" name="last_name" value="{{old('last_name')}}" placeholder="Last Name">
+                        <input type="text" class="text"  id="phone_number" name="phone_number" value="{{old('phone_number')}}" placeholder="Phone Number">
+                        <input type="password" id="password" name="password" value="{{old('password')}}" placeholder="Password" required>
+                        <input type="password" id="password_confirmation" name="password_confirmation" value="{{old('password_confirmation')}}" placeholder="Confirm Password" required>
+                        <div class="submit">
+                            <input type="submit" onclick="myFunction()" value="Register" required>
+                    </div> 
+                      {{ csrf_field() }}
+                    
+
+                </form>
             </div>
-            @endif
-            <div class="form-group">
-                <div class="input-group">
-                    <label class="input-group-addon" for="email"><i class="fa fa-envelope"></i></label>
-                    <input type="email" id="email" name="email" placeholder="example@exp.com" value="{{old('email')}}" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <label class="input-group-addon" for="first_name"><i class="fa fa-user"></i></label>
-                    <input type="text" id="first_name" name="first_name" placeholder="First Name" value="{{old('first_name')}}" class="form-control">
-                </div>
-            </div>
-             <div class="form-group">
-                <div class="input-group">
-                    <label class="input-group-addon" for="last_name"><i class="fa fa-user"></i></label>
-                    <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="{{old('last_name')}}" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                 <div class="input-group">
-                    <label class="input-group-addon" for="password"><i class="fa fa-lock" aria-hidden="true"></i>
-</label>
-                    <input type="password" id="password" name="password" class="form-control" value="{{old('password')}}" placeholder="password" required>
-                </div>
-            </div>
-            <div class="form-group">
-                 <div class="input-group">
-                    <label class="input-group-addon" for="password_confirmation"><i class="fa fa-lock" aria-hidden="true"></i>
-</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" value="{{old('password_confirmation')}}" class="form-control" placeholder="confirm password" required>
-                </div>
-            </div>
-            {{ csrf_field() }}
-            <button type="submit" class="btn btn-primary pull-right">Sign Up</button>
-            
-        </form>
-    </div>
+                
+        </div>
+
 </div>
 @endsection

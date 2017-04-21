@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Mail;
+use App\Generalsettings;
+use Illuminate\Support\Facades\DB;
+
+
 
 class ContactFormController extends Controller
 {
@@ -11,7 +15,11 @@ class ContactFormController extends Controller
 
     public function GetContactForm()
     {
-        return view('partials.contact-us');
+
+         $generalsetting = DB::table('generalsettings')
+                ->where('id', '=', 1)
+                ->first();
+        return view('partials.contact-us')->with('general', $generalsetting);
      }   
     //post and mail contact form
     public function PostContactForm(Request $request)
