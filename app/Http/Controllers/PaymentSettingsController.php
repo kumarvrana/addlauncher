@@ -8,6 +8,11 @@ use App\PaymentSetting;
 
 class PaymentSettingsController extends Controller
 {
+
+  public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getCashTransfer', 'postCashTransfer', 'UpdateCashPayment', 'getCitrusTransfer', 'postCitrusTransfer', 'UpdateCitrusPayment', 'getStripeTransfer' , 'postStripeTransfer' , 'UpdateStripePayment']]);
+    }
     // cash payment 
 
     public function getCashTransfer()

@@ -22,6 +22,7 @@
       </div>
     </div>
   </div>
+  
 </div>
 </div> <!-- end of fixed-div -->
 

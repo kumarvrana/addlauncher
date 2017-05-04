@@ -8,6 +8,12 @@ use App\Advertisingconsolution;
 
 class AdvertisingconsolutionController extends Controller
 {
+
+	public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardAdvertisingconsolutionList']]);
+    }
+
     public function getDashboardAdvertisingconsolutionList(){
         $advertisingconsolution_ads = Advertisingconsolution::all();
         return view('backend.mediatypes.advertisingconsolution.advertisingconsolution-list', ['advertisingconsolution_ads' => $advertisingconsolution_ads]);

@@ -12,6 +12,8 @@
     @yield('styles')
     <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>tinymce.init({ selector:'textarea', plugins: 'code link' });</script>
+    <link rel="icon"  href="{{asset('images/logo/'.$general->favicon)}}">
+    
    
 </head>
 <body>

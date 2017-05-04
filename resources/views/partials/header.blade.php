@@ -81,7 +81,8 @@ $printsession = (array) Session::get('cart');
       <div class="row">
         <div class="col-md-3 col-sm-3 col-sms-12">
           <div id="logo">
-            <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/'.$general->logo)}}" title="Add Launcher" alt="Add Launcher" class="img-responsive" /></a>
+            <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/'.$general->logo)}}" id="logoimg" title="Add Launcher" alt="Add Launcher" class="img-responsive" /></a>
+            <a href="{{env('APP_URL')}}"><img src="{{asset('images/logo/'.$general->logo_fixed)}}" id="logoimg2" title="Add Launcher" alt="Add Launcher" class="img-responsive" /></a>
           </div>
         </div>
         <div class="col-md-6 col-sm-6 col-sms-12">

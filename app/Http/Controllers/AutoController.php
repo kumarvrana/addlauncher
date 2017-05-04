@@ -8,6 +8,7 @@ use App\Http\Requests;
 use Session;
 use App\Autos;
 use App\Autosprice;
+use App\Mainaddtype;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -19,47 +20,85 @@ use App\Order;
 
 class AutoController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardAutoList', 'getDashboardAutoForm', 'postDashboardAutoForm', 'addAutoPrice', 'getDeleteAutoad', 'postUpdateeAutoad', 'getUpdateeAutoad', 'getuncheckAutoadOptions']]);
+    } 
+
      //frontend function starts
     
+
     public function getfrontendAllAutoads()
     {
       
-       $auto_ads = Autos::all();
-       return view('frontend-mediatype.autos.autoads-list', ['products' => $auto_ads]);
+        $auto_type = array(  'auto_rikshaw' => 'Auto Rikshaw',
+                        'e_rikshaw' => 'E Rikshaw',
+                        'tricycle' => 'Tricycle'
+                        );
+
+        $location = 'Delhi NCR';
+        $ad_cats = Mainaddtype::orderBy('title')->get();
+
+
+        return view('frontend-mediatype.autos.autoads-list', ['auto_type' => $auto_type, 'location' => $location, 'mediacats' => $ad_cats]);
     }
     
+
+
     public function getfrontAutoadByType($autotype)
     {
-        $auto_ads = Autos::where('autotype', $autotype)->get();
-        if($autotype == 'tricycle'){
-            return view('frontend-mediatype.autos.autoAdByType', ['products' => $auto_ads, 'autotype' => $autotype]);
-        }
-        return view('frontend-mediatype.autos.autoAdByType', ['autotype' => $autotype]);
+        switch($autotype){
+            case 'auto_rikshaw':
+                $options = array(
+                                'sticker' => 'Sticker',
+                                'auto_hood' => 'Auto Hood',
+                                'backboard' => 'Backboard',
+                                'full_auto' => 'Full Auto'
+                            );
+            break;
+            case 'e_rikshaw':
+                $options = array(
+                                'back_board' => 'Back Board',
+                                'stepney_tier' => 'Stepney Tier'
+                            );
+            break;
+            case 'tricycle':
+
+                $auto_ads = Autos::where('autotype', $autotype)->get();
+
+                return view('frontend-mediatype.autos.auto-single', [
+                                                                    'autos' => $auto_ads,
+                                                                    'autotype' => $autotype,
+                                                                    'autoOption' => 'tricycle'
+                                                                ]
+                            );
+             break;
+         }
+
+        $location = 'Delhi NCR';    
+
+        
+        return view('frontend-mediatype.autos.autoAdByType', [
+                                                    'options' => $options,
+                                                    'autotype' => $autotype,
+                                                    'location' => $location
+                                                    ]
+                    );
+
+
+
     }
 
     public function getfrontAutoadByOption($autotype, $autoOption)
     {
-        $auto_ads = Autos::where('autotype', $autotype)->get()->toArray();
-        $autoOption1 = '%'.$autoOption.'%';
-        $autos = array();
-        foreach($auto_ads as $auto){
-            $count = Autosprice::where([
-                                    ['autos_id', '=', $auto['id']],
-                                    ['price_key', 'LIKE', $autoOption1],
-                                    ['option_type', '=', $autotype],
-                                ])->get()->count();
-            if($count > 0){
-                 $autopriceOptions = Autosprice::where([
-                                    ['autos_id', '=', $auto['id']],
-                                    ['price_key', 'LIKE', $autoOption1],
-                                    ['option_type', '=', $autotype],
-                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                array_push($auto, $autopriceOptions);
-                $autos[] = array_flatten($auto);
-            }
-       }
-       
-        return view('frontend-mediatype.autos.auto-single', ['products' => $autos, 'autotype' => $autotype, 'autoOption' => $autoOption]);
+        
+        $autos = new Autosprice();
+
+        $autos = $autos->getAutoByFilter($autotype, $autoOption);
+        
+        return view('frontend-mediatype.autos.auto-single', ['autos' => $autos, 'autotype' => $autotype, 'autoOption' => $autoOption]);
+
     }
 
     public function getfrontAutoad($id)
@@ -263,9 +302,9 @@ class AutoController extends Controller
        $displayoptions = json_decode($request['displayoptions']);
        $datta = array();
         foreach($displayoptions as $options){
-			$datta[] = strtolower(str_replace(' ', '_', $options));
-		
-		}
+            $datta[] = strtolower(str_replace(' ', '_', $options));
+        
+        }
        
         $count = Autosprice::where([
                                     ['autos_id', '=', $request['id']],
@@ -397,17 +436,13 @@ class AutoController extends Controller
    {
         $flag = false;
         $auto_ad = Autos::where('id', $id)->first()->toArray();
-        
+       
         $selectDisplayOpt = explode("+", $variation);
         if($selectDisplayOpt[1] !== 'tricycle'){
             $flag = true;
-            $main_key = substr($selectDisplayOpt[1], 6);
-        
            
-            $auto_price = Autosprice::where([
-                                        ['autos_id', '=', $id],
-                                        ['price_key', '=', $selectDisplayOpt[1]],
-                                    ])->first()->toArray();
+            $autoprice = new Autosprice();
+            $auto_price =$autoprice->getAutoPriceForCart($id, $selectDisplayOpt[1]);
            
 
             $auto_ad = array_merge($auto_ad, $auto_price);

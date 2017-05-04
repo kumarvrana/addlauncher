@@ -8,6 +8,12 @@ use App\lib\EnumOrder;
                
 class OrderController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getOrders', 'viewOrder']]);
+    }
+
     public function getOrders()
     {
         $orders = Order::latest()->paginate(10);

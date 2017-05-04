@@ -6,15 +6,19 @@ use App\Http\Requests;
 use Sentinel;
 use Activation;
 use App\User;
+use App\AuthenticateUser;
 use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
-
+use Socialite;
 use Illuminate\Http\Request;
+//use App\AuthUserListenerInterface;
 
 class LoginController extends Controller
 {
+
      public function getSignin()
      {
+        
          return view('shop.user.signin');
      }
 
@@ -60,4 +64,6 @@ class LoginController extends Controller
          Sentinel::logout();
          return redirect()->route('user.signin');
      }
+
+     
 }

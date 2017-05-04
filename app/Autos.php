@@ -9,8 +9,8 @@ class Autos extends Model
      protected $fillable = [
          'autorikshaw_options', 'erikshaw_options', 'light_option', 'auto_number', 'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status','discount', 'autotype'
     ];
-    public function autos()
+    public function autosprice()
     {
-        return $this->belongsTo('App\Autosprice');
+        return $this->hasMany('App\Autosprice', 'autos_id');
     }
 }

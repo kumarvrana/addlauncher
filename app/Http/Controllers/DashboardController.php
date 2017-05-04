@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\File;
 
 class DashboardController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+    
     public function getDashboard()
     {
         $orders = Order::latest()->limit(10)->offset(0)->get();

@@ -17,6 +17,12 @@ use App\Order;
 
 class NewspaperController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardNewspaperList', 'getDashboardNewspaperForm', 'postDashboardNewspaperForm', 'addNewspaperPrice', 'getDeleteNewspaperad', 'getUpdateeNewspaperad', 'getuncheckNewspaperadOptions']]);
+    }
+        
      //frontend function starts
     
     public function getfrontendAllNewspaperads()

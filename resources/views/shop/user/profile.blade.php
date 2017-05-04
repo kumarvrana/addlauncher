@@ -5,25 +5,57 @@
 @endsection
 
 @section('content')
+<div class="container">
 <div class="row">
-    <div class="col-md-4 col-md-offset-4">
+    <div class="col-md-12">
+        
+            
+        
         <h1>User Profile</h1>
         <hr/>
-        <h2>My Orders</h2>
-        @foreach( $orders as $order)
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <ul class="list-group">
-                    @foreach( $order->cart->items as $item)
-                        <li class="list-group-item"><span class="badge">${{$item['price']}}</span>{{$item['item']['title']}}|{{$item['qty']}}</li>
-                        
-                    
-                    @endforeach
-                    </ul>
-                </div>
-                <div class="panel-footer">Total Price: ${{$order->cart->totalPrice}}</div>
-                </div>
-        @endforeach
+       
+        <div class="profile-order">
+        <div class="panel panel-default panel-cart">
+        <div class="panel-heading">
+          <h4 class="text-center">
+            My Orders 
+          </h4>
+          
+        </div>
+        <table class="table table-fixed">
+
+          <thead>
+            <tr>
+              <th class="col-xs-2">#</th><th class="col-xs-8">Name</th><th class="col-xs-2">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+           @PHP $i=1; @ENDPHP
+             @foreach( $orders as $order)
+             @PHP $aa=$loop->iteration @ENDPHP
+              @foreach( $order->cart->items as $item)
+                <tr>
+                    <td class="col-xs-2" style="background-color: #fee998;">{{$aa}}</td>
+                    <td class="col-xs-8" style="background-color: #fee998;"><strong>{{ucwords($item['item']['title'])}}</strong>&emsp;Qty: {{$item['qty']}}</td>
+                    <td class="col-xs-2" style="background-color: #fee998;">Rs.{{$item['price']}}</td>
+                </tr>
+                 @endforeach
+                <tr>
+                    <td style="text-align: right;border-bottom: 2px solid #767676" class="col-xs-10" colspan="2"><strong>Total Price</strong></td>
+                    <td class="col-xs-2" style="color: red; border-bottom: 2px solid #767676"><strong>Rs.{{$order->cart->totalPrice}}</strong></td>
+                </tr>
+             
+               
+            @endforeach
+@PHP $i++; @ENDPHP
+          </tbody>
+        </table>
+      </div>
+       
     </div>
+
+   
+    </div>
+</div>
 </div>
 @endsection

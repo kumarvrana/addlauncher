@@ -9,7 +9,9 @@ use Reminder;
 use App\User;
 
 class ForgetPasswordController extends Controller
-{
+{ 
+
+    
     
     public function getForgetPassword()
     {

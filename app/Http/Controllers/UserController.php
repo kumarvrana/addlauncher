@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getUsers']]);
+    }
+
     public function getUsers()
     {
         

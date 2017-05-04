@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Session;
 use App\Metros;
 use App\Metrosprice;
+use App\Mainaddtype;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -17,12 +18,17 @@ use App\Order;
 class MetroController extends Controller
 {
     
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardMetroList', 'getDashboardMetroForm', 'postDashboardMetroForm', 'addMetroPrice', 'getDeleteMetroad', 'getUpdateeMetroad', 'getuncheckMetroadOptions']]);
+    }
     //frontend function starts
     
     public function getfrontendAllMetroads()
     {
        $metro_ads = Metros::all();
-       return view('frontend-mediatype.metros.metroads-list', ['products' => $metro_ads]);
+       $ad_cats = Mainaddtype::orderBy('title')->get();
+       return view('frontend-mediatype.metros.metroads-list', ['products' => $metro_ads ,'mediacats' => $ad_cats]);
     }
 
     /*public function getfrontMetroadByOption($metroOption)

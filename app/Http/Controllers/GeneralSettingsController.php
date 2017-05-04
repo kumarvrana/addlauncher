@@ -13,6 +13,11 @@ use Image;
 
 class GeneralSettingsController extends Controller
 {
+
+  public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getGeneralSettings', 'postGeneralSettings', 'UpdateGeneralSettings']]);
+    }
     // cash payment 
 
     public function getGeneralSettings()
@@ -89,6 +94,8 @@ class GeneralSettingsController extends Controller
           'sitename' => 'required',
           'tagline' => 'required',
           'logo' => 'mimes:jpeg,bmp,png',
+          'logo_fixed' => 'mimes:jpeg,bmp,png',
+          'favicon' => 'mimes:jpeg,bmp,png',
           'firstemail' => 'required|email',
           'secondemail' => 'email',
           'firstphone' => 'required',
@@ -96,6 +103,10 @@ class GeneralSettingsController extends Controller
         ]);
 
        
+       
+          
+
+
 
          $editsetting = Generalsettings::find(1);
           if($request->hasFile('logo'))
@@ -110,6 +121,29 @@ class GeneralSettingsController extends Controller
             $editsetting->logo = $filename;
           }
 
+          if($request->hasFile('logo_fixed'))
+          {
+            $file= $request->file('logo_fixed');
+            $filename= time().'.'.$file->getClientOriginalExtension();
+
+            $location= public_path("images\logo\\".$filename);
+            Image::make($file)->save($location);
+
+            $oldimage = $editsetting->logo_fixed;
+            $editsetting->logo_fixed = $filename;
+          }
+
+          if($request->hasFile('favicon'))
+          {
+            $file= $request->file('favicon');
+            $filename= time().'.'.$file->getClientOriginalExtension();
+
+            $location= public_path("images\logo\\".$filename);
+            Image::make($file)->save($location);
+
+            $oldimage = $editsetting->favicon;
+            $editsetting->favicon = $filename;
+          }
 
          $editsetting->sitename = $request->input('sitename');
          $editsetting->tagline = $request->input('tagline');

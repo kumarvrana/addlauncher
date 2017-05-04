@@ -32,13 +32,8 @@
                 <div class="col-md-8">
                    
                   <div class="row"> <!-- row repeater starts here -->
-                 
-                        @PHP
-                           $car_options = array('bumper' => 'Bumper', 'rear_window_decals' => 'Rear Window Decals', 'doors' => 'Doors');
-                                
-                        @ENDPHP
-                        
-                        @foreach($car_options as $key => $value)
+                    
+                        @foreach($options as $key => $value)
                             @PHP
                                 $image = $key.".jpg";
                             @ENDPHP

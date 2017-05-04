@@ -10,4 +10,9 @@ class Cars extends Model
         'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'cartype', 'display_options','numberofcars','discount'
     ];
 
+    public function carsprice()
+    {
+        return $this->hasMany('App\Carsprice', 'cars_id');
+    }
+
 }

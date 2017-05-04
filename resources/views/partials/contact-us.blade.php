@@ -6,15 +6,12 @@
 
 @endsection
 
-@section('styles')
-    <link rel="stylesheet" href="{{ URL::to( 'css/contact.css' ) }}" />
-@stop
 
 @section('content')
 
 
     <!-- Contact -->
-                <section id="section8">
+                <section id="section-contact">
                     <div class="container">
                         <h2>Get In Touch With Us</h2>
                         <div class="row">

@@ -83,35 +83,52 @@
 
                
                 
-            
+            <div class="step-header">Television Display Options</div>
+                <input type="hidden" name="modelname" id="modelname" value="Television">
+                @PHP
+                        $ad_genre = array( 'Entertainment' => 'Entertainment', 'News' => 'News', 'Sports' => 'Sports' , 'Devotional' => 'Devotional', 'Kids' => 'Kids', 'Educational' => 'Educational', 'Food_and_drink' => 'Food and drink', 'Travel' => 'Travel');
+
+                        $newsoptions = array('ticker' => 'Ticker', 'aston' => 'Aston', 'fct' => 'Fct' ,'time_check' => 'Time Check');
+ 
+
+                @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Television Options</h3></div><div class="panel-body">
-
                     <div class="form-group">
-                    	<label>Select Genre</label>
-                    	<select class="form-control" name="genre">
-                    		<option value="Entertainment">Entertainment</option>
-                    		<option value="News">News</option>
-                    		<option value="Sports">Sports</option>
-                    		<option value="Devotional">Devotional</option>
-                    		<option value="Kids">Kids</option>
-                    		<option value="Educational">Educational</option>
-                    		<option value="Food_and_drink">Food and drink</option>
-                    		<option value="Travel">Travel</option>
-                    	</select>
+                         <label for="newstype">Genre:</label>
+                            <select class="form-control" name="genre" id="genre" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $ad_genre as $key => $value )
+                                <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
+                            
+                            </select>
+                                
+                    </div> 
+                    <div class="form-group newsoptions">
+                        <label for="newsdisplay">News Ad Display Options: </label>
+                             
+                    @foreach($newsoptions as $key => $value)
+                        <label class='checkbox-inline'><input data-label='News Ad Display Options' onclick="addDomToPriceOptionsTelevision('{{$value}}', 'news_options')" name='newsdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @endforeach
+                                       
+                    </div> 
+
+
+                   <div class="form-group">
+                        <label for="busesnumber">Numbers Of News Channel Display this Ad? : </label>
+                        <input class="form-control" type="text" name="televisionsnumber" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="televisionsnumber">Discount (%): </label>
-                        <input class="form-control" type="text" name="televisiondiscount" placeholder="put an integer value for discount like 5 or 10">
+                        <label for="busesnumber">Discount (%): </label>
+                        <input class="form-control" type="text" name="discount" placeholder="put an integer value for discount like 5 or 10">
                     </div>
                     </div>
                 </div>
 
                 <div class="step-header">Pricing Options</div>
-                    <div id="light-content" class="alert alert-info">
-                                You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
-                        </div>
+                    
                     <div id="pricing-options-step">
                         
                     </div>

@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Session;
 use App\Airports;
 use App\Airportsprice;
+use App\Mainaddtype;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -17,37 +18,37 @@ use App\Order;
 class AirportController extends Controller
 {
     
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardAirportList', 'getDashboardAirportForm', 'postDashboardAirportForm', 'addAirportPrice', 'getDeleteAirportad', 'getUpdateeAirportad', 'getuncheckAirportadOptions']]);
+    }
+
     //frontend function starts
     
+
     public function getfrontendAllAirportads()
     {
-       $airport_ads = Airports::all();
-       return view('frontend-mediatype.airports.airportads-list', ['products' => $airport_ads]);
+       $airport_options = array(
+                                'unipole' => 'Unipole',
+                                'backlit_panel' => 'Backlit Panel',
+                                'luggage_trolley' => 'Luggage Trolley'
+                            );
+
+       $location = 'Delhi NCR';
+          $ad_cats = Mainaddtype::orderBy('title')->get();
+
+       return view('frontend-mediatype.airports.airportads-list', ['airport_options' => $airport_options, 'location' => $location,'mediacats' => $ad_cats]);
     }
+
 
     public function getfrontAirportadByOption($airportOption)
     {
-       
-        $airport_ads = Airports::all()->toArray();
-       
-        $airportOption1 = '%'.$airportOption.'%';
-        $airports = array();
-        foreach($airport_ads as $airport){
-            $count = Airportsprice::where([
-                                    ['airports_id', '=', $airport['id']],
-                                    ['price_key', 'LIKE', $airportOption1],
-                                   ])->get()->count();
-            if($count > 0){
-                 $airportpriceOptions = Airportsprice::where([
-                                    ['airports_id', '=', $airport['id']],
-                                    ['price_key', 'LIKE', $airportOption1],
-                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                array_push($airport, $airportpriceOptions);
-                $airports[] = array_flatten($airport);
-            }
-       }
-       
-        return view('frontend-mediatype.airports.airport-single', ['products' => $airports, 'airportOption' => $airportOption]);
+          
+        $airports = new Airportsprice();
+
+        $airports = $airports->getAirportByFilter($airportOption);
+        
+        return view('frontend-mediatype.airports.airport-single', ['airports' => $airports, 'airportOption' => $airportOption]);
     }
     
     public function getfrontAirportad($id)
@@ -74,6 +75,8 @@ class AirportController extends Controller
 
     // get list of all the products in airport stop media type
     public function getDashboardAirportList(){
+
+        
         $airport_ads = Airports::all();
         return view('backend.mediatypes.airports.airport-list', ['airport_ads' => $airport_ads]);
     }
@@ -176,6 +179,7 @@ class AirportController extends Controller
     {
         $delele_airportad = Airports::where('id', $airportadID)->first();
         $delele_airportad->delete();
+        
         $delete_airportadprice = Airportsprice::where('airports_id', $airportadID);
         $delete_airportadprice->delete();
        
@@ -253,9 +257,9 @@ class AirportController extends Controller
          $editairport->status = $request->input('status');
          $editairport->references = $request->input('reference');
          $editairport->display_options = serialize($request->input('airportdisplay'));
-          $editairport->light_option = $request->input('aplighting');
-          $editairport->airportnumber = $request->input('airportsnumber');
-          $editairport->discount = $request->input('airportdiscount');
+         $editairport->light_option = $request->input('aplighting');
+         $editairport->airportnumber = $request->input('airportsnumber');
+         $editairport->discount = $request->input('airportdiscount');
 
         if($request->hasFile('image')){
             $file = $request->file('image');
@@ -305,187 +309,51 @@ class AirportController extends Controller
    //Fliter Functions
    public function getFilterAirportAds(Request $request)
    {
-       if(!empty($request['locationFilter']) && !empty($request['pricerange'])){
-            $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $request['pricerange']); // comparion operator
-            if($filter_priceCamparsion != '<>'){
-                    $filter_price = preg_replace('/[^0-9]/', '', $request['pricerange']);
-                    $airportpriceOptions = Airportsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('airports_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-            }else{
-                    $filter_price = preg_replace('/[^0-9]/', '_', $request['pricerange']);
-                    $filter_price = explode('_', $filter_price);
-                
-                    $airportpriceOptions = Airportsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', '>=', $filter_price[0]],
-                                ['price_value', '<=', $filter_price[2]],
-                                ])->get(array('airports_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();   
+        
+        $airportPrice = new Airportsprice();
+        $filterResults = $airportPrice->FilterAirportsAds($request->all());
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchAirport){
+                $this->airport_ads($searchAirport, $request->all());
             }
-            if(count($airportpriceOptions)>0){
-               
-                $airports = array(); 
-                foreach($airportpriceOptions as $key => $value){
-                    $location = "%".$request['locationFilter']."%";
-            
-                    $airport_ad = Airports::where('id', '=', $value['airports_id'])->where('location', 'LIKE', $location)->Where('city', 'LIKE', $location)->get()->toArray();
-                    if(count($airport_ad) > 0){
-                        $airportpriceiterate = Airportsprice::where([
-                                        ['airports_id', '=', $value['airports_id']],
-                                        ['price_key', 'LIKE', $value['price_key']],
-                                    
-                                        ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->first()->toArray();
-                        array_push($airport_ad, $airportpriceiterate);
-                        $airports[] = array_flatten($airport_ad);
-                    }
-                
-                }
-                if(count($airports)>0){
-                    
-                    foreach($airports as $searchAirport){
-                        $this->airport_ads($searchAirport, $request->all());
-                    }
-            
-                }else{
-                    echo "<b>No results to display!</b>";
-                }
 
-            }else{
-                echo "<b>No results to display!</b>";
-            }    
-       }
+        }else{
+            echo "<strong>No Results Found!</strong>";
+        }
 
-       if(!empty($request['pricerange']) && empty($request['locationFilter'])){
-            $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $request['pricerange']); // comparion operator
-            if($filter_priceCamparsion != '<>'){
-                    $filter_price = preg_replace('/[^0-9]/', '', $request['pricerange']);
-                    $airportpriceOptions = Airportsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('airports_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-            }else{
-                    $filter_price = preg_replace('/[^0-9]/', '_', $request['pricerange']);
-                    $filter_price = explode('_', $filter_price);
-                
-                    $airportpriceOptions = Airportsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', '>=', $filter_price[0]],
-                                ['price_value', '<=', $filter_price[2]],
-                                ])->get(array('airports_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();   
-            }
-            if(count($airportpriceOptions)>0){
-                
-                $airports = array(); 
-                foreach($airportpriceOptions as $key => $value){
-                    
-                    $airport_ad = Airports::where('id', '=', $value['airports_id'])->get()->toArray();
-                    
-                    $airportpriceiterate = Airportsprice::where([
-                                        ['airports_id', '=', $value['airports_id']],
-                                        ['price_key', 'LIKE', $value['price_key']],
-                                    
-                                        ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->first()->toArray();
-                    array_push($airport_ad, $airportpriceiterate);
-                    $airports[] = array_flatten($airport_ad);
-                
-                }
-                if(count($airports)>0){
-            
-                    foreach($airports as $searchAirport){
-                        $this->airport_ads($searchAirport, $request->all());
-                    }
-            
-                }else{
-                    echo "<b>No results to display!</b>";
-                }
-
-            }else{
-                echo "<b>No results to display!</b>";
-            }
-            
-           
-       }
-       if(!empty($request['locationFilter']) && empty($request['pricerange'])){
-            $location = "%".$request['locationFilter']."%";
-            $airport_ad = Airports::where('location', 'LIKE', $location)->orWhere('city', 'LIKE', $location)->get()->toArray();
-            $airports = array();
-            $Sairports = array();
-            if(count($airport_ad)>0){
-                foreach($airport_ad as $airport){
-                    
-                    $airportpriceOptions = Airportsprice::where([
-                                    ['airports_id', 'LIKE',  $airport['id']],                                 
-                                    ])->get(array('price_key', 'price_value', 'number_key',
-                                    'number_value', 'duration_key', 'duration_value'))->toArray();
-                   
-                    if(count($airportpriceOptions)>0){
-                        $i = 1;
-                        foreach($airportpriceOptions as $priceOptions){
-                            if($i ==1 ){
-                                $Sairports[] = array_merge($airport, $priceOptions);
-                            }else{
-                                array_pop($airports);
-                                $Sairports[] = array_merge($airport, $priceOptions);
-                            }
-                            
-                           
-                            $i++;
-                        }
-                        
-                    }else{
-                        echo "<b>No results to display!</b>";
-                    }
-                    
-                }
-                if(count($Sairports)>0){
-                    
-                    foreach($Sairports as $searchAirport){
-                        $this->Locationairport_ads($searchAirport, $request->all());
-                    }
-            
-                }else{
-                    echo "<b>No results to display!</b>";
-                }
-            }else{
-                echo "<b>No results to display!</b>";
-            }
-       }
-       
-       
         $content = ob_get_contents();
         ob_get_clean();
         return $content;
-       
-       
+  
    }
+
    public function airport_ads($searchAirport, $fileroptions)
    { 
          ?>
        
        <div class="col-md-3 col-sm-3 "> 
         <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/airports/'.$searchAirport[11]) ?>"> </div>
-            <p class="font-1"><?= $searchAirport[3] ?></p>
-            <p class="font-2"><?= $searchAirport[5] ?>, <?= $searchAirport[6] ?>, <?= $searchAirport[7] ?></p>
+            <div class=" cat-opt-img "> <img src="<?= asset('images/airports/'.$searchAirport->airport->image) ?>"> </div>
+            <p class="font-1"><?= $searchAirport->airport->title ?></p>
+            <p class="font-2"><?= $searchAirport->airport->location ?>, <?= $searchAirport->airport->city ?>, <?= $searchAirport->airport->state ?></p>
             <div class="row">
                 <div class="col-md-6">
-                    <p class="font-3"><?= $searchAirport[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchAirport[18]), 6))?> <br>for <br> <?= $searchAirport[23]?> months</p>
+                    <p class="font-3"><?= $searchAirport->number_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchAirport->price_key), 6))?> <br>for <br> <?= $searchAirport->duration_value?> months</p>
                     </div>
                 <div class="col-md-6">
-                        <p class="font-4"><del class="lighter">Rs <?= $searchAirport[19]?> </del><br>Rs <?= $searchAirport[19]?> </p>
+                        <p class="font-4"><del class="lighter">Rs <?= $searchAirport->price_value?> </del><br>Rs <?= $searchAirport->price_value?> </p>
                 </div>
             
             </div>
 
             <?php
-            $options = $searchAirport[19].'+'.$searchAirport[18];
-            $session_key = 'airports'.'_'.$searchAirport[18].'_'.$searchAirport[0];
+            $options = $searchAirport->price_value.'+'.$searchAirport->price_key;
+            $session_key = 'airports'.'_'.$searchAirport->price_key.'_'.$searchAirport->airport->id;
             $printsession = (array) Session::get('cart');
                             
            ?>
             <div class="clearfix"> 
-                <button class="glass add-cartButton" data-href="<?= route('airport.addtocartAfterSearch', ['id' => $searchAirport[0], 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
+                <button class="glass add-cartButton" data-href="<?= route('airport.addtocartAfterSearch', ['id' => $searchAirport->airport->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
                 <?php
                     if(count($printsession) > 0){
                      if(array_key_exists($session_key, $printsession['items'])){
@@ -503,59 +371,19 @@ class AirportController extends Controller
     </div>
     <?php
    }
-   public function Locationairport_ads($searchAirport, $fileroptions)
-   {
-      
-       ?>
-       <div class="col-md-3 col-sm-3 "> 
-        <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/airports/'.$searchAirport['image']) ?>"> </div>
-            <p class="font-1"><?= $searchAirport['title'] ?></p>
-            <p class="font-2"><?= $searchAirport['location'] ?> | <?= $searchAirport['city'] ?> | <?= $searchAirport['state'] ?></p>
-            <p class="font-3"><?= $searchAirport['number_value']?> <?= ucwords(substr(str_replace('_', ' ', $searchAirport['price_key']), 6))?> for <?= $searchAirport['duration_value']?> months</p>
-            <p class="font-2"><del class="lighter">Rs <?= $searchAirport['price_value']?> </del>Rs <?= $searchAirport['price_value']?> </p>
-            <?php
-            $options = $searchAirport['price_value'].'+'.$searchAirport['price_key'];
-            $session_key = 'airports'.'_'.$searchAirport['price_key'].'_'.$searchAirport['id'];
-            $printsession = (array) Session::get('cart');
-                            
-           ?>
-            <div class="clearfix"> 
-                <button class="glass add-cartButton" data-href="<?= route('airport.addtocartAfterSearch', ['id' => $searchAirport['id'], 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
-                <?php
-                    if(count($printsession) > 0){
-                     if(array_key_exists($session_key, $printsession['items'])){
-                       echo "Remove From Cart"; 
-                    }else{
-                        echo "Add to Cart"; 
-                    }
-                    }else{
-                        echo "Add to Cart";
-                    }
-                ?>
-            </button> 
-            </div>
-        </div>
-    </div>
-    <?php 
-   }
+  
     //cart functions
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)
    {
+       
         $airport_ad = Airports::where('id', $id)->first()->toArray();
-        
-        $selectDisplayOpt = explode("+", $variation);
-        $main_key = substr($selectDisplayOpt[1], 6);
-        
-       
-        $airport_price = Airportsprice::where([
-                                    ['airports_id', '=', $id],
-                                    ['price_key', '=', $selectDisplayOpt[1]],
-                                ])->first()->toArray();
-       
+
+        $airportPrice = new Airportsprice();
+        $airport_price = $airportPrice->getAirportspriceCart($id, $variation);
+               
         $airport_Ad = array_merge($airport_ad, $airport_price);
-       
+        
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldCart);
@@ -572,14 +400,8 @@ class AirportController extends Controller
     {
         $airport_ad = Airports::where('id', $id)->first()->toArray();
         
-        $selectDisplayOpt = explode("+", $variation);
-        $main_key = substr($selectDisplayOpt[1], 6);
-        
-       
-        $airport_price = Airportsprice::where([
-                                    ['airports_id', '=', $id],
-                                    ['price_key', '=', $selectDisplayOpt[1]],
-                                ])->first()->toArray();
+        $airportPrice = new Airportsprice();
+        $airport_price = $airportPrice->getAirportspriceCart($id, $variation);
        
         $airport_Ad = array_merge($airport_ad, $airport_price);
        

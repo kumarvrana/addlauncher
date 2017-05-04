@@ -45,7 +45,11 @@
                     <p><a href="{{ route('user.forgetpassword') }}">Forgot Password ?</a></p>
                 </form>
             </div>
-                
+            <!--
+                <div class="adl-other-login"><a href="{{route('socicalLogin', ['loginWith' => 'facebook'])}}">Facebook login</a></div>
+                <div class="adl-other-login"><a href="{{route('socicalLogin', ['loginWith' => 'twitter'])}}">Twitter login</a></div>
+                <div class="adl-other-login"><a href="{{route('socicalLogin', ['loginWith' => 'linkedin'])}}">Linkedin login</a></div>
+            -->
         </div>
 
 </div>

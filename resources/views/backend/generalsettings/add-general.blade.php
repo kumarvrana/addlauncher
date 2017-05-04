@@ -38,9 +38,17 @@
                         <label for="tagline">Tagline</label>
                         <input type="text" id="tagline" name="tagline" placeholder="Tagline" value="{{$general->tagline}}" class="form-control">
                     </div>
+                    <div class="form-group">
+                        <label for="favicon">Favicon</label>
+                        <input type="file" id="favicon" name="favicon" class="form-control" value="{{$general->favicon}}">
+                    </div>
                      <div class="form-group">
                         <label for="logo">Logo</label>
                         <input type="file" id="logo" name="logo" class="form-control" value="{{$general->logo}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="logo_fixed">Logo Fixed</label>
+                        <input type="file" id="logo_fixed" name="logo_fixed" class="form-control" value="{{$general->logo_fixed}}">
                     </div>
                     <div class="form-group">
                         <label for="firstemail">First Email</label>

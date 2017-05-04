@@ -15,14 +15,16 @@ class Cart
             $this->items = $oldCart->items;
             $this->totalQty = $oldCart->totalQty;
             $this->totalPrice = $oldCart->totalPrice;
+            
         }
     }
     // add product to cart
     public function addorRemove($item, $id, $model, $flag){
-        
+
+                
         if($flag){
             $adPlusId = $model.'_'.$item['price_key'].'_'.$id;
-            $storedItem = ['qty' => 0, 'price' => $item['price_value'], 'item' => $item];
+            $storedItem = ['qty' => 0, 'price' => $item['price_value'], 'duration' => 0, 'item' => $item];
             if($this->items){
                 if(array_key_exists($adPlusId, $this->items)){
                      $this->items[$adPlusId]['qty']--;
@@ -41,7 +43,7 @@ class Cart
         }else{
            
             $adPlusId = $model.'_'.'tricycle'.'_'.$id;
-            $storedItem = ['qty' => 0, 'price' => $item['price'], 'item' => $item];
+            $storedItem = ['qty' => 0, 'price' => $item['price'], 'duration' => 0, 'item' => $item];
             if($this->items){
                 if(array_key_exists($adPlusId, $this->items)){
                      $this->items[$adPlusId]['qty']--;
@@ -61,13 +63,14 @@ class Cart
          return 'added';  
     }
 
-    public function UpdateCartQty($item, $itemskey, $count)
+    public function UpdateCartQty($item, $itemskey, $count, $duration)
     {
         $checkKey = explode('_', $itemskey);
         if( $checkKey[1] == 'tricycle' ){
-             $price = 0;
+            $price = 0;
             $this->items[$itemskey]['qty'] = $count;
-            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['price'] * $count;
+            $this->items[$itemskey]['duration'] = $duration;
+            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['price'] * $count  * $duration;
 
             foreach($this->items as $itm){
                 $price += $itm['price'];
@@ -77,7 +80,8 @@ class Cart
         }else{
             $price = 0;
             $this->items[$itemskey]['qty'] = $count;
-            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['price_value'] * $count;
+            $this->items[$itemskey]['duration'] = $duration;
+            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['price_value'] * $count * $duration;
 
             foreach($this->items as $itm){
                 $price += $itm['price'];
@@ -94,16 +98,16 @@ class Cart
             if(array_key_exists($id, $this->items)){
                 $checkKey = explode('_', $id);
                 if($checkKey[1] == 'tricycle'){
+                    $this->totalQty--;
+                    $this->totalPrice -= $this->items[$id]['item']['price'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];
                     $this->items[$id]['qty']--;
                     $this->items[$id]['price'] -= $this->items[$id]['item']['price'];
-                    $this->totalQty--;
-                    $this->totalPrice -= $this->items[$id]['item']['price'];
                     unset($this->items[$id]);
                 }else{
+                    $this->totalQty--;
+                    $this->totalPrice -= $this->items[$id]['item']['price_value'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];
                     $this->items[$id]['qty']--;
                     $this->items[$id]['price'] -= $this->items[$id]['item']['price_value'];
-                    $this->totalQty--;
-                    $this->totalPrice -= $this->items[$id]['item']['price_value'];
                     unset($this->items[$id]);
                 }
                

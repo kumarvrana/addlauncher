@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cart;
+use App\Order;
+
 use Session;
 use Sentinel;
 
@@ -22,13 +24,14 @@ class CartController extends Controller
         }else{
             $oldcart = Session::get('cart');
             $cart = new Cart($oldcart);
+           
             $mediaType = array();
             foreach((array)$cart->items as $items){
                 $key = array_search($items, (array)$cart->items);
                 $mediaTypes = explode('_', $key);
                 $mediaType[] = $mediaTypes[0];
             }
-        
+           
             return view('shop.shopping-cart', ['products' => $cart->items, 'totalPrice' => $cart->totalPrice, 'mediaTypes' => $mediaType]);
         }
         
@@ -76,13 +79,14 @@ class CartController extends Controller
 
         $itemId = $_REQUEST['item'];
         $count = $_REQUEST['count'];
+        $duration = $_REQUEST['duration'];
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
 
-        $cart->UpdateCartQty((array)$cart, $itemId, $count);
+        $cart->UpdateCartQty((array)$cart, $itemId, $count, $duration);
         Session::put('cart', $cart);
         $cart = (array)$cart;
-        
+       
         return response()->json(['subtotal' => $cart['items'][$itemId]['price'], 'total' => $cart['totalPrice']], 200);
     }
 }

@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\File;
 
 class HistoryController extends Controller
 {
+
+	public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getHistory']]);
+    }
+
     public function getHistory($id)
     {
         

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use Session;
 use App\Billboards;
 use App\Billboardsprice;
+use App\Mainaddtype;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -18,53 +19,54 @@ use App\Order;
 class BillboardController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardBillboardList', 'getDashboardBillboardForm', 'postDashboardBillboardForm', 'addBillboardPrice', 'getDeleteBillboardad', 'getUpdateeBillboardad', 'getuncheckBillboardadOptions']]);
+    }
+
      //frontend function starts
     
     public function getfrontendAllBillboardads()
     {
-       $billboard_ads = Billboards::all();
-       return view('frontend-mediatype.outdooradvertisings.outdooradvertisingads-list', ['products' => $billboard_ads]);
+       $billboard_options = array(
+                                'unipole' => 'Unipole',
+                                'hoarding' => 'Hoarding',
+                                'pole_kiosk' => 'Pole Kiosk',
+                                'i_walker' => 'I Walker'
+                            );
+
+       $location = 'Delhi NCR';
+       $ad_cats = Mainaddtype::orderBy('title')->get();
+
+       return view('frontend-mediatype.outdooradvertisings.outdooradvertisingads-list', ['billboard_options' => $billboard_options, 'location' => $location,'mediacats' => $ad_cats]);
     }
+
+
     public function getfrontBillboardadByOption($billboardOption)
     {
-       
-        $billboard_ads = Billboards::all()->toArray();
-       
-        $billboardOption1 = '%'.$billboardOption.'%';
-        $billboards = array();
-        foreach($billboard_ads as $billboard){
-            $count = Billboardsprice::where([
-                                    ['billboards_id', '=', $billboard['id']],
-                                    ['price_key', 'LIKE', $billboardOption1],
-                                   ])->get(array('price_key', 'price_value'))->count();
-            if($count > 0){
-                 $billboardpriceOptions = Billboardsprice::where([
-                                    ['billboards_id', '=', $billboard['id']],
-                                    ['price_key', 'LIKE', $billboardOption1],
-                                   ])->get(array('price_key', 'price_value'))->toArray();
-                array_push($billboard, $billboardpriceOptions);
-                $billboards[] = array_flatten($billboard);
-            }
-       }
-       
-        return view('frontend-mediatype.outdooradvertisings.outdooradvertising-single', ['products' => $billboards, 'billboardOption' => $billboardOption]); 
+          
+        $billboards = new Billboardsprice();
+
+        $billboards = $billboards->getBillboardByFilter($billboardOption);
+        
+        return view('frontend-mediatype.outdooradvertisings.outdooradvertising-single', ['billboards' => $billboards, 'billboardOption' => $billboardOption]);
     }
+    
     public function getfrontBillboardad($id)
     {
         $billboardad = Billboards::find($id);
         if($billboardad){
-         if($billboardad->status === "3" || $billboardad->status === "2"){
-         return redirect()->back();
-         }else{   
-        $billboardprice = Billboardsprice::where('billboards_id', $id)->get();
-        return view('frontend-mediatype.outdooradvertisings.outdooradvertising-single', ['billboardad' => $billboardad, 'billboardprice' => $billboardprice]);
-    }
-
-    }else{
+            if($billboardad->status === "3" || $billboardad->status === "2"){
+                return redirect()->back();
+            }else{
+                $billboardprice = Billboardsprice::where('billboards_id', $id)->get();
+                return view('frontend-mediatype.outdooradvertisings.outdooradvertising-single', ['billboardad' => $billboardad, 'billboardprice' => $billboardprice]);
+            }
+        }else{
             return redirect()->back();
         }
-    
-    }
+        
+     }
     // frontend functions ends
     
   
@@ -139,7 +141,7 @@ class BillboardController extends Controller
       
       
 
-   	   if($request->has('price_hoarding')){
+       if($request->has('price_hoarding')){
             $this->addBillboardPrice($lastinsert_ID, 'price_hoarding', $request->input('price_hoarding') , 'number_hoarding', $request->input('number_hoarding') , 'duration_hoarding', $request->input('duration_hoarding'));
         }
       
@@ -208,9 +210,9 @@ class BillboardController extends Controller
         $displayoptions = json_decode($request['displayoptions']);
         $datta = array();
         foreach($displayoptions as $options){
-			$datta[] = strtolower(str_replace(' ', '_', $options));
-		
-		}
+            $datta[] = strtolower(str_replace(' ', '_', $options));
+        
+        }
         
         $count = Billboardsprice::where([
                                     ['billboards_id', '=', $request['id']],
@@ -278,7 +280,7 @@ class BillboardController extends Controller
         }
       
      
-   	   if($request->has('price_hoarding')){
+       if($request->has('price_hoarding')){
             $this->updateBillboardPrice($ID, 'price_hoarding', $request->input('price_hoarding'), 'number_hoarding', $request->input('number_hoarding'), 'duration_hoarding', $request->input('duration_hoarding'));
         }
       
@@ -313,98 +315,50 @@ class BillboardController extends Controller
 
    //Fliter Functions
    public function getFilterBillboardAds(Request $request){
-       $params = array_filter($request->all());
-       foreach($params as $key=>$value){
-            if($key == 'pricerange'){
-                
-                $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $value); // comparion operator
-                if($filter_priceCamparsion != '<>'){
-                     $filter_price = preg_replace('/[^0-9]/', '', $value);
-                     $billboardpriceOptions = Billboardsprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', $filter_priceCamparsion, $filter_price],
-                                    ])->get()->toArray();
-                }else{
-                     $filter_price = preg_replace('/[^0-9]/', '_', $value);
-                     $filter_price = explode('_', $filter_price);
-                    
-                     $billboardpriceOptions = Billboardsprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', '>=', $filter_price[0]],
-                                    ['price_value', '<=', $filter_price[2]],
-                                    ])->get()->toArray();   
-                }
-                if(count($billboardpriceOptions)>0){
-                
-                foreach($billboardpriceOptions as $key => $value){
-                    $billboard_ads = Billboards::find($value['billboards_id'])->get()->toArray();
-                    $filterLike = substr($value['price_key'], 6);
-                    $billboardOption1 = '%'.$filterLike;
-                    $billboards = array();
-                    
-                    $billboardpriceOptions = Billboardsprice::where([
-                                ['billboards_id', '=', $value['billboards_id']],
-                                ['price_key', 'LIKE', $billboardOption1],
-                                //['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                        
-                    array_push($billboard_ads, $billboardpriceOptions);
-                    $billboards[] = array_flatten($billboard_ads);
-                     
-                   
-               
-                }
-                if(count($billboards)>0){
-                    echo "<pre>";
-                    print_r($billboards);
-                    echo "</pre>";
-                    foreach($billboards as $searchBillboard){
-                       $this->billboard_ads($searchBillboard);
-                    }
-                
-                    }else{
-                        echo "<b>No results to display!</b>";
-                }
-
-            }else{
-                echo "<b>No results to display!</b>";
-            }
-                
-            
-            }
-            
-           
-            
-            if($key == 'locationFilter'){
-                
+        
+        $billboardPrice = new Billboardsprice();
+        $filterResults = $billboardPrice->FilterBillboardsAds($request->all());
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchBillboard){
+                $this->billboard_ads($searchBillboard, $request->all());
             }
 
-            
-       }
+        }else{
+            echo "<strong>No Results Found!</strong>";
+        }
+
         $content = ob_get_contents();
         ob_get_clean();
         return $content;
-       
-       
+  
    }
-   public function billboard_ads($searchBillboard)
-   {
-       ?>
+    public function billboard_ads($searchBillboard, $fileroptions)
+   { 
+         ?>
+       
        <div class="col-md-3 col-sm-3 "> 
         <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/billboards/'.$searchBillboard[11]) ?>"> </div>
-            <p class="font-1"><?= $searchBillboard[3] ?></p>
-            <p class="font-2"><?= $searchBillboard[5] ?> | <?= $searchBillboard[6] ?> | <?= $searchBillboard[7] ?></p>
-            <p class="font-3"><?= $searchBillboard[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchBillboard[18]), 6))?> for <?= $searchBillboard[23]?> months</p>
-            <p class="font-2"><del class="lighter">Rs <?= $searchBillboard[19]?> </del>Rs <?= $searchBillboard[19]?> </p>
+            <div class=" cat-opt-img "> <img src="<?= asset('images/billboards/'.$searchBillboard->billboard->image) ?>"> </div>
+            <p class="font-1"><?= $searchBillboard->billboard->title ?></p>
+            <p class="font-2"><?= $searchBillboard->billboard->location ?>, <?= $searchBillboard->billboard->city ?>, <?= $searchBillboard->billboard->state ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchBillboard->number_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchBillboard->price_key), 6))?> <br>for <br> <?= $searchBillboard->duration_value?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchBillboard->price_value?> </del><br>Rs <?= $searchBillboard->price_value?> </p>
+                </div>
+            
+            </div>
+
             <?php
-            $options = $searchBillboard[19].'+'.$searchBillboard[18];
-            $session_key = 'billboards'.'_'.$searchBillboard[18].'_'.$searchBillboard[0];
+            $options = $searchBillboard->price_value.'+'.$searchBillboard->price_key;
+            $session_key = 'billboards'.'_'.$searchBillboard->price_key.'_'.$searchBillboard->billboard->id;
             $printsession = (array) Session::get('cart');
                             
            ?>
             <div class="clearfix"> 
-                <a class="glass" href="<?= route('billboard.addtocart', ['id' => $searchBillboard[0], 'variation' => $options]) ?>"><span class="fa fa-star"></span>
+                <button class="glass add-cartButton" data-href="<?= route('billboard.addtocartAfterSearch', ['id' => $searchBillboard->billboard->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
                 <?php
                     if(count($printsession) > 0){
                      if(array_key_exists($session_key, $printsession['items'])){
@@ -416,7 +370,7 @@ class BillboardController extends Controller
                         echo "Add to Cart";
                     }
                 ?>
-            </a> 
+            </button> 
             </div>
         </div>
     </div>
@@ -428,28 +382,22 @@ class BillboardController extends Controller
    public function getAddToCart(Request $request, $id, $variation)
    {
         $billboard_ad = Billboards::where('id', $id)->first()->toArray();
-        
-        $selectDisplayOpt = explode("+", $variation);
-        $main_key = substr($selectDisplayOpt[1], 6);
-        
-       
-        $billboard_price = Billboardsprice::where([
-                                    ['billboards_id', '=', $id],
-                                    ['price_key', '=', $selectDisplayOpt[1]],
-                                ])->first()->toArray();
-       
+
+        $billboardPrice = new Billboardsprice();
+        $billboard_price = $billboardPrice->getBillboardspriceCart($id, $variation);
+               
         $billboard_Ad = array_merge($billboard_ad, $billboard_price);
-       
+        
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($billboard_Ad, $billboard_ad['id'], 'billboards', $flag=true); //pass full billboard details, id and model name like "billboards"
+        $status = $cart->addorRemove($billboard_Ad, $billboard_ad['id'], 'billboards', $flag=true); //pass full billboard details, id and model name like "billboards"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');
 
-        return redirect()->back()->with(['status' => 'added']);
+        return redirect()->back()->with(['status' => $status]);
     }
 
  

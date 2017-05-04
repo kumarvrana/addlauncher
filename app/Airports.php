@@ -10,4 +10,9 @@ class Airports extends Model
         'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'display_options', 'light_option', 'airportnumber','discount'
     ];
 
+    public function airportsprice()
+    {
+        return $this->hasMany('App\Airportsprice', 'airports_id');
+    }
+
 }

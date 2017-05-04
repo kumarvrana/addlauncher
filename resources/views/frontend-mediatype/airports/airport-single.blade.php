@@ -34,43 +34,43 @@
                 <div class="col-md-8">
 					
 					<div class="row">
-					
-						@if($products)
-							@foreach($products as $product)
+						
+						@if($airports)
+							@foreach($airports as $airport)
+								
 								<div class="col-md-3 col-sm-3 "> 
 									<div class="pro-item"> 
-										<div class=" cat-opt-img "> <img src="{{asset('images/airports/'.$product[11])}}"> </div>
-										<p class="font-1">{{$product[3]}}</p>
-										<p class="font-2">{{$product[5]}} | {{$product[6]}} 
-										| {{$product[7]}}</p>
+										<div class=" cat-opt-img "> <img src="{{asset('images/airports/'.$airport->airport->image)}}"> </div>
+										<p class="font-1">{{$airport->airport->title}}</p>
+										<p class="font-2">{{$airport->airport->location}} | {{$airport->airport->city}} 
+										| {{$airport->airport->state}}</p>
 										<hr>
 										<div class="row">
 											<div class="col-md-6">
-												<p class="font-3">{{$product[21]}} {{ucwords(str_replace('_', ' ', $airportOption))}}<br> for <br> {{$product[23]}} months</p>
+												<p class="font-3">{{$airport->number_value}} {{ucwords(str_replace('_', ' ', $airportOption))}}<br> for <br> {{$airport->duration_value}} months</p>
 											</div>
 											<div class="col-md-6">
-												<p class="font-4"><del class="lighter">Rs {{$product[19]}} <br></del>Rs {{$product[19]}} </p>
+												<p class="font-4"><del class="lighter">Rs {{$airport->price_value}} <br></del>Rs {{$airport->price_value}} </p>
 											</div>
 										</div>
 										
-										 @PHP
-										$options = $product[19].'+'.$product[18];
-										$session_key = 'airports'.'_'.$product[18].'_'.$product[0];
-										$printsession = (array) Session::get('cart');
-														
-									@ENDPHP
+										@PHP
+											$options = $airport->price_value.'+'.$airport->price_key;
+											$session_key = 'airports'.'_'.$airport->price_key.'_'.$airport->airport->id;
+											$printsession = (array) Session::get('cart');														
+										@ENDPHP
 										<div class="clearfix"> 
-											<a class="glass" href="{{route('airport.addtocart', ['id' => $product[0], 'variation' => $options])}}">
+											<a class="glass" href="{{route('airport.addtocart', ['id' => $airport->airport->id, 'variation' => $options])}}">
 											
 										 @if(count($printsession) > 0)
-												@if(array_key_exists($session_key, $printsession['items'])) 
-													<span class="fa fa-minus-circle"></span> Remove From Cart 
-												@else
-													<span class="fa fa-star"></span> Add to Cart 
-												@endif
-												@else
-													<span class="fa fa-star"></span> Add to Cart
-												@endif
+											 @if(array_key_exists($session_key, $printsession['items'])) 
+												<span class="fa fa-minus-circle"></span> Remove From Cart 
+											 @else
+												<span class="fa fa-star"></span> Add to Cart 
+											 @endif
+										 @else
+											<span class="fa fa-star"></span> Add to Cart
+										 @endif
 											
 										</a> 
 										</div>

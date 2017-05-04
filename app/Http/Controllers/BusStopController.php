@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Session;
 use App\Busstops;
 use App\Busstopsprice;
+use App\Mainaddtype;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -17,21 +18,26 @@ use App\Order;
 class BusstopController extends Controller
 {
     
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardBusstopList', 'getDashboardBusstopForm', 'postDashboardBusstopForm', 'addBusstopPrice', 'getDeleteBusstopad', 'getUpdateeBusstopad', 'getuncheckBusstopadOptions']]);
+    }
     //frontend function starts
     
     public function getfrontendAllBusstopads()
     {
        $busstop_ads = Busstops::all();
-       return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads]);
+          $ad_cats = Mainaddtype::orderBy('title')->get();
+
+
+       return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads,'mediacats' => $ad_cats]);
     }
     
     public function getfrontBusstopad($id)
     {
-        $busstopad = Busstops::where('id', '=', $id)->get()->toArray();
-        $busstopad = array_flatten($busstopad);
-        $busstoppriceOptions = Busstopsprice::where('busstops_id', '=', $id)->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-            
-        return view('frontend-mediatype.busstops.busstop-single', ['products' => $busstopad, 'productOptions' => $busstoppriceOptions]);
+        $busstoppricead = Busstopsprice::where('busstops_id', $id)->get();
+                    
+        return view('frontend-mediatype.busstops.busstop-single', ['busstopads' => $busstoppricead]);
     }
     
     
@@ -323,9 +329,7 @@ class BusstopController extends Controller
                
                 }
                 if(count($busstops)>0){
-                    echo "<pre>";
-                    print_r($busstops);
-                    echo "</pre>";
+                   
                     foreach($busstops as $searchBusstop){
                        $this->busstop_ads($searchBusstop);
                     }
@@ -396,15 +400,10 @@ class BusstopController extends Controller
    public function getAddToCart(Request $request, $id, $variation)
    {
         $busstop_ad = Busstops::where('id', $id)->first()->toArray();
-        
-        $selectDisplayOpt = explode("+", $variation);
-        $main_key = substr($selectDisplayOpt[1], 6);
-        
+       
+        $busPrice = new Busstopsprice();
 
-        $busstop_price = Busstopsprice::where([
-                                    ['busstops_id', '=', $id],
-                                    ['price_key', '=', $selectDisplayOpt[1]],
-                                ])->first()->toArray();
+        $busstop_price = $busPrice->getBusstopsPriceCart($id, $variation);
 
         
         $busstop_Ad = array_merge($busstop_ad, $busstop_price);
@@ -413,12 +412,12 @@ class BusstopController extends Controller
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($busstop_Ad, $busstop_ad['id'], 'busstops', $flag=true); //pass full busstop details, id and model name like "busstops"
+        $status = $cart->addorRemove($busstop_Ad, $busstop_ad['id'], 'busstops', $flag=true); //pass full busstop details, id and model name like "busstops"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');
 
-        return redirect()->back()->with(['status' => 'added']);
+        return redirect()->back()->with(['status' => $status]);
     }
 
  

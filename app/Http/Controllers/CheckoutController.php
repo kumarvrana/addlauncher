@@ -15,6 +15,7 @@ use Sentinel;
 use Mail;
 use App\PaymentSetting;
 
+
 class CheckoutController extends Controller
 {
      
@@ -43,7 +44,8 @@ class CheckoutController extends Controller
      public function getThankyoupage($order)
      {
           $order_data = Order::find($order);
-          return view('shop.thankyou', ['orders' => $order_data]);
+          $aftercashpayment = PaymentSetting::find(2);
+          return view('shop.thankyou', ['orders' => $order_data, 'settings'=> $aftercashpayment]);
      }
     
     public function getPaymentmethod($paymentMethod)

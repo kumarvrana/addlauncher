@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\File;
 
 class MainaddtypeController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getAddList', 'getAddCategory', 'postAddCategory', 'getCatImageinList', 'getDeleteCategory',  'getEditCategory' , 'postUpdateCategory']]);
+    }
+
      public function getAddList(){
         $cat_list  = Mainaddtype::orderBy('title')->get();
         return view('backend.admin.add-cat-list', ['categories' => $cat_list]);

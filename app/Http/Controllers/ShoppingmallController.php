@@ -8,6 +8,7 @@ use Session;
 use App\Shoppingmalls;
 use App\Shoppingmallsprice;
 use Image;
+use App\Mainaddtype;
 use App\Product;
 use Illuminate\Support\Facades\File;
 use App\Cart;
@@ -17,53 +18,59 @@ use App\Order;
 class ShoppingmallController extends Controller
 {
     
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardShoppingmallList', 'getDashboardShoppingmallForm', 'postDashboardShoppingmallForm', 'addShoppingmallPrice', 'getDeleteShoppingmallad', 'getUpdateeShoppingmallad', 'getuncheckShoppingmalladOptions']]);
+    }
     //frontend function starts
     
     public function getfrontendAllShoppingmallads()
     {
-       $shoppingmall_ads = Shoppingmalls::all();
-       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['products' => $shoppingmall_ads]);
+       $shoppingmall_options = array(
+                                'danglers' => 'Danglers',
+                                'drop_down_banners' => 'Drop Down Banners',
+                                'signage' => 'Signage',
+                                'pillar_branding' => 'Pillar Branding',
+                                'washroom_branding' => 'Washroom Branding',
+                                'wall_branding' => 'Wall Branding',
+                                'popcorn_tub_branding' => 'Danglers',
+                                'drop_down_banners' => 'Popcorn Tub Branding',
+                                'product_kiosk' => 'Product Kiosk',
+                                'standee' => 'Standee'
+                            );
+
+       $location = 'Delhi NCR';
+
+       $ad_cats = Mainaddtype::orderBy('title')->get();
+
+       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['shoppingmall_options' => $shoppingmall_options , 'location' => $location ,'mediacats' => $ad_cats]);
     }
+
     public function getfrontShoppingmalladByOption($shoppingmallOption)
     {
-       $shoppingmall_ads = Shoppingmalls::all()->toArray();
-       
-        $shoppingmallOption1 = '%'.$shoppingmallOption.'%';
-        $shoppingmalls = array();
-        foreach($shoppingmall_ads as $shoppingmall){
-            $count = Shoppingmallsprice::where([
-                                    ['shoppingmalls_id', '=', $shoppingmall['id']],
-                                    ['price_key', 'LIKE', $shoppingmallOption1],
-                                   ])->get()->count();
-            if($count > 0){
-                 $shoppingmallpriceOptions = Shoppingmallsprice::where([
-                                    ['shoppingmalls_id', '=', $shoppingmall['id']],
-                                    ['price_key', 'LIKE', $shoppingmallOption1],
-                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                array_push($shoppingmall, $shoppingmallpriceOptions);
-                $shoppingmalls[] = array_flatten($shoppingmall);
-            }
-       }
-       
-        return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['products' => $shoppingmalls, 'shoppingmallOption' => $shoppingmallOption]);
+          
+        $shoppingmalls = new Shoppingmallsprice();
+
+        $shoppingmalls = $shoppingmalls->getShoppingmallByFilter($shoppingmallOption);
+        
+        return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmalls' => $shoppingmalls, 'shoppingmallOption' => $shoppingmallOption]);
     }
     
     public function getfrontShoppingmallad($id)
     {
         $shoppingmallad = Shoppingmalls::find($id);
         if($shoppingmallad){
-            if($shoppingmallad->status === '3' || $shoppingmallad->status === '2'){
+            if($shoppingmallad->status === "3" || $shoppingmallad->status === "2"){
                 return redirect()->back();
             }else{
-                 $shoppingmallprice = Shoppingmallsprice::where('shoppingmalls_id', $id)->get();
+                $shoppingmallprice = Shoppingmallsprice::where('shoppingmalls_id', $id)->get();
                 return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmallad' => $shoppingmallad, 'shoppingmallprice' => $shoppingmallprice]);
             }
         }else{
             return redirect()->back();
         }
-       
-    }
-    
+        
+     }
     
     // frontend functions ends
 
@@ -72,6 +79,7 @@ class ShoppingmallController extends Controller
 
     // get list of all the products in shoppingmall stop media type
     public function getDashboardShoppingmallList(){
+
         $shoppingmall_ads = Shoppingmalls::all();
         return view('backend.mediatypes.shoppingmalls.shoppingmall-list', ['shoppingmall_ads' => $shoppingmall_ads]);
     }
@@ -392,173 +400,51 @@ class ShoppingmallController extends Controller
    //Fliter Functions
    public function getFilterShoppingmallAds(Request $request)
    {
-       if(!empty($request['locationFilter']) && !empty($request['pricerange'])){
-            $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $request['pricerange']); // comparion operator
-            if($filter_priceCamparsion != '<>'){
-                    $filter_price = preg_replace('/[^0-9]/', '', $request['pricerange']);
-                    $shoppingmallpriceOptions = Shoppingmallsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('shoppingmalls_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-            }else{
-                    $filter_price = preg_replace('/[^0-9]/', '_', $request['pricerange']);
-                    $filter_price = explode('_', $filter_price);
-                
-                    $shoppingmallpriceOptions = Shoppingmallsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', '>=', $filter_price[0]],
-                                ['price_value', '<=', $filter_price[2]],
-                                ])->get(array('shoppingmalls_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();   
-            }
-            if(count($shoppingmallpriceOptions)>0){
-               
-                $shoppingmalls = array(); 
-                foreach($shoppingmallpriceOptions as $key => $value){
-                    $location = "%".$request['locationFilter']."%";
-            
-                    $shoppingmall_ad = Shoppingmalls::where('id', '=', $value['shoppingmalls_id'])->where('location', 'LIKE', $location)->Where('city', 'LIKE', $location)->get()->toArray();
-                    if(count($shoppingmall_ad) > 0){
-                        $shoppingmallpriceiterate = Shoppingmallsprice::where([
-                                        ['shoppingmalls_id', '=', $value['shoppingmalls_id']],
-                                        ['price_key', 'LIKE', $value['price_key']],
-                                    
-                                        ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->first()->toArray();
-                        array_push($shoppingmall_ad, $shoppingmallpriceiterate);
-                        $shoppingmalls[] = array_flatten($shoppingmall_ad);
-                    }
-                
-                }
-                if(count($shoppingmalls)>0){
-                    
-                    foreach($shoppingmalls as $searchShoppingmall){
-                        $this->shoppingmall_ads($searchShoppingmall);
-                    }
-            
-                }else{
-                    echo "<b>No results to display!</b>";
-                }
-
-            }else{
-                echo "<b>No results to display!</b>";
-            }    
-       }
-
-       if(!empty($request['pricerange']) && empty($request['locationFilter'])){
-            $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $request['pricerange']); // comparion operator
-            if($filter_priceCamparsion != '<>'){
-                    $filter_price = preg_replace('/[^0-9]/', '', $request['pricerange']);
-                    $shoppingmallpriceOptions = Shoppingmallsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('shoppingmalls_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-            }else{
-                    $filter_price = preg_replace('/[^0-9]/', '_', $request['pricerange']);
-                    $filter_price = explode('_', $filter_price);
-                
-                    $shoppingmallpriceOptions = Shoppingmallsprice::where([
-                                ['price_key', 'LIKE', 'price_%'],                                    
-                                ['price_value', '>=', $filter_price[0]],
-                                ['price_value', '<=', $filter_price[2]],
-                                ])->get(array('shoppingmalls_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();   
-            }
-            if(count($shoppingmallpriceOptions)>0){
-                
-                $shoppingmalls = array(); 
-                foreach($shoppingmallpriceOptions as $key => $value){
-                    
-                    $shoppingmall_ad = Shoppingmalls::where('id', '=', $value['shoppingmalls_id'])->get()->toArray();
-                    
-                    $shoppingmallpriceiterate = Shoppingmallsprice::where([
-                                        ['shoppingmalls_id', '=', $value['shoppingmalls_id']],
-                                        ['price_key', 'LIKE', $value['price_key']],
-                                    
-                                        ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->first()->toArray();
-                    array_push($shoppingmall_ad, $shoppingmallpriceiterate);
-                    $shoppingmalls[] = array_flatten($shoppingmall_ad);
-                
-                }
-                if(count($shoppingmalls)>0){
-            
-                    foreach($shoppingmalls as $searchShoppingmall){
-                        $this->shoppingmall_ads($searchShoppingmall);
-                    }
-            
-                }else{
-                    echo "<b>No results to display!</b>";
-                }
-
-            }else{
-                echo "<b>No results to display!</b>";
-            }
-            
-           
-       }
-       if(!empty($request['locationFilter']) && empty($request['pricerange'])){
-            $location = "%".$request['locationFilter']."%";
-            $shoppingmall_ad = Shoppingmalls::where('location', 'LIKE', $location)->orWhere('city', 'LIKE', $location)->get()->toArray();
-             
-            if(count($shoppingmall_ad)>0){
-                foreach($shoppingmall_ad as $shoppingmall){
-                    $shoppingmallpriceOptions = Shoppingmallsprice::where([
-                                    ['shoppingmalls_id', 'LIKE',  $shoppingmall['id']],                                 
-                                    ])->get(array('price_key', 'price_value', 'number_key',
-                                    'number_value', 'duration_key', 'duration_value'))->toArray();
-                   
-                    if(count($shoppingmallpriceOptions)>0){
-                        
-                        foreach($shoppingmallpriceOptions as $priceOptions){
-                           //for($i = 1;$i<=count($shoppingmallpriceOptions);$i++){
-                                array_push($shoppingmall, $priceOptions);
-                                
-                                $shoppingmalls[] = array_flatten($shoppingmall);
-                           //}
-                          
-                        }
-                       
-                    }else{
-                        echo "<b>No results to display!</b>";
-                    }
-                    
-                }
-                if(count($shoppingmalls)>0){
-            
-                    foreach($shoppingmalls as $searchShoppingmall){
-                        //$this->shoppingmall_ads($searchShoppingmall);
-                    }
-            
-                }else{
-                    echo "<b>No results to display!</b>";
-                }
-            }else{
-                echo "<b>No results to display!</b>";
-            }
-       }
        
-       
+       $shoppingmallPrice = new Shoppingmallsprice();
+        $filterResults = $shoppingmallPrice->FilterShoppingmallsAds($request->all());
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchShoppingmall){
+                $this->shoppingmall_ads($searchShoppingmall, $request->all());
+            }
+
+        }else{
+            echo "<strong>No Results Found!</strong>";
+        }
+
         $content = ob_get_contents();
         ob_get_clean();
         return $content;
        
        
    }
-   public function shoppingmall_ads($searchShoppingmall)
-   {
-       ?>
+  public function shoppingmall_ads($searchShoppingmall, $fileroptions)
+   { 
+         ?>
+       
        <div class="col-md-3 col-sm-3 "> 
         <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/shoppingmalls/'.$searchShoppingmall[11]) ?>"> </div>
-            <p class="font-1"><?= $searchShoppingmall[3] ?></p>
-            <p class="font-2"><?= $searchShoppingmall[5] ?> | <?= $searchShoppingmall[6] ?> | <?= $searchShoppingmall[7] ?></p>
-            <p class="font-3"><?= $searchShoppingmall[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchShoppingmall[18]), 6))?> for <?= $searchShoppingmall[23]?> months</p>
-            <p class="font-2"><del class="lighter">Rs <?= $searchShoppingmall[19]?> </del>Rs <?= $searchShoppingmall[19]?> </p>
+            <div class=" cat-opt-img "> <img src="<?= asset('images/shoppingmalls/'.$searchShoppingmall->shoppingmall->image) ?>"> </div>
+            <p class="font-1"><?= $searchShoppingmall->shoppingmall->title ?></p>
+            <p class="font-2"><?= $searchShoppingmall->shoppingmall->location ?>, <?= $searchShoppingmall->shoppingmall->city ?>, <?= $searchShoppingmall->shoppingmall->state ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchShoppingmall->number_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchShoppingmall->price_key), 6))?> <br>for <br> <?= $searchShoppingmall->duration_value?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchShoppingmall->price_value?> </del><br>Rs <?= $searchShoppingmall->price_value?> </p>
+                </div>
+            
+            </div>
+
             <?php
-            $options = $searchShoppingmall[19].'+'.$searchShoppingmall[18];
-            $session_key = 'shoppingmalls'.'_'.$searchShoppingmall[18].'_'.$searchShoppingmall[0];
+            $options = $searchShoppingmall->price_value.'+'.$searchShoppingmall->price_key;
+            $session_key = 'shoppingmalls'.'_'.$searchShoppingmall->price_key.'_'.$searchShoppingmall->shoppingmall->id;
             $printsession = (array) Session::get('cart');
                             
            ?>
             <div class="clearfix"> 
-                <a class="glass" href="<?= route('shoppingmall.addtocart', ['id' => $searchShoppingmall[0], 'variation' => $options]) ?>"><span class="fa fa-star"></span>
+                <button class="glass add-cartButton" data-href="<?= route('shoppingmall.addtocartAfterSearch', ['id' => $searchShoppingmall->shoppingmall->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
                 <?php
                     if(count($printsession) > 0){
                      if(array_key_exists($session_key, $printsession['items'])){
@@ -570,7 +456,7 @@ class ShoppingmallController extends Controller
                         echo "Add to Cart";
                     }
                 ?>
-            </a> 
+            </button> 
             </div>
         </div>
     </div>
@@ -580,30 +466,24 @@ class ShoppingmallController extends Controller
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)
    {
-        $shoppingmall_ad = Shoppingmalls::where('id', $id)->first()->toArray();
-        
-        $selectDisplayOpt = explode("+", $variation);
-        $main_key = substr($selectDisplayOpt[1], 6);
-        
-
-        $shoppingmall_price = Shoppingmallsprice::where([
-                                    ['shoppingmalls_id', '=', $id],
-                                    ['price_key', '=', $selectDisplayOpt[1]],
-                                ])->first()->toArray();
-
-        
-        $shoppingmall_Ad = array_merge($shoppingmall_ad, $shoppingmall_price);
        
+        $shoppingmall_ad = Shoppingmalls::where('id', $id)->first()->toArray();
+
+        $shoppingmallPrice = new Shoppingmallsprice();
+        $shoppingmall_price = $shoppingmallPrice->getShoppingmallspriceCart($id, $variation);
+               
+        $shoppingmall_Ad = array_merge($shoppingmall_ad, $shoppingmall_price);
+        
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($shoppingmall_Ad, $shoppingmall_ad['id'], 'shoppingmalls', $flag=true); //pass full shoppingmall details, id and model name like "shoppingmalls"
+        $status = $cart->addorRemove($shoppingmall_Ad, $shoppingmall_ad['id'], 'shoppingmalls', $flag=true); //pass full shoppingmall details, id and model name like "shoppingmalls"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');
 
-        return redirect()->back()->with(['status' => 'added']);
+        return redirect()->back()->with(['status' => $status]);
     }
 
  

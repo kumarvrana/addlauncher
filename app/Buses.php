@@ -10,5 +10,10 @@ class Buses extends Model
         'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'display_options', 'busnumber','discount'
     ];
 
+    public function busesprice()
+    {
+        return $this->hasMany('App\Busesprice', 'buses_id');
+    }
+
            
 }

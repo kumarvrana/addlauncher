@@ -3,12 +3,7 @@
 @section('title')
     Checkout|Add Launcher 
 @endsection
-@section('styles')
 
-    <link rel="stylesheet" type="text/css" href="{{ URL::to( 'css/checkout.css' ) }}">
-
-
-@endsection
 @section('content')
         <div class="container-fluid">
             <div class="row cart-body">

@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Session;
 use App\Cinemas;
 use App\Cinemasprice;
+use App\Mainaddtype;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -17,12 +18,17 @@ use App\Order;
 class CinemaController extends Controller
 {
     
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardCinemaList', 'getDashboardCinemaForm', 'postDashboardCinemaForm', 'addCinemaPrice', 'getDeleteCinemaad', 'getUpdateeCinemaad', 'getuncheckCinemaadOptions']]);
+    }
     //frontend function starts
     
     public function getfrontendAllCinemaads()
     {
        $cinema_ads = Cinemas::all();
-       return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads]);
+       $ad_cats = Mainaddtype::orderBy('title')->get();
+       return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads ,'mediacats' => $ad_cats]);
     }
 
     

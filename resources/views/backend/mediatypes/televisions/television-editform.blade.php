@@ -82,36 +82,83 @@
 
         </div>
 		<div class="step">
-            <div class="step-header">Televisions Ad Options</div>
-               @PHP
-                   $television_options = array('unipole' => 'Unipole', 'backlit_panel' => 'Backlit Panel', 'luggage_trolley' => 'Luggage Trolley');
-                     $bsdisplayData = unserialize($television->display_options);
-                @ENDPHP
+
+               
+                
+            <div class="step-header">Television Display Options</div>
+                <input type="hidden" name="modelname" id="modelname" value="Television">
+                @PHP
+                        $ad_genre = array( 'Entertainment' => 'Entertainment', 'News' => 'News', 'Sports' => 'Sports' , 'Devotional' => 'Devotional', 'Kids' => 'Kids', 'Educational' => 'Educational', 'Food_and_drink' => 'Food and drink', 'Travel' => 'Travel');
+
+                        $newsoptions = array('ticker' => 'Ticker', 'aston' => 'Aston', 'fct' => 'Fct' ,'time_check' => 'Time Check');
+
+                        $newsdisplayData = unserialize($television->news_options);
+                                     
+                 @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Television Options</h3></div><div class="panel-body">
+                    <div class="form-group">
+                         <label for="newstype">Genre:</label>
+                            <select class="form-control" name="genre" id="genre" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $ad_genre as $key => $value )
+                                <option value="{{$key}}" @PHP if($television->genre == $key){
+                            echo "Selected";
+                        } @ENDPHP>{{$value}}</option>
+                                @endforeach
+                            
+                            </select>
+                                
+                    </div> 
+                    <div class="form-group newsoptions">
+                        <label for="newsdisplay">News Ad Display Options: </label>
+                             
+                    @foreach($newsoptions as $key => $value)
+                        <label class='checkbox-inline'><input data-label='News Ad Display Options' onclick="addDomToPriceOptionsTelevision('{{$value}}', 'news_options')" name='newsdisplay[]' type='checkbox' @PHP if($newsdisplayData){ if(in_array($key, $newsdisplayData)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}</label>
+                    @endforeach
+                                       
+                    </div>
+                
+
+                   <div class="form-group">
+                        <label for="busesnumber">Numbers Of Channel Display this Ad? : </label>
+                        <input class="form-control" type="text" name="televisionnumber" value="{{$television->television_number}}" required>
+                    </div>
                     
-
                     <div class="form-group">
-                        <label for="televisionsnumber">Numbers Of Televisions Display this Ad? : </label>
-                        <input class="form-control" type="text" name="televisionsnumber" value="{{$television->televisionnumber}}" required></div>
-
-                    <div class="form-group">
-                        <label for="televisionsnumber">Discount (%): </label>
-                        <input class="form-control" type="text" name="televisiondiscount" placeholder="put an integer value for discount like 5 or 10" value="{{$television->discount}}">
+                        <label for="busesnumber">Discount (%): </label>
+                        <input class="form-control" type="text" name="discount"  value="{{$television->discount}}">
                     </div>
                     </div>
                 </div>
 
-                    <div id="light-content" class="alert alert-info">
-                                You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
-                        </div>
-                    <div id="pricing-options-step">
-                        <input type="hidden" name="modelname" id="modelname" value="Television">
+                <div class="step-header">Pricing Options</div>
+                    
+                     <div id="pricing-options-step">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
+                        <input type="hidden" id="display_options" value="{{json_encode(unserialize($television->display_options))}}">
+                        <input type="hidden" id="ticker_options" value="{{json_encode(unserialize($television->ticker_options))}}">
+                        <input type="hidden" id="aston_options" value="{{json_encode(unserialize($television->aston_options))}}">
+                        <input type="hidden" id="fct_options" value="{{json_encode(unserialize($television->fct_options))}}">
+                        <input type="hidden" id="time_check_options" value="{{json_encode(unserialize($television->time_check_options))}}">
                         <input type="hidden" id="uncheckID" value="{{$television->id}}">
                         <input type="hidden" id="tablename" value="televisions">
                         
+                         @foreach($televisionpricemeta as $televisionprice)
                          
+                            <div id="p{{$televisionprice->rate_key}}" class="form-group">
+                                <label for="{{$televisionprice->rate_key}}">Rate for {{ucfirst(substr(str_replace("_", " ", $televisionprice->rate_key), 10))}} Ad  Per unit:</label>
+                                <input class="form-control" type="text" name="{{$televisionprice->rate_key}}" value="{{$televisionprice->time_band_value}}" required>
+                            </div>
+                            <div id="p{{$televisionprice->time_band_key}}" class="form-group">
+                                <label for="{{$televisionprice->time_band_key}}">Time band of {{ucfirst(substr(str_replace("_", " ", $televisionprice->time_band_key), 5))}} Ad:</label>
+                                <input class="form-control" type="text" name="{{$televisionprice->time_band_key}}" value="{{$televisionprice->rate_value}}" required>
+                            </div>
+                            <div id="p{{$televisionprice->exposure_key}}" class="form-group">
+                                <label for="{{$televisionprice->exposure_key}}">Exposure for {{ucfirst(substr(str_replace("_", " ", $televisionprice->exposure_key), 9))}} Ad:</label>
+                                <input class="form-control" type="text" name="{{$televisionprice->exposure_key}}" value="{{$televisionprice->exposure_value}}" required>
+                            </div>
+                        @endforeach
                     </div>
 
             </div>

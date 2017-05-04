@@ -168,7 +168,8 @@ return [
         App\Providers\ComposerLanguagesProvider::class,
         App\Providers\ComposerNewspaperProvider::class,
         App\Providers\ComposerMagazineProvider::class,
-
+        Laravel\Tinker\TinkerServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -237,6 +238,7 @@ return [
         'Activation' => Cartalyst\Sentinel\Laravel\Facades\Activation::class,
         'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class,
         'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
     ],
 

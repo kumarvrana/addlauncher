@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Session;
 use App\Cars;
+use App\Mainaddtype;
 use App\Carsprice;
 use Image;
 use App\Product;
@@ -17,45 +18,58 @@ use App\Order;
 class CarController extends Controller
 {
     
+    public function __construct()
+    {
+        $this->middleware('admin', ['only' => ['getDashboardCarList', 'getDashboardCarForm', 'postDashboardCarForm', 'addCarPrice', 'getDeleteCarad', 'getUpdateeCarad', 'getuncheckCaradOptions']]);
+    }
     //frontend function starts
     
     public function getfrontendAllCarads()
     {
-       $car_ads = Cars::all();
-       return view('frontend-mediatype.cars.carads-list', ['products' => $car_ads]);
+         $car_type = array(  'micro_and_mini' => 'Micro And Mini',
+                        'sedan' => 'Sedan',
+                        'suv' => 'Suv',
+                        'large' => 'Large'
+                        );
+
+        $location = 'Delhi NCR';
+        $ad_cats = Mainaddtype::orderBy('title')->get();
+
+
+        return view('frontend-mediatype.cars.carads-list', ['car_type' => $car_type, 'location' => $location, 'mediacats' => $ad_cats]);
     }
     
     // get cars by category
     public function getfrontCaradByType($cartype)
     {
-        $car_ads = Cars::where('cartype', $cartype)->get();
         
-        return view('frontend-mediatype.cars.carAdByType', ['cartype' => $cartype]);
+        $options = array(
+                                'bumper' => 'Bumper',
+                                'rear_window_decals' => 'Rear Window Decals',
+                                'doors' => 'Doors'
+                            );
+
+        $location = 'Delhi NCR';    
+
+        
+        return view('frontend-mediatype.cars.carAdByType', [
+                                                    'options' => $options,
+                                                    'cartype' => $cartype,
+                                                    'location' => $location
+                                                    ]
+                    );
+
     }
+
     public function getfrontCaradByOption($cartype, $carOption)
     {
-        $car_ads = Cars::where('cartype', $cartype)->get()->toArray();
-        $carOption1 = '%'.$carOption.'%';
-        $cars = array();
-        foreach($car_ads as $car){
-            $count = Carsprice::where([
-                                    ['cars_id', '=', $car['id']],
-                                    ['price_key', 'LIKE', $carOption1],
-                                    ['option_type', '=', $cartype],
-                                ])->get()->count();
-            if($count > 0){
-                 $carpriceOptions = Carsprice::where([
-                                    ['cars_id', '=', $car['id']],
-                                    ['price_key', 'LIKE', $carOption1],
-                                    ['option_type', '=', $cartype],
-                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                array_push($car, $carpriceOptions);
-                $cars[] = array_flatten($car);
-            }
-       }
-       
-        return view('frontend-mediatype.cars.car-single', ['products' => $cars, 'cartype' => $cartype, 'carOption' => $carOption]);
+         $cars = new Carsprice();
+
+        $cars = $cars->getCarByFilter($cartype, $carOption);
+        
+        return view('frontend-mediatype.cars.car-single', ['cars' => $cars, 'cartype' => $cartype, 'carOption' => $carOption]);
     }
+
     public function getfrontCarad($id)
     {
         $carad = Cars::find($id);

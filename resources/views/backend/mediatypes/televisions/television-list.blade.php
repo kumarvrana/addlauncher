@@ -44,7 +44,7 @@
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
-
+        
             @foreach($television_ads as $televisionad)
             <tr class="row-details">
             
