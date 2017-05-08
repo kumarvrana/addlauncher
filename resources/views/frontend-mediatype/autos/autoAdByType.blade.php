@@ -30,7 +30,8 @@
                   @include('partials.filter-sidebar.auto')
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-md-8">  
+                
                     <div class="ad-sec">  
                         <div class="loader" style="display:none"></div>
                         <div class="data-box" > <!-- row repeater starts here -->

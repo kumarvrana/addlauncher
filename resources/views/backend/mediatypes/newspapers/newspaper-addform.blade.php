@@ -103,7 +103,8 @@
                                  
                
                 <div class="panel panel-primary">
-                    <div class="panel-heading "><h3 class="panel-title">Newspaper/Magazine General Options</h3></div><div class="panel-body">
+                    <div class="panel-heading "><h3 class="panel-title">Newspaper/Magazine General Options</h3></div>
+                    <div class="panel-body">
                      <div class="form-group">
                          <label for="printmedia_type">Print Media Ad Type (Delhi):</label>
                             <select class="form-control" name="printmedia_type" id="printmedia_type" required="required">
@@ -115,7 +116,7 @@
                             </select>
                                 
                     </div> 
-                    <div class="form-group">
+                    <div class="form-group newspaper">
                          <label for="newspaperlist">News Paper List (Delhi):</label>
                             <select class="form-control" name="newspaperlist" id="newspaperlist" required="required">
                                 <option value="">--Select--</option>
@@ -126,7 +127,7 @@
                             </select>
                                 
                     </div>
-                     <div class="form-group">
+                     <div class="form-group magazine">
                          <label for="magazinelist">Magazines List (Delhi):</label>
                             <select class="form-control" name="magazinelist" id="magazinelist" required="required">
                                 <option value="">--Select--</option>

@@ -92,7 +92,8 @@
                     
                 @ENDPHP
                 <div class="panel panel-primary">
-                    <div class="panel-heading "><h3 class="panel-title">Auto Options</h3></div><div class="panel-body">
+                    <div class="panel-heading "><h3 class="panel-title">Auto Options</h3></div>
+                    <div class="panel-body">
                     <div class="form-group">
                          <label for="autotype">Auto Type:</label>
                             <select class="form-control" name="autotype" id="autotype" required="required">

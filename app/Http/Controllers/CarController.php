@@ -329,6 +329,73 @@ class CarController extends Controller
    }
 
  
+ //Fliter Functions
+   public function getFilterCarAds(Request $request)
+   {
+        
+        $carPrice = new Carsprice();
+        $filterResults = $carPrice->FilterCarsAds($request->all());
+
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchCar){
+                $this->car_ads($searchCar, $request->all());
+            }
+
+        }else{
+            echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
+        }
+
+        $content = ob_get_contents();
+        ob_get_clean();
+        return $content;
+  
+   }
+
+   public function car_ads($searchCar, $fileroptions)
+   { 
+         ?>
+       
+       <div class="col-md-3 col-sm-3 "> 
+        <div class="pro-item"> 
+            <div class=" cat-opt-img "> <img src="<?= asset('images/cars/'.$searchCar->car->image) ?>"> </div>
+            <p class="font-1"><?= $searchCar->car->title ?></p>
+            <p class="font-2"><?= $searchCar->car->location ?>, <?= $searchCar->car->city ?>, <?= $searchCar->car->state ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchCar->number_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchCar->price_key), 6))?> <br>for <br> <?= $searchCar->duration_value?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchCar->price_value?> </del><br>Rs <?= $searchCar->price_value?> </p>
+                </div>
+            
+            </div>
+
+            <?php
+            $options = $searchCar->price_value.'+'.$searchCar->price_key;
+            $session_key = 'cars'.'_'.$searchCar->price_key.'_'.$searchCar->car->id;
+            $printsession = (array) Session::get('cart');
+                            
+           ?>
+            <div class="clearfix"> 
+                <button class="glass add-cartButton" data-href="<?= route('car.addtocartAfterSearch', ['id' => $searchCar->car->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
+                <?php
+                    if(count($printsession) > 0){
+                     if(array_key_exists($session_key, $printsession['items'])){
+                       echo "Remove From Cart"; 
+                    }else{
+                        echo "Add to Cart"; 
+                    }
+                    }else{
+                        echo "Add to Cart";
+                    }
+                ?>
+            </button> 
+            </div>
+        </div>
+    </div>
+    <?php
+   }
+  
     //cart functions
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)

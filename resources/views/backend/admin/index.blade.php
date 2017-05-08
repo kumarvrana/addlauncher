@@ -38,7 +38,11 @@
                     @if($category[1] == 'tricycle')
                     <li>{{$item['item']['title']}}|<b> Tricycle </b>|{{$item['qty']}}</li>
                     @else
-                        <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b>|{{$item['qty']}}</li>
+                         @if($category[0] == 'televisions')
+                            <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['rate_key'],5)))}}</b>|{{$item['qty']}}</li>
+                         @else
+                            <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b>|{{$item['qty']}}</li>
+                        @endif
                     @endif
                  @endforeach
                  </ul></td>

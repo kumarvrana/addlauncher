@@ -266,7 +266,7 @@ nav .top-links-right .top-checkout a:hover {
     margin: 3px 0 0;
 }
 header {
-    padding: 20px 0 10px 0;
+    padding: 0px 0 0px 0;
     min-height: 100px;
 }
 header .static-top .top-supost {
@@ -275,6 +275,10 @@ header .static-top .top-supost {
 header .button-link-top {
     width: 100%;
     float: right;
+}
+
+header .button-link-top, .cmsblock{
+    margin-top: 20px;
 }
 header .button-link-top #cart {
     position: relative;
@@ -386,8 +390,12 @@ header .button-link-top #cart .dropdown-menu li .div-sdiviped .row-cart {
     opacity: 1;
 }
 .fix-nav header {
-    padding: 25px 0 10px 0;
+    padding: 0px 0 0px 0;
     min-height: 80px;
+}
+
+.fix-nav header .button-link-top, .fix-nav .cmsblock{
+    margin-top: 20px;
 }
 .fix-nav .header-icon .col h2,
 .fix-nav .header-icon .col em,
@@ -1066,6 +1074,165 @@ div.pt_menu .parentMenu a,
     width: 18px;
     height: 18px;
 }
+
+/*
+* ----------------------------------------------------------------------------------------
+* 3.Button CSS STYLE
+* ----------------------------------------------------------------------------------------
+*/
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    background: #1f1f1f;
+    color: #fff;
+    padding: 0 40px;
+    max-width: 100%;
+    font-size: 14px;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    border-radius: 0;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+
+
+.btn.thb-fill-style {
+    background: transparent;
+    color: #1f1f1f;
+    position: relative;
+    border: 1px solid #1f1f1f;
+    z-index: 0
+}
+
+
+
+.btn.thb-fill-style:before,
+.btn.thb-fill-style:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: #484848;
+    will-change: transform;
+    z-index: -2;
+    -moz-transform: scale(1, 0);
+    -ms-transform: scale(1, 0);
+    -webkit-transform: scale(1, 0);
+    transform: scale(1, 0);
+    -moz-transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%
+}
+
+
+
+.btn.thb-fill-style:before {
+    background: #1f1f1f;
+    z-index: -1;
+    -moz-transition-delay: 0.15s;
+    -o-transition-delay: 0.15s;
+    -webkit-transition-delay: 0.15s;
+    transition-delay: 0.15s
+}
+
+
+
+.btn.thb-fill-style:hover {
+    background: transparent;
+    color: #fff
+}
+
+
+
+.btn.thb-fill-style:hover span {
+    background: transparent
+}
+
+
+.btn.thb-fill-style:hover:before,
+.btn.thb-fill-style:hover:after {
+    -moz-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1)
+}
+
+
+
+.btn.thb-fill-style.white,
+.light-title.type-portfolio .btn.thb-fill-style {
+    border-color: #fff;
+    color: #fff
+}
+
+
+
+.btn.thb-fill-style.white:before,
+.light-title.type-portfolio .btn.thb-fill-style:before {
+    background: #fff
+}
+
+
+
+.btn.thb-fill-style.white:after,
+.light-title.type-portfolio .btn.thb-fill-style:after {
+    background: #ededed
+}
+
+
+
+.btn.thb-fill-style.white:hover,
+.light-title.type-portfolio .btn.thb-fill-style:hover {
+    color: #1f1f1f
+}
+
+
+.btn.thb-fill-style.accent {
+    border-color: #ef173b;
+    color: #ef173b
+}
+
+
+
+.btn.thb-fill-style.accent:before {
+    background: #ef173b
+}
+
+
+
+.btn.thb-fill-style.accent:after {
+    background: #1f1f1f
+}
+
+
+
+.btn.thb-fill-style.accent:hover {
+    color: #fff
+}
+
+
+
+.btn.thb-fill-style>span {
+    -moz-transition: none;
+    -o-transition: none;
+    -webkit-transition: none;
+    transition: none
+}
+
+.btn.thb-fill-style:before, .btn.thb-fill-style:after {
+    -moz-transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+    -o-transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+    -webkit-transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+    transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+}
+
 /*
 * ----------------------------------------------------------------------------------------
 * 3.GLOBAL CSS STYLE
@@ -1161,6 +1328,11 @@ div.pt_menu .parentMenu a,
 section.main-sec {
     padding-top: 30px;
     background: #ededed;
+}
+
+.oops-img {
+    width: 40%;
+    margin: 0 auto;
 }
 /*
 * ----------------------------------------------------------------------------------------
@@ -1336,7 +1508,6 @@ section.sec-cat-box {
 .single-product {
     text-align: center;
     border: 1px solid #38b1e2;
-    border-bottom: 5px solid #38b1e2;
     margin-bottom: 30px;
     margin-bottom: 30px;
     position: relative;
@@ -1354,7 +1525,6 @@ section.sec-cat-box {
 }
 .single-product:hover {
     border: 1px solid #000;
-    border-bottom: 5px solid #000;
     transition: 0.5s all;
     -webkit-transition: 0.5s all;
     -o-transition: 0.5s all;
@@ -1387,9 +1557,9 @@ section.sec-cat-box {
 .single-product:hover .product-img .first-img {
     display: none;
 }
-.single-product:hover .product-img .second-img {
+/*.single-product:hover .product-img .second-img {
     display: block;
-}
+}*/
 .single-product:hover .add-to-links li a {
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -1403,11 +1573,36 @@ section.sec-cat-box {
     transition: all .3s ease 0s;
     padding: 20px 0;
 }
-.single-product:hover .products-desc {
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    visibility: hidden;
+.single-product:hover .product-name {
+    background: black;
+        transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -ms-transition: 0.5s all;
 }
+
+
+.single-product:hover .btn.thb-fill-style:before, .single-product:hover btn.thb-fill-style:after {
+    -moz-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+.single-product:hover .btn.thb-fill-style:before, .single-product:hover .btn.thb-fill-style:after {
+    -moz-transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+    -o-transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+    -webkit-transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+    transition: all 0.25s cubic-bezier(0.37, 0.31, 0.2, 0.85);
+}
+
+.single-product:hover  .btn.thb-fill-style {
+    background: transparent;
+    color: #fff;
+}
+
+
 .top-seller-wrapper2 .single-product:hover .products-desc {
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -1425,9 +1620,7 @@ section.sec-cat-box {
     padding: 10px 20px;
     text-transform: capitalize;
 }
-.product-name:hover {
-    color: #40bfee;
-}
+
 .product-rating {
     padding: 10px 0 25px;
 }
@@ -1576,6 +1769,15 @@ section.sec-cat-box {
     font-weight: 600;
     font-family: roboto, sans-serif;
 }
+.font-1-title {
+    text-transform: capitalize;
+    color: #2e2d2c;
+    font-size: 15px;
+    text-align: center;
+    margin-top: 2px;
+    padding: 5px;
+    margin-bottom: 0px;
+}
 .font-2 {
     font-size: 15px;
     color: #0a69c2;
@@ -1633,7 +1835,7 @@ button.glass.add-cartButton {
     border: none;
 }
 .data-box {
-    background: #ffffff;
+    background: #f5f5f5;
     padding: 20px;
     margin-bottom: 40px;
 }
@@ -2351,3 +2553,44 @@ form.registration-form fieldset {
 * ----------------------------------------------------------------------------------------
 */
 
+.filter-side {
+    background: #ffffff;
+    padding: 0px;
+}
+
+.g-side{
+    background: #ffc702;
+    color: black;
+    margin-right: 10px;
+    padding: 0px 5px;
+}
+
+
+.panel-filter .panel-heading .panel-title {
+    font-weight: 900;
+}
+
+
+.refine{
+        text-transform: uppercase;
+    font-weight: 900;
+    line-height: 2;
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
+    margin: 15px;
+}
+
+.page-sidebar-right {
+    background: #ffffff;
+    padding: 10px;
+}
+
+/*
+* ----------------------------------------------------------------------------------------
+* Category Link Hidden From THe Menu
+* ----------------------------------------------------------------------------------------
+*/
+
+a.category-link {
+    visibility: hidden;
+}

@@ -26,24 +26,13 @@ class ShoppingmallController extends Controller
     
     public function getfrontendAllShoppingmallads()
     {
-       $shoppingmall_options = array(
-                                'danglers' => 'Danglers',
-                                'drop_down_banners' => 'Drop Down Banners',
-                                'signage' => 'Signage',
-                                'pillar_branding' => 'Pillar Branding',
-                                'washroom_branding' => 'Washroom Branding',
-                                'wall_branding' => 'Wall Branding',
-                                'popcorn_tub_branding' => 'Danglers',
-                                'drop_down_banners' => 'Popcorn Tub Branding',
-                                'product_kiosk' => 'Product Kiosk',
-                                'standee' => 'Standee'
-                            );
+       $shoppingmall_ads = Shoppingmalls::all();
 
        $location = 'Delhi NCR';
 
        $ad_cats = Mainaddtype::orderBy('title')->get();
 
-       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['shoppingmall_options' => $shoppingmall_options , 'location' => $location ,'mediacats' => $ad_cats]);
+       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['shoppingmall_ads' => $shoppingmall_ads , 'location' => $location ,'mediacats' => $ad_cats]);
     }
 
     public function getfrontShoppingmalladByOption($shoppingmallOption)
@@ -59,16 +48,14 @@ class ShoppingmallController extends Controller
     public function getfrontShoppingmallad($id)
     {
         $shoppingmallad = Shoppingmalls::find($id);
-        if($shoppingmallad){
+        $shoppingmallprice = Shoppingmallsprice::where('shoppingmalls_id', $id)->get();
+
+         if($shoppingmallad){
             if($shoppingmallad->status === "3" || $shoppingmallad->status === "2"){
                 return redirect()->back();
-            }else{
-                $shoppingmallprice = Shoppingmallsprice::where('shoppingmalls_id', $id)->get();
-                return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmallad' => $shoppingmallad, 'shoppingmallprice' => $shoppingmallprice]);
             }
-        }else{
-            return redirect()->back();
-        }
+          } 
+        return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmallad' => $shoppingmallprice, 'title' => $shoppingmallad->title]);
         
      }
     

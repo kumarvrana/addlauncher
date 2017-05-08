@@ -19,9 +19,7 @@
                         <div class="form-bottom">
                         
                             <div class="row">
-                                
-                       
-                                
+                   
                             
 			@if(Session::has('cart'))
    				@if(count($products) > 0)
@@ -40,73 +38,49 @@
 					<tbody>
 					@PHP
 						$i = 1;
-						
 					@ENDPHP
                      @foreach( $products as $product)
                      
 						<tr >
-                        @PHP
-                            $key = array_search($product, $products);
-                            $imagefolder = explode('_', $key);
-							
-                        @ENDPHP
-						@if($imagefolder[1] === 'tricycle')
-                        	<td data-th="Number" class="sr">{{$loop->iteration}}</td>
-                        	<td data-th="Image" class="im">
-                        		<img src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }}" class="img-responsive"/>
-                        	</td>
-							<td data-th="Product" class="pn">
-								<div class="row">
-									
-									<div class="col-sm-12 c-title">
-										<h4 class="nomargin">{{ $product['item']['title'] }} {{$imagefolder[1]}} </h4>
-									</div>
-									<div class="col-sm-12 c-detail">
-                                        <h5>Product Details : <small> {{substr (strip_tags($product['item']['description']), 0,100)}}</small></h5>
-                                    </div>
-								</div>
+                   			<td data-th="Number" class="sr">{{$loop->iteration}}</td>
+							@PHP
+								$key = array_search($product, $products);
+								$imagefolder = explode('_', $key);
+								if($imagefolder[1] == 'tricycle'){
+									$priceValue = $product['item']['price'];
+									$subTitle = ucfirst($imagefolder[1]);
+								}else{
+									$priceKey = ($imagefolder[0] == 'televisions') ? $product['item']['rate_key'] : $product['item']['price_key'];
+									$priceValue = ($imagefolder[0] == 'televisions') ? $product['item']['rate_value'] : $product['item']['price_value'];
+									$substrNumber = ($imagefolder[0] == 'televisions') ? 5 : 6;
+									$subTitle = ucwords(str_replace('_', ' ', substr($priceKey, $substrNumber)));
+									if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
+								}
+								
+							@ENDPHP
+							<td data-th="Image" class="im">
+									<img src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{$subTitle}}" class="img-responsive"/>
 							</td>
 							
+                        	<td data-th="Product" class="pn">
+								<div class="row">
+									<div class="col-sm-12 c-title">
+										<h4 class="nomargin">{{ $product['item']['title'] }} | {{$subTitle}}</h4>
+									</div>
+									<div class="col-sm-12 c-detail">
+										<h5>Product Details : <small> {{substr (strip_tags($product['item']['description']), 0,100)}}</small></h5>
+									</div>
+								</div>
+							</td>
+							<td data-th="Price" class="pr">Rs.{{$priceValue}}</td>
 							
-							
-                            <td data-th="Price" class="pr">Rs.{{$product['item']['price']}}</td>
 							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}}</h4></td>
 							<td class="actions rm" data-th="">
-								<!-- <a href="{{route('cart.shoppingCart')}}" class="btn btn-info btn-block"><i class="fa fa-refresh"></i></a> -->
+							
 								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
 							</td>
 						</tr>
 						
-						@else
-							<td data-th="Number" class="sr">{{$loop->iteration}}</td>
-                        	<td data-th="Image" class="im">
-								@PHP
-									if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
-								@ENDPHP
-								
-                        		<img src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}" class="img-responsive"/>
-                        	</td>
-							<td data-th="Product" class="pn">
-								<div class="row">
-									
-									<div class="col-sm-12 c-title">
-										<h4 class="nomargin">{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}{{$imagefolder[1]}}</h4>
-									</div>
-									<div class="col-sm-12 c-detail">
-                                        <h5>Product Details : <small> {{substr (strip_tags($product['item']['description']), 0,100)}}</small></h5>
-                                    </div>
-								</div>
-							</td>
-							
-							
-                            <td data-th="Price" class="pr">Rs.{{$product['item']['price_value']}}</td>
-							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}}</h4></td>
-							<td class="actions rm" data-th="">
-							
-								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
-							</td>
-						</tr>
-						@endif
 						@PHP
 							$i++;
 						@ENDPHP
@@ -118,7 +92,7 @@
 						</tr>
 						<tr>
 							<td><a href="{{route('product.mainCats')}}" class="btn btn-info btn-cart"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
-							<td colspan="3" class="hidden-xs"></td>
+							<td colspan="2" class="hidden-xs"></td>
 							<td colspan="3">
 								<div class="pr-chk">
 									<div class="row">
@@ -174,7 +148,7 @@
                             @if(Session::has('cart'))
    				@if(count($products) > 0)   				
 				<table id="adl-cart-table" class="table table-cart">
-
+				<div class="loader" style="display: none;"></div>
     				<thead>
 						<tr>
 							<th class="sr">#</th>
@@ -191,6 +165,7 @@
 					
 
 						$j = 1;
+
 						
 					@ENDPHP
                      @foreach( $products as $product)
@@ -214,14 +189,14 @@
 							</td>
 							@if($imagefolder[0] == 'cinemas')
 							<td data-th="length" class="qt">
-							<select id="duration-{{$j}}" name="duration" data-index="{{$j}}" data-itemkey="{{$key}}" class="form-control">
-                            	<option value="">Length</option>
+							<select id="length-{{$j}}" name="length" data-index="{{$j}}" data-itemkey="{{$key}}" class="form-control">
+                            	<option value="" disabled>Length</option>
                             	<option value="1">10 sec</option>
                             	<option value="2">20 sec</option>
                             	<option value="3">30 sec</option>
                             	<option value="4">40 sec</option>
                             	<option value="5">50 sec</option>
-                            	<option value="5">60 sec</option>
+                            	<option value="6">60 sec</option>
                             </select>								
 							</td>
 							@else
@@ -232,9 +207,11 @@
 											<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$product['item']['auto_number']}}">
 										</td>
 									@else
+										<?php $numberKey = ( $imagefolder[0] == 'televisions') ? $product['item']['exposure_value'] : $product['item']['number_value']; ?>
 										<td data-th="Quantity" class="qt">
-											<input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['number_value']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$product['item']['number_value']}}</span>
-											<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$product['item']['number_value']}}">
+											<input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$numberKey}}" value="{{$product['qty']}}">
+											<span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$numberKey}}</span>
+											<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$numberKey}}">
 										</td>
 									@endif
 							
@@ -274,8 +251,18 @@
 						
 						@else
 							<td data-th="Number" class="sr">{{ $loop->iteration }}</td>
-                        	
+                        	@if($imagefolder[0] == 'televisions')
 							<td data-th="Product" class="pn">
+								<div class="row">
+									
+									<div class="col-sm-12 c-title">
+										<h4 class="nomargin">{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['rate_key'], 5))) }}</h4>
+									</div>
+									
+								</div>
+							</td>
+							@else
+								<td data-th="Product" class="pn">
 								<div class="row">
 									
 									<div class="col-sm-12 c-title">
@@ -283,11 +270,13 @@
 									</div>
 									
 								</div>
-							</td>
+								</td>
+							@endif
+
 							@if($imagefolder[0] == 'cinemas')
 							<td data-th="length" class="qt">
-							<select id="duration-{{$j}}" name="duration" data-itemkey="{{$key}}" data-index="{{$j}}" class="form-control change-cart">
-                            	<option value="">Length</option>
+							<select id="length-{{$j}}" name="length" data-itemkey="{{$key}}" data-index="{{$j}}" class="form-control change-cart">
+                            	<option value="" disabled>Length</option>
                             	<option value="1">10 sec</option>
                             	<option value="2">20 sec</option>
                             	<option value="3">30 sec</option>
@@ -297,9 +286,10 @@
                             </select>							
 							</td>
 							@else
+							<?php $numberKey = ( $imagefolder[0] == 'televisions') ? $product['item']['exposure_value'] : $product['item']['number_value']; ?>
 							<td data-th="Quantity" class="qt">
-									<input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['number_value']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$product['item']['number_value']}}</span>
-									<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$product['item']['number_value']}}">
+									<input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$numberKey}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$numberKey}}</span>
+									<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$numberKey}}">
 								</td>
 					
 							@endif
@@ -372,7 +362,6 @@
 								@ENDPHP
                             </select>
 
-
 								</td>
 					
 							@endif
@@ -438,12 +427,6 @@
         </div>        
     </div>
 </div>
-
-
-
-
-
-
 
 
 

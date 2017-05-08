@@ -17,8 +17,7 @@ class SiteUserMiddleware
     public function handle($request, Closure $next)
     {
          if(Sentinel::check() && Sentinel::getUser()->roles()->first()->slug == 'site-user'){
-             dd($next($request));
-            return $next($request);
+             return $next($request);
          }else
             return redirect()->route('user.signin');
     }

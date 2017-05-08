@@ -33,41 +33,51 @@
 					
 					<div class="row">
 						
-						@foreach($productOptions as $productOption)
+						@foreach($cinemas as $cinema)
+
+						
 						<div class="col-md-3 col-sm-3 "> 
 							<div class="pro-item"> 
-								<div class=" cat-opt-img"><img src="{{asset('images/cinemas/'.$products[11])}}"> 
+								<div class=" cat-opt-img"><img src="{{asset('images/cinemas/'.$cinema->cinema->image)}}"> 
 								</div>
-								<p class="font-1">{{$products[3]}}</p>
-								<p class="font-2">{{$products[5]}}, {{$products[6]}}, {{$products[7]}}</p>
+								
+
+								<p class="font-1-title">{{$cinema->cinema->title}}</p>
+								<p class="font-1">{{ucwords(str_replace('_', ' ', substr($cinema->price_key, 6)))}}</p>
+								
+								<p class="font-2">{{$cinema->cinema->location}} | {{$cinema->cinema->city}} | {{$cinema->cinema->state}}</p>
 								<hr>
 								<div class="row">
 									<div class="col-md-6">
-										<p class="font-3">{{ucwords(str_replace('_', ' ', substr($productOption['price_key'], 6)))}} Ads for {{$productOption['duration_value']}} months</p>
+									@if(substr($cinema->price_key, 6)=='mute_slide_ad')
+										<p class="font-3">Per Month Rates <br> For <br>10 Sec</p>
+									@else
+										<p class="font-3">Per Week Rates <br> For <br>10 Sec</p>
+									@endif
 									</div>
 									<div class="col-md-6">
-									<p class="font-2"><del class="lighter">Rs {{$productOption['price_value']}}</del> 
-									Rs{{$productOption['price_value']}}</p>
+									<p class="font-2"><del class="lighter">Rs {{$cinema->price_value}}<br></del> 
+									Rs{{$cinema->price_value}}</p>
 									</div>
 									</div>
 
 								@PHP
-								$options = $productOption['price_value'].'+'.$productOption['price_key'];
-								$session_key = 'cinemas'.'_'.$productOption['price_key'].'_'.$products[0];
+								$options = $cinema->price_value.'+'.$cinema->price_key;
+								$session_key = 'cinemas'.'_'.$cinema->price_key.'_'.$cinema->cinema->id;
 								$printsession = (array) Session::get('cart');
 												
 								@ENDPHP
 								<div class="clearfix"> 
-									<a class="glass" href="{{route('cinema.addtocart', ['id' => $products[0], 'variation' => $options])}}">
+									<a class="glass" href="{{route('cinema.addtocart', ['id' => $cinema->cinema->id, 'variation' => $options])}}">
 										@if(count($printsession) > 0)
-												@if(array_key_exists($session_key, $printsession['items'])) 
-													<span class="fa fa-minus-circle"></span> Remove From Cart 
-												@else
-													<span class="fa fa-star"></span> Add to Cart 
-												@endif
-												@else
-													<span class="fa fa-star"></span> Add to Cart
-												@endif
+											@if(array_key_exists($session_key, $printsession['items'])) 
+												<span class="fa fa-minus-circle"></span> Remove From Cart 
+											@else
+												<span class="fa fa-star"></span> Add to Cart 
+											@endif
+											@else
+												<span class="fa fa-star"></span> Add to Cart
+										@endif
 									</a> 
 								</div>
 							</div>

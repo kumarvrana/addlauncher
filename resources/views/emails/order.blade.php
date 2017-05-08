@@ -327,7 +327,11 @@
                                         <td>{{$item['item']['title']}}</td>
                                         <td>{{$order['order_status']}}</td>
                                         <td>{{$item['qty']}}</td>
+                                        @if($imagefolder[0] == 'televisions')
+                                        <td>Rs. {{number_format($item['item']['rate_value'], 2)}}</td>
+                                        @else
                                         <td>Rs. {{number_format($item['item']['price_value'], 2)}}</td>
+                                        @endif
                                         <td>Rs. {{number_format($item['price'], 2)}}</td>
                                     </tr>
                                     @endif

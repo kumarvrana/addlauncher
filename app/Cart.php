@@ -21,8 +21,8 @@ class Cart
     // add product to cart
     public function addorRemove($item, $id, $model, $flag){
 
-                
         if($flag){
+            
             $adPlusId = $model.'_'.$item['price_key'].'_'.$id;
             $storedItem = ['qty' => 0, 'price' => $item['price_value'], 'duration' => 0, 'item' => $item];
             if($this->items){
@@ -99,13 +99,22 @@ class Cart
                 $checkKey = explode('_', $id);
                 if($checkKey[1] == 'tricycle'){
                     $this->totalQty--;
-                    $this->totalPrice -= $this->items[$id]['item']['price'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];
+                    if($this->items[$id]['duration'] > 0){
+                        $this->totalPrice -= $this->items[$id]['item']['price'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];
+                    }else{
+                        $this->totalPrice -= $this->items[$id]['item']['price'] * $this->items[$id]['qty'];
+                    }
                     $this->items[$id]['qty']--;
                     $this->items[$id]['price'] -= $this->items[$id]['item']['price'];
                     unset($this->items[$id]);
                 }else{
                     $this->totalQty--;
-                    $this->totalPrice -= $this->items[$id]['item']['price_value'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];
+                    if($this->items[$id]['duration'] > 0){
+                        $this->totalPrice -= $this->items[$id]['item']['price_value'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];
+                    }else{
+                        $this->totalPrice -= $this->items[$id]['item']['price_value'] * $this->items[$id]['qty']; 
+                    }
+                    
                     $this->items[$id]['qty']--;
                     $this->items[$id]['price'] -= $this->items[$id]['item']['price_value'];
                     unset($this->items[$id]);
@@ -120,4 +129,93 @@ class Cart
         $this->totalQty--;
         $this->totalPrice -= $this->items[$id]['item']['price'];
     }
+
+     // add television product to cart
+
+
+    public function addorRemoveTelevision($item, $id, $model, $flag)
+    {           
+        $adPlusId = $model.'_'.$item['rate_key'].'_'.$id;
+        $storedItem = ['qty' => 0, 'price' => $item['rate_value'], 'duration' => 0, 'item' => $item];
+        if($this->items){
+            if(array_key_exists($adPlusId, $this->items)){
+                    $this->items[$adPlusId]['qty']--;
+                    $this->items[$adPlusId]['price'] -= $this->items[$adPlusId]['item']['rate_value'];
+                    $this->totalQty--;
+                    $this->totalPrice -= $this->items[$adPlusId]['item']['rate_value'];
+                    unset($this->items[$adPlusId]);
+                return 'removed';
+            }
+        }
+        $storedItem['qty']++;
+        $storedItem['price'] = $item['rate_value'] * $storedItem['qty'];
+        $this->items[$adPlusId] = $storedItem;
+        $this->totalQty++;
+        $this->totalPrice += $item['rate_value'];
+        
+        return 'added';  
+    }
+
+
+
+        public function UpdateTelevisionCartQty($item, $itemskey, $count, $duration)
+        {
+            $checkKey = explode('_', $itemskey);
+            
+            $price = 0;
+            $this->items[$itemskey]['qty'] = $count;
+            $this->items[$itemskey]['duration'] = $duration;
+            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['rate_value'] * $count * $duration;
+
+            foreach($this->items as $itm){
+                $price += $itm['price'];
+            }
+            $this->totalPrice = $price;
+            
+       }
+      
+        public function removeTelevisionCartItem($id)
+        {
+            if($this->items){
+                if(array_key_exists($id, $this->items)){
+                    $checkKey = explode('_', $id);
+                    $this->totalQty--;
+                    if($this->items[$id]['duration'] > 0){
+                        $this->totalPrice -= $this->items[$id]['item']['rate_value'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];    
+                    }else{
+                        $this->totalPrice -= $this->items[$id]['item']['rate_value'] * $this->items[$id]['qty'];
+                    }
+
+                    $this->items[$id]['qty']--;
+                    $this->items[$id]['price'] -= $this->items[$id]['item']['rate_value'];
+                    unset($this->items[$id]);
+                
+                }
+            }
+        }
+
+
+        public function addorRemoveCinema($item, $id, $model, $flag)
+        {           
+          $adPlusId = $model.'_'.$item['price_key'].'_'.$id;
+            $storedItem = ['qty' => 0, 'length'=>1, 'price' => $item['price_value'], 'duration' => 0, 'item' => $item];
+            if($this->items){
+                if(array_key_exists($adPlusId, $this->items)){
+                     $this->items[$adPlusId]['qty']--;
+                     $this->items[$adPlusId]['price'] -= $this->items[$adPlusId]['item']['price_value'];
+                     $this->totalQty--;
+                     $this->totalPrice -= $this->items[$adPlusId]['item']['price_value'];
+                     unset($this->items[$adPlusId]);
+                    return 'removed';
+                }
+            }
+            $storedItem['qty']++;
+            $storedItem['price'] = $item['price_value'] * $storedItem['qty'];
+            $this->items[$adPlusId] = $storedItem;
+            $this->totalQty++;
+            $this->totalPrice += $item['price_value']; 
+
+            return 'added';  
+    }
+
 }

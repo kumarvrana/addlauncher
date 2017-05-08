@@ -87,7 +87,7 @@
                 <input type="hidden" name="modelname" id="modelname" value="Cinema">
                
                 @PHP
-                    $cinema_options = array('rate_per_week' => 'Rate Per Week', 'trailor_per_week' => 'Trailor Per Week', 'mute_slide_per_week' => 'Mute Slide Per Week');
+                    $cinema_options = array('video_ad' => 'Video Ad', 'trailor_ad' => 'Trailor Ad', 'mute_slide_ad' => 'Mute Slide Ad');
                     $offScreen_AdOptions = array('danglers' => 'Danglers', 'tent_cards' => 'Tent Cards', ''=> 'glow_box', '' => 'Glow Box', 'product_sampling' => 'Product', '' => '', '' => '', '' => '');
                     $cinema_category = array('gold' => 'Gold', 'platinum' => 'Platinum', 'silver' => 'Silver'); 
                 @ENDPHP

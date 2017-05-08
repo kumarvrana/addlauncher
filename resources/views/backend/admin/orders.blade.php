@@ -61,7 +61,22 @@
 
                 <td><ul>
                  @foreach( $order->cart->items as $item)
-                    <li><a href="{{route('dashboard.viewOrder', ['id' => $order['id']])}}">{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b></a></li>
+                    @PHP
+                        $key = array_search($item, $order->cart->items);
+                        $category = explode('_', $key);
+                    @ENDPHP
+                    <li><a href="{{route('dashboard.viewOrder', ['id' => $order['id']])}}">{{$item['item']['title']}}|
+                  
+                      @if($category[1] == 'tricycle')
+                        <b>Tricycle</b>
+                      @else
+                          @if($category[0] == 'televisions')
+                            <b>{{ucwords(str_replace('_', ' ', substr($item['item']['rate_key'],5)))}}</b>
+                          @else
+                            <b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b>
+                         @endif
+                     @endif
+                    </a></li>
                  @endforeach
                  </ul></td>
                 <td>{{$item['qty']}}</td>

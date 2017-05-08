@@ -108,7 +108,7 @@ class BusstopController extends Controller
 
         //busstop display prices insertion
 
-   	   if($request->has('price_full')){
+       if($request->has('price_full')){
             $this->addBusstopPrice($lastinsert_ID, 'price_full', $request->input('price_full'), 'number_full', $request->input('number_full'), 'duration_full', $request->input('duration_full'));
         }
 
@@ -286,97 +286,56 @@ class BusstopController extends Controller
    }
 
    //Fliter Functions
-   public function getFilterBusstopAds(Request $request){
-       $params = array_filter($request->all());
-       foreach($params as $key=>$value){
-            if($key == 'pricerange'){
-                
-                $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $value); // comparion operator
-                if($filter_priceCamparsion != '<>'){
-                     $filter_price = preg_replace('/[^0-9]/', '', $value);
-                     $busstoppriceOptions = Busstopsprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', $filter_priceCamparsion, $filter_price],
-                                    ])->get()->toArray();
-                }else{
-                     $filter_price = preg_replace('/[^0-9]/', '_', $value);
-                     $filter_price = explode('_', $filter_price);
-                    
-                     $busstoppriceOptions = Busstopsprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', '>=', $filter_price[0]],
-                                    ['price_value', '<=', $filter_price[2]],
-                                    ])->get()->toArray();   
-                }
-                if(count($busstoppriceOptions)>0){
-                
-                foreach($busstoppriceOptions as $key => $value){
-                    $busstop_ads = Busstops::find($value['busstops_id'])->get()->toArray();
-                    $filterLike = substr($value['price_key'], 6);
-                    $busstopOption1 = '%'.$filterLike;
-                    $busstops = array();
-                    
-                    $busstoppriceOptions = Busstopsprice::where([
-                                ['busstops_id', '=', $value['busstops_id']],
-                                ['price_key', 'LIKE', $busstopOption1],
-                                //['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                        
-                    array_push($busstop_ads, $busstoppriceOptions);
-                    $busstops[] = array_flatten($busstop_ads);
-                     
-                   
-               
-                }
-                if(count($busstops)>0){
-                   
-                    foreach($busstops as $searchBusstop){
-                       $this->busstop_ads($searchBusstop);
-                    }
-                
-                    }else{
-                        echo "<b>No results to display!</b>";
-                }
+   public function getFilterBusstopAds(Request $request)
+   {
+        
+        $busstopPrice = new Busstopsprice();
+        
+        $filterResults = $busstopPrice->FilterBusstopsAds($request->all());
 
-            }else{
-                echo "<b>No results to display!</b>";
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchBusstop){
+                $this->busstop_ads($searchBusstop, $request->all());
             }
-                
-            
-            }
-            
+
+        }else{
+            echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
            
-            
-            if($key == 'locationFilter'){
-                
-            }
+        }
 
-            
-       }
         $content = ob_get_contents();
         ob_get_clean();
         return $content;
-       
-       
+  
    }
-   public function busstop_ads($searchBusstop)
-   {
-       ?>
+
+   public function busstop_ads($searchBusstop, $fileroptions)
+   { 
+         ?>
+       
        <div class="col-md-3 col-sm-3 "> 
         <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/busstops/'.$searchBusstop[11]) ?>"> </div>
-            <p class="font-1"><?= $searchBusstop[3] ?></p>
-            <p class="font-2"><?= $searchBusstop[5] ?> | <?= $searchBusstop[6] ?> | <?= $searchBusstop[7] ?></p>
-            <p class="font-3"><?= $searchBusstop[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchBusstop[18]), 6))?> for <?= $searchBusstop[23]?> months</p>
-            <p class="font-2"><del class="lighter">Rs <?= $searchBusstop[19]?> </del>Rs <?= $searchBusstop[19]?> </p>
+            <div class=" cat-opt-img "> <img src="<?= asset('images/busstops/'.$searchBusstop->busstop->image) ?>"> </div>
+            <p class="font-1"><?= $searchBusstop->busstop->title ?></p>
+            <p class="font-2"><?= $searchBusstop->busstop->location ?>, <?= $searchBusstop->busstop->city ?>, <?= $searchBusstop->busstop->state ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchBusstop->number_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchBusstop->price_key), 6))?> <br>for <br> <?= $searchBusstop->duration_value?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchBusstop->price_value?> </del><br>Rs <?= $searchBusstop->price_value?> </p>
+                </div>
+            
+            </div>
+
             <?php
-            $options = $searchBusstop[19].'+'.$searchBusstop[18];
-            $session_key = 'busstops'.'_'.$searchBusstop[18].'_'.$searchBusstop[0];
+            $options = $searchBusstop->price_value.'+'.$searchBusstop->price_key;
+            $session_key = 'busstops'.'_'.$searchBusstop->price_key.'_'.$searchBusstop->busstop->id;
             $printsession = (array) Session::get('cart');
                             
            ?>
             <div class="clearfix"> 
-                <a class="glass" href="<?= route('busstop.addtocart', ['id' => $searchBusstop[0], 'variation' => $options]) ?>"><span class="fa fa-star"></span>
+                <button class="glass add-cartButton" data-href="<?= route('busstop.addtocartAfterSearch', ['id' => $searchBusstop->busstop->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
                 <?php
                     if(count($printsession) > 0){
                      if(array_key_exists($session_key, $printsession['items'])){
@@ -388,12 +347,13 @@ class BusstopController extends Controller
                         echo "Add to Cart";
                     }
                 ?>
-            </a> 
+            </button> 
             </div>
         </div>
     </div>
     <?php
    }
+  
 
     //cart functions
    // add or remove item to cart
@@ -418,6 +378,27 @@ class BusstopController extends Controller
         //Session::forget('cart');
 
         return redirect()->back()->with(['status' => $status]);
+    }
+
+     public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)
+    {
+        $busstop_ad = Busstops::where('id', $id)->first()->toArray();
+        
+        $busstopPrice = new Busstopsprice();
+        $busstop_price = $busstopPrice->getBusstopspriceCart($id, $variation);
+       
+        $busstop_Ad = array_merge($busstop_ad, $busstop_price);
+       
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+                
+        $cart = new Cart($oldCart);
+
+        $status = $cart->addorRemove($busstop_Ad, $busstop_ad['id'], 'busstops', $flag=true); //pass full busstop details, id and model name like "busstops"
+        
+        $request->session()->put('cart', $cart);
+        //Session::forget('cart');
+
+        return response(['status' => $status, 'quatity' => $cart->totalQty, 'total' => $cart->totalPrice], 200);
     }
 
  

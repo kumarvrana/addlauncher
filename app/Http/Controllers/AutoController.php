@@ -28,10 +28,9 @@ class AutoController extends Controller
 
      //frontend function starts
     
-
     public function getfrontendAllAutoads()
     {
-      
+
         $auto_type = array(  'auto_rikshaw' => 'Auto Rikshaw',
                         'e_rikshaw' => 'E Rikshaw',
                         'tricycle' => 'Tricycle'
@@ -44,8 +43,6 @@ class AutoController extends Controller
         return view('frontend-mediatype.autos.autoads-list', ['auto_type' => $auto_type, 'location' => $location, 'mediacats' => $ad_cats]);
     }
     
-
-
     public function getfrontAutoadByType($autotype)
     {
         switch($autotype){
@@ -76,8 +73,7 @@ class AutoController extends Controller
              break;
          }
 
-        $location = 'Delhi NCR';    
-
+        $location = 'Delhi NCR';
         
         return view('frontend-mediatype.autos.autoAdByType', [
                                                     'options' => $options,
@@ -85,9 +81,6 @@ class AutoController extends Controller
                                                     'location' => $location
                                                     ]
                     );
-
-
-
     }
 
     public function getfrontAutoadByOption($autotype, $autoOption)
@@ -139,12 +132,9 @@ class AutoController extends Controller
         
      }
     
-    
     // frontend functions ends
   
-
     //Backend functions below
-
 
     // get list of all the products in auto stop media type
      public function getDashboardAutoList(){
@@ -157,7 +147,6 @@ class AutoController extends Controller
     {
         return view('backend.mediatypes.autos.auto-addform');
     }
-
 
     // post list of all the products in auto media type
 
@@ -247,7 +236,6 @@ class AutoController extends Controller
            
         }
         
-       
         //return to auto product list
        return redirect()->route('dashboard.getAutoList')->with('message', 'Successfully Added!');
     }
@@ -430,6 +418,75 @@ class AutoController extends Controller
         
    }
 
+
+   //Fliter Functions
+   public function getFilterAutoAds(Request $request)
+   {
+        
+        $autoPrice = new Autosprice();
+        $filterResults = $autoPrice->FilterAutosAds($request->all());
+
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchAuto){
+                $this->auto_ads($searchAuto, $request->all());
+            }
+
+        }else{
+            echo "<img src='../images/oops.png' class='img-responsive oops-img'>";
+        }
+
+        $content = ob_get_contents();
+        ob_get_clean();
+        return $content;
+  
+   }
+
+   public function auto_ads($searchAuto, $fileroptions)
+   { 
+         ?>
+       
+       <div class="col-md-3 col-sm-3 "> 
+        <div class="pro-item"> 
+            <div class=" cat-opt-img "> <img src="<?= asset('images/autos/'.$searchAuto->auto->image) ?>"> </div>
+            <p class="font-1"><?= $searchAuto->auto->title ?></p>
+            <p class="font-2"><?= $searchAuto->auto->location ?>, <?= $searchAuto->auto->city ?>, <?= $searchAuto->auto->state ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchAuto->number_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchAuto->price_key), 6))?> <br>for <br> <?= $searchAuto->duration_value?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchAuto->price_value?> </del><br>Rs <?= $searchAuto->price_value?> </p>
+                </div>
+            
+            </div>
+
+            <?php
+            $options = $searchAuto->price_value.'+'.$searchAuto->price_key;
+            $session_key = 'autos'.'_'.$searchAuto->price_key.'_'.$searchAuto->auto->id;
+            $printsession = (array) Session::get('cart');
+                            
+           ?>
+            <div class="clearfix"> 
+                <button class="glass add-cartButton" data-href="<?= route('auto.addtocartAfterSearch', ['id' => $searchAuto->auto->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
+                <?php
+                    if(count($printsession) > 0){
+                     if(array_key_exists($session_key, $printsession['items'])){
+                       echo "Remove From Cart"; 
+                    }else{
+                        echo "Add to Cart"; 
+                    }
+                    }else{
+                        echo "Add to Cart";
+                    }
+                ?>
+            </button> 
+
+            </div>
+        </div>
+    </div>
+    <?php
+   }
+  
     //cart functions
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)
@@ -458,6 +515,29 @@ class AutoController extends Controller
         //Session::forget('cart');
 
         return redirect()->back()->with(['status' => 'added']);
+    }
+
+    // Search Option
+
+    public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)
+    {
+        $auto_ad = Autos::where('id', $id)->first()->toArray();
+        
+        $autoPrice = new Autosprice();
+        $auto_price = $autoPrice->getAutospriceCart($id, $variation);
+       
+        $auto_Ad = array_merge($auto_ad, $auto_price);
+       
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+                
+        $cart = new Cart($oldCart);
+
+        $status = $cart->addorRemove($auto_Ad, $auto_ad['id'], 'autos', $flag=true); //pass full auto details, id and model name like "autos"
+        
+        $request->session()->put('cart', $cart);
+        //Session::forget('cart');
+
+        return response(['status' => $status, 'quatity' => $cart->totalQty, 'total' => $cart->totalPrice], 200);
     }
 
  

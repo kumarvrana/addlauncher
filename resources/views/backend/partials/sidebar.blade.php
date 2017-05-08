@@ -1,7 +1,9 @@
 <div class="col-sm-3 col-md-2 sidebar sidebar-nav">
     <div class="list-group">
+    <hr>
         <a class="list-group-item list-group-item-danger"  href="{{route('dashboard')}}">Overview <span class="sr-only">(current)</span></a>
         <a class="list-group-item list-group-item-danger" href="{{ route('dashboard.addCategoryList') }}">Ad Category List</a>
+        <a class="list-group-item list-group-item-danger" href="{{route('dashboard.generalsettings')}}">General Options</a>
         <hr>
 		<div class="list-group" role="menu">
 			<a class="list-group-item  list-group-item-success" href="{{route('dashboard.getAdvertisingConsolutionList')}}">Advertising Consolution</a>

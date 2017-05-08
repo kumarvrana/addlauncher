@@ -15,6 +15,9 @@ class RegistrationController extends Controller
     
     public function getSignup()
     {
+        if(Sentinel::check())
+             return redirect()->back();
+             
         return view('shop.user.signup');
     }
 

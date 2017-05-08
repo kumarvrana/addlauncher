@@ -8,8 +8,18 @@ use App\Socialmediamarketings;
 
 class SocialmediaController extends Controller
 {
-    public function getDashboardSocialmediaList(){
+    public function getfrontendAllSocialmediaads(){
         $socialmedia_ads = Socialmediamarketings::all();
-        return view('backend.mediatypes.socialmedias.socialmedia-list', ['socialmedia_ads' => $socialmedia_ads]);
+
+         if($socialmedia_ads->isEmpty())
+         {
+
+			return view('partials.comingsoon');
+
+         } else {
+
+           return view('frontend-mediatype.socialmedias.socilamediaads-list', ['socialmedia_ads' => $socialmedia_ads]);
+         }
     }
 }
+

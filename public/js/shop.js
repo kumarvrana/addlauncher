@@ -9,26 +9,57 @@ $(function() {
     });*/
 
     $("#adl-cart-table").on("change", ".change-cart", function() {
+        $(".loader").show();
 
         $(".error").hide();
+
         var index = $(this).attr("data-index");
         var itemTD = $(this).attr("data-itemkey");
         var id = $(this).attr("id");
+        var self = $("#adl-cart-table");
         var maxValue = Number($(this).val());
-        if (id == "quantity-"+index) {
-            var cCost = maxValue;
-            var cDuration = Number($('#duration-'+index+' option:selected').val());
-            var dbValue = $("#quantity-hidden-" + index).val();
-             if (maxValue > dbValue) {
-                $(".quantity-error-" + index).show();
-                return;
-             }
-        }else{
-            var cCost = Number($('#quantity-'+index).val());
-            var cDuration = maxValue;
+        switch(id){
+            case 'quantity-'+index:
+                var length = 'quantity';
+                var cCost = maxValue;
+                var cDuration = Number($('#duration-'+index+' option:selected').val());
+                var dbValue = $("#quantity-hidden-" + index).val();
+                if (maxValue > dbValue) {
+                    $(".quantity-error-" + index).show();
+                    $(".loader").hide();
+                    return;
+                    
+
+                }
+            break;
+            case 'length-'+index:
+                var length = 'length';
+                var cCost = maxValue;
+                var cDuration = Number($('#duration-'+index+' option:selected').val());
+               
+            break;
+            case 'duration-'+index:
+                var selectID1 = $(this).closest('td').prev('td');
+	            var prevSelectName = selectID1.find( ".change-cart" ).attr( "name" );
+                if(prevSelectName == 'length'){
+                    var cCost = Number($('#length-'+index).val());
+                }else{
+                    var cCost = Number($('#quantity-'+index).val());
+                }
+                var cDuration = maxValue;
+              
+            break;
+
+
+
         }
-        //console.log("cost: "+cCost+" and duration: "+cDuration);
-        $.ajax({
+       let working = false;
+            if (working) {
+                    xhr.abort();
+                }
+                working = true;
+
+                xhr= $.ajax({
                 method: 'GET',
                 url: updateCartUrl,
                 data: {
@@ -42,7 +73,11 @@ $(function() {
                 var grandTotal = "Rs. " + response.total;
                 $('.subtotal-' + index).html(subtotalOutput);
                 $('.cart-total').text(grandTotal);
+                $(".loader").hide();
+                working = false;
+
             });
+
         
     });
 
@@ -64,7 +99,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 
     $(window).scroll(function() {
-        if ($(this).scrollTop() > 250) {
+        if ($(this).scrollTop() > 190) {
             $('.fixed-div').addClass("fix-nav");
         } else {
             $('.fixed-div').removeClass("fix-nav");

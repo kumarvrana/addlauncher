@@ -7,7 +7,6 @@ use App\Http\Requests;
 use Session;
 use App\Buses;
 use App\Busesprice;
-use App\Mainaddtype;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -26,36 +25,43 @@ class BusController extends Controller
     
     public function getfrontendAllBusads()
     {
-       $bus_options = Buses::all();
-       $location = 'Delhi NCR';
-       $ad_cats = Mainaddtype::orderBy('title')->get();
-       
-       return view('frontend-mediatype.buses.busads-list', ['bus_options' => $bus_options, 'location' => $location,'mediacats' => $ad_cats]);
+       $bus_ads = Buses::all();
+       return view('frontend-mediatype.buses.busads-list', ['products' => $bus_ads]);
 
     }
-    public function getfrontBusadByOption($busOption)
-    {
-          
-        $buses = new Busesprice();
 
-        $buses = $buses->getBusByFilter($busOption);
-        
-        return view('frontend-mediatype.buses.bus-single', ['buses' => $buses, 'busOption' => $busOption]);
+     public function getfrontBusadByOption($busOption)
+    {
+       
+        $bus_ads = Buses::all()->toArray();
+       
+        $busOption1 = '%'.$busOption.'%';
+        $buses = array();
+        foreach($bus_ads as $bus){
+            $count = Busesprice::where([
+                                    ['buses_id', '=', $bus['id']],
+                                    ['price_key', 'LIKE', $busOption1],
+                                   ])->get()->count();
+            if($count > 0){
+                 $buspriceOptions = Busesprice::where([
+                                    ['buses_id', '=', $bus['id']],
+                                    ['price_key', 'LIKE', $busOption1],
+                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+                array_push($bus, $buspriceOptions);
+                $buses[] = array_flatten($bus);
+            }
+       }
+       
+        return view('frontend-mediatype.buses.bus-single', ['products' => $buses, 'busOption' => $busOption]);
     }
     
     public function getfrontBusad($id)
     {
-       $busad = Buses::find($id);
-        if($busad){
-            if($busad->status === "3" || $busad->status === "2"){
-                return redirect()->back();
-            }else{
-                $busprice = Busesprice::where('buses_id', $id)->get();
-                return view('frontend-mediatype.buses.bus-single', ['busad' => $busad, 'busprice' => $busprice]);
-            }
-        }else{
-            return redirect()->back();
-        }
+        $busad = Buses::where('id', '=', $id)->get()->toArray();
+        $busad = array_flatten($busad);
+        $buspriceOptions = Busesprice::where('buses_id', '=', $id)->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+            
+        return view('frontend-mediatype.buses.bus-single', ['products' => $busad, 'productOptions' => $buspriceOptions]);
     }
     
     
@@ -351,18 +357,74 @@ class BusController extends Controller
 
    //Fliter Functions
    public function getFilterBusAds(Request $request){
+       $params = array_filter($request->all());
+       foreach($params as $key=>$value){
+            if($key == 'pricerange'){
+                
+                $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $value); // comparion operator
+                if($filter_priceCamparsion != '<>'){
+                     $filter_price = preg_replace('/[^0-9]/', '', $value);
+                     $buspriceOptions = Busesprice::where([
+                                    ['price_key', 'LIKE', 'price_%'],                                    
+                                    ['price_value', $filter_priceCamparsion, $filter_price],
+                                    ])->get()->toArray();
+                }else{
+                     $filter_price = preg_replace('/[^0-9]/', '_', $value);
+                     $filter_price = explode('_', $filter_price);
+                    
+                     $buspriceOptions = Busesprice::where([
+                                    ['price_key', 'LIKE', 'price_%'],                                    
+                                    ['price_value', '>=', $filter_price[0]],
+                                    ['price_value', '<=', $filter_price[2]],
+                                    ])->get()->toArray();   
+                }
+                if(count($buspriceOptions)>0){
+                
+                foreach($buspriceOptions as $key => $value){
+                    $bus_ads = Buses::find($value['buses_id'])->get()->toArray();
+                    $filterLike = substr($value['price_key'], 6);
+                    $busOption1 = '%'.$filterLike;
+                    $buses = array();
+                    
+                    $buspriceOptions = Busesprice::where([
+                                ['buses_id', '=', $value['buses_id']],
+                                ['price_key', 'LIKE', $busOption1],
+                                //['price_value', $filter_priceCamparsion, $filter_price],
+                                ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
+                        
+                    array_push($bus_ads, $buspriceOptions);
+                    $buses[] = array_flatten($bus_ads);
+                     
+                   
+               
+                }
+                if(count($buses)>0){
+                    echo "<pre>";
+                    print_r($buses);
+                    echo "</pre>";
+                    foreach($buses as $searchBus){
+                       $this->bus_ads($searchBus);
+                    }
+                
+                    }else{
+                        echo "<b>No results to display!</b>";
+                }
 
-       $busPrice = new Busesprice();
-        $filterResults = $busPrice->FilterBusesAds($request->all());
-        if(count($filterResults)>0){
-            foreach($filterResults as $searchBus){
-                $this->bus_ads($searchBus, $request->all());
+            }else{
+                echo "<b>No results to display!</b>";
+            }
+                
+            
+            }
+            
+           
+            
+            if($key == 'locationFilter'){
+                
             }
 
-        }else{
-            echo "<strong>No Results Found!</strong>";
-        }
-
+            
+       }
         $content = ob_get_contents();
         ob_get_clean();
         return $content;
@@ -410,22 +472,29 @@ class BusController extends Controller
    public function getAddToCart(Request $request, $id, $variation)
    {
         $bus_ad = Buses::where('id', $id)->first()->toArray();
-
-        $busPrice = new Busesprice();
-        $bus_price = $busPrice->getBusespriceCart($id, $variation);
-               
-        $bus_Ad = array_merge($bus_ad, $bus_price);
         
+        $selectDisplayOpt = explode("+", $variation);
+        $main_key = substr($selectDisplayOpt[1], 6);
+
+        $bus_price = Busesprice::where([
+                                    ['buses_id', '=', $id],
+                                    ['price_key', '=', $selectDisplayOpt[1]],
+                                ])->first()->toArray();
+
+       
+        
+        $bus_Ad = array_merge($bus_ad, $bus_price);
+       
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldCart);
 
-        $status = $cart->addorRemove($bus_Ad, $bus_ad['id'], 'buses', $flag=true); //pass full bus details, id and model name like "buses"
+        $cart->addorRemove($bus_Ad, $bus_ad['id'], 'buses', $flag=true); //pass full bus details, id and model name like "buses"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');
 
-        return redirect()->back()->with(['status' => $status]);
+        return redirect()->back()->with(['status' => 'added']);
     }
 
  

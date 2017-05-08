@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Cart;
 use App\Order;
-
+use App\Mainaddtype;
 use Session;
 use Sentinel;
 
@@ -46,10 +46,14 @@ class CartController extends Controller
 
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
-        $cart->removeCartItem($id);
+        $model = explode('_', $id);
+        if($model == 'televisions')
+            $cart->removeTelevisionCartItem($id);
+        else
+            $cart->removeCartItem($id);
 
         Session::put('cart', $cart);
-        
+       
         return redirect()->back();
     }
     // remove item form payment page bu using index id
@@ -61,8 +65,12 @@ class CartController extends Controller
 
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
-        $cart->removeCartItem($id);
-
+        $model = explode('_', $id);
+        if($model == 'televisions')
+            $cart->removeTelevisionCartItem($id);
+        else
+            $cart->removeCartItem($id);
+       
         Session::put('cart', $cart);
         $checkEmptyCart = Session::get('cart');
         if(count($checkEmptyCart->items) < 1){
@@ -76,14 +84,17 @@ class CartController extends Controller
         if(!Sentinel::check()){
            return redirect()->route('user.signin');
         }
-
         $itemId = $_REQUEST['item'];
         $count = $_REQUEST['count'];
         $duration = $_REQUEST['duration'];
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
+        $model = explode('_', $itemId);
+        if($model[0] == 'televisions')
+            $cart->UpdateTelevisionCartQty((array)$cart, $itemId, $count, $duration);
+        else
+            $cart->UpdateCartQty((array)$cart, $itemId, $count, $duration);
 
-        $cart->UpdateCartQty((array)$cart, $itemId, $count, $duration);
         Session::put('cart', $cart);
         $cart = (array)$cart;
        

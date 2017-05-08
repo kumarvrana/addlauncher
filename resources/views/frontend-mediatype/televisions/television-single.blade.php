@@ -19,7 +19,7 @@
 
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-         <h1><span>{{ucwords(str_replace('_', ' ', $televisionOption))}}</span> OPTIONS</h1>
+         <h1><span>{{$title}}</span> OPTIONS</h1>
      </div>
 </section>       
 <section class="main-sec">        
@@ -34,17 +34,17 @@
 				
 					<div class="row">
 				
-					@if($televisions)
-						@foreach($televisions as $television)
+					@if($televisionad)
+						@foreach($televisionad as $television)
 						<div class="col-md-3 col-sm-3"> 
 							<div class="pro-item"> 
 								<div class=" cat-opt-img "> <img src="{{asset('images/televisions/'.$television->television->image)}}"> </div>
-								<p class="font-1">{{$television->television->title}} | {{ucwords(str_replace('_', ' ', $televisionOption))}}</p>
+								<p class="font-1">{{$television->television->title}} | {{ucwords(str_replace('_', ' ', substr($television->rate_key, 5)))}}</p>
 								<p class="font-2">{{$television->television->location}} | {{$television->television->city}} | {{$television->television->state}}</p>
 								<hr>
 								<div class="row">
 									<div class="col-md-6">
-										<p class="font-3">{{$television->exposure_value}} {{ucwords(str_replace('_', ' ', $televisionOption))}}<br> for <br> {{$television->exposure_value}} months</p>
+										<p class="font-3">{{$television->exposure_value}} {{ucwords(str_replace('_', ' ', substr($television->rate_key, 5)))}}<br> for <br> {{$television->exposure_value}} months</p>
 									</div>
 									<div class="col-md-6">
 										<p class="font-4"><del class="lighter">Rs {{$television->rate_value}} <br></del>Rs {{$television->rate_value}} </p>

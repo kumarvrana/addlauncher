@@ -27,96 +27,24 @@ public function __construct()
     
     public function getfrontendAllTelevisionads()
     {
-      
-        $ad_genre = array(  'entertainment' => 'Entertainment',
-                        'news' => 'News',
-                        'sports' => 'Sports',
-                        'devotional' => 'Devotional',
-                        'kids' => 'Kids',
-                        'educational' => 'Educational',
-                        'food_and_drink' => 'Food and drink',
-                        'travel' => 'Travel'
-                        );
 
-        $location = 'Delhi NCR';
-        $ad_cats = Mainaddtype::orderBy('title')->get();
+        $television_ads = Televisions::all();
 
-        return view('frontend-mediatype.televisions.televisionads-list', ['ad_genre' => $ad_genre, 'location' => $location , 'mediacats' => $ad_cats]);
-    }
-
-     public function getfrontTelevisionadByType($genre)
-    {
-        switch($genre){
-            case 'news':
-                $options = array(
-                                'ticker' => 'Ticker',
-                                'aston' => 'Aston',
-                                'fct' => 'Fct',
-                                'time_check' => 'Time Check'
-                            );
-            break;
-    
-         }
-
-        $location = 'Delhi NCR';                                    
-        
-        return view('frontend-mediatype.televisions.televisionAdByType', [
-                                                    'options' => $options,
-                                                    'genre' => $genre,
-                                                    'location' => $location
-                                                    ]
-                    );
-
-
-
-    }
-
-     public function getfrontTelevisionadByOption($genre, $televisionOption)
-    {
-        
-        $televisions = new Televisionsprice();
-
-        $televisions = $televisions->getTelevisionByFilter($genre, $televisionOption);
-        
-        return view('frontend-mediatype.televisions.television-single', ['televisions' => $televisions, 'genre' => $genre, 'televisionOption' => $televisionOption]);
-
+        return view('frontend-mediatype.televisions.televisionads-list', ['televisions_ads' => $television_ads]);
     }
 
     public function getfrontTelevisionad($id)
     {
-         $televisionad = Televisions::find($id);
-        //$televisionprice = Televisionsprice::where('television_id', $id)->get();
+        $televisionad = Televisions::find($id);
+        $televisionprice = Televisionsprice::where('television_id', $id)->get();
 
          if($televisionad){
             if($televisionad->status === "3" || $televisionad->status === "2"){
                 return redirect()->back();
-            }else{
-
-       $televisiondisplay = Televisionsprice::where([
-                                    ['television_id', '=', $id],
-                                    ['genre', '=', 'display'],
-                                ])->get();
-        $televisiontickerdisplay = Televisionsprice::where([
-                                    ['television_id', '=', $id],
-                                    ['genre', '=', 'ticker'],
-                                ])->get();
-        $televisionastondisplay = Televisionsprice::where([
-                                    ['television_id', '=', $id],
-                                    ['genre', '=', 'aston'],
-                                ])->get();
-        $televisiontimecheckdisplay = Televisionsprice::where([
-                                    ['television_id', '=', $id],
-                                    ['genre', '=', 'time_check'],
-                                ])->get();
-        $televisionfctdisplay = Televisionsprice::where([
-                                    ['television_id', '=', $id],
-                                    ['genre', '=', 'fct'],
-                                ])->get();
-        return view('frontend-mediatype.televisions.television-single', ['televisionad' => $televisionad, 'television_display' => $televisiondisplay, 'television_tickerdisplay' => $televisiontickerdisplay, 'television_astondisplay' => $televisionastondisplay, 'television_timecheckdisplay' => $televisiontimecheckdisplay, 'television_fctdisplay' => $televisionfctdisplay]);
-    }
-    }else{
-            return redirect()->back();
-        }
+            }
+          } 
+        return view('frontend-mediatype.televisions.television-single', ['televisionad' => $televisionprice, 'title' => $televisionad->title]);
+    
         
      }
 
@@ -213,7 +141,7 @@ public function __construct()
     }
 
     //insert price data to television price table
-    public function addTelevisionPrice($id, $timekey, $timevalue, $ratekey, $ratevalue, $exposurekey, $exposurevalue, $type)
+    public function addTelevisionPrice($id, $ratekey, $ratevalue, $timekey, $timevalue, $exposurekey, $exposurevalue, $type)
     {
         $insert = new Televisionsprice();
 
@@ -366,7 +294,7 @@ public function __construct()
 
 
 
- public function updateTelevisionPrice( $id, $timekey, $timevalue, $ratekey, $ratevalue, $exposurekey, $exposurevalue, $type){
+ public function updateTelevisionPrice( $id, $ratekey, $ratevalue, $timekey, $timevalue, $exposurekey, $exposurevalue, $type){
         $count = Televisionsprice::where([
                                     ['television_id', '=', $id],
                                     ['rate_key', '=', $ratekey],
@@ -387,24 +315,21 @@ public function __construct()
 
     public function getAddToCart(Request $request, $id, $variation)
    {
-        $flag = false;
+        $flag= true;
         $television_ad = Televisions::where('id', $id)->first()->toArray();
        
         $selectDisplayOpt = explode("+", $variation);
-            $flag = true;
-           
-            $televisionprice = new Televisionsprice();
-            $television_price =$televisionprice->getTelevisionPriceForCart($id, $selectDisplayOpt[1]);
-           
 
-            $television_ad = array_merge($television_ad, $television_price);
+        $televisionprice = new Televisionsprice();
+        $television_price = $televisionprice->getTelevisionPriceCart($id, $selectDisplayOpt[1]);
         
-    
+        $television_ad = array_merge($television_ad, $television_price);
+
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($television_ad, $television_ad['id'], 'televisions', $flag); //pass full television details, id and model name like "televisions"
+        $cart->addorRemoveTelevision($television_ad, $television_ad['id'], 'televisions', $flag); //pass full television details, id and model name like "televisions"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');

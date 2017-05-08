@@ -35,13 +35,13 @@ class Televisionsprice extends Model
         return $televisionpriceOptions;
     }
 
-    public static function getTelevisionPriceForCart($id, $option)
+    public static function getTelevisionPriceCart($id, $option)
     {
         $television_price = static::where([
                                         ['television_id', '=', $id],
                                         ['rate_key', '=', $option],
                                     ])
-                                    ->get(array('television_id', 'rate_key', 'rate_value', 'time_band_key', 'time_band_value', 'exposure_key', 'exposure_value','genre'))
+                                    ->get(array('rate_key', 'rate_value', 'time_band_key', 'time_band_value', 'exposure_key', 'exposure_value'))
                                     ->first()->toArray();
 
 

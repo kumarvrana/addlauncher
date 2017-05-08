@@ -2,7 +2,7 @@
 
 @section('title')
 
-    Auto | Media | Ad Launcher
+    Car | Media | Ad Launcher
 
 @endsection
 
@@ -26,12 +26,15 @@
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
                 <div class="col-md-2">
-                  @include('partials.sidebar')
+                  @include('partials.filter-sidebar.car')
                 </div>
 
                 <div class="col-md-8">
                    
-                  <div class="row"> <!-- row repeater starts here -->
+                  <div class="ad-sec">  
+                        <div class="loader" style="display:none"></div>
+                        <div class="data-box" > <!-- row repeater starts here -->
+                            <div class="row" id="table-results">
                     
                         @foreach($options as $key => $value)
                             @PHP
@@ -61,9 +64,16 @@
                         @endforeach
 
 
-          </div> <!-- row repeater ends here -->
+              </div>
+                        </div>
+
+                             
+
+                    </div> <!-- row repeater ends here -->
            
-        </div>
+                
+            </div>
+
           <div class="col-md-2">
             @include('partials.sidebar-cart')
                 

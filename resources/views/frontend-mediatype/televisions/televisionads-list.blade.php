@@ -33,32 +33,77 @@
                 <div class="col-md-8">
                     
                   <div class="row"> <!-- row repeater starts here -->
-                 
-                    @foreach($ad_genre as $key => $value)
-                    @PHP
-                        $image = $key.".jpg";
+                   
+                    @foreach($televisions_ads as $television)
+                        @PHP
+                        if($television->status){
+                                    switch($television->status){
+                                        case 1:
+                                            $status = 'Available';
+                                        break;
+                                        case 2:
+                                            $status = 'Sold Out';
+                                        break;
+                                        case 3:
+                                            $status = 'Coming Soon';
+                                        break;
+                                    }
+                                }
+                                $st_class= strtolower(str_replace(' ','_', $status));
+                             
+                    if($status!='Available')  {
                     @ENDPHP
+
                     <div class="col-md-3">
                         <div class="owl-item active">
                             <div class="single-product">
                                 <div class="product-img">
-                                        <img class="second-img {{$key}}" src="{{asset('images/televisions/'.$image)}}" alt="{{$key}}">
+                                        <img class="second-img" src="{{asset('images/televisions/'.$television->image)}}" alt="product">
                                 </div>
                                 <div class="products-desc">
                                     
-                                    <div class="product-price"><span>{{$value}}</span></div>
+                                    <div class="product-price"><span>{{$television->title}}</span></div>
                                     <hr>
                                     <div class="product-name">
-                                        {{$location}}
+                                        {{$television->location}} | {{$television->city}} | {{$television->state}}
                                     </div>
                                 </div>
-                                <div class="product-mark"></div>
+                                <div class="product-mark sold_out">{{$status}}</div>
                                 <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{ route('frontend.getfrontTelevisionadByType', ['genre' => $key]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
+                                    <div class="add-to-cart"><a href="{{route('frontend.televisionsingle', ['id' => $television->id])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    @PHP }
+
+                    else { @ENDPHP
+
+                    <div class="col-md-3">
+                        <div class="owl-item active">
+                            <div class="single-product">
+                                <div class="product-img">
+                                        <img class="second-img" src="{{asset('images/televisions/'.$television->image)}}" alt="product">
+                                </div>
+                                <div class="products-desc">
+                                    
+                                    <div class="product-price"><span>{{$television->title}}</span></div>
+                                    <hr>
+                                    <div class="product-name">
+                                        {{$television->location}} | {{$television->city}} | {{$television->state}}
+                                    </div>
+                                </div>
+                                <div class="product-mark available">{{$status}}</div>
+                                <div class="product-hover">
+                                    <div class="add-to-cart"><a href="{{route('frontend.televisionsingle', ['id' => $television->id])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @PHP } @ENDPHP
+                    
                     @endforeach
 
         

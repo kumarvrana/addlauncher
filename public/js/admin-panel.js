@@ -126,7 +126,7 @@ $(function() {
     //Start Auto options code
 
     var fieldisieditpage = document.getElementById("priceData");
-    $('.e_rickshawOtions, .autorikshawOtions').hide();
+    $('.e_rickshawOtions, .autorikshawOtions, .magazine, .newspaper').hide();
     if (fieldisieditpage) {
         var selectedAutotypeEdit = $('#autotype').find(':selected').attr('value');
         if (selectedAutotypeEdit == 'auto_rikshaw') {
@@ -136,6 +136,16 @@ $(function() {
         if (selectedAutotypeEdit == 'e_rikshaw') {
             $('.e_rickshawOtions').addClass('selected');
             $('.e_rickshawOtions').show();
+        }
+
+        var selectedPrintMediatypeEdit = $('#printmedia_type').find(':selected').attr('value');
+        if (selectedPrintMediatypeEdit == 'newspaper') {
+            $('.newspaper').addClass('selected');
+            $('.newspaper').show();
+        }
+        if (selectedPrintMediatypeEdit == 'magazine') {
+            $('.magazine').addClass('selected');
+            $('.magazine').show();
         }
     }
 
@@ -158,6 +168,22 @@ $(function() {
             }
         }
     });
+//print media
+
+    $('#printmedia_type').on('change', function() {
+        $('.selected').hide();
+        $('.selected').removeClass('selected');
+        var selectedprintmediatype = $(this).find(':selected').attr('value');
+        
+        if (typeof selectedprintmediatype === "undefined") {
+            msg = "Select Print Media Type";
+            return msg;
+        } else {
+             $('.'+selectedprintmediatype).addClass('selected');
+             $('.'+selectedprintmediatype).show();
+        }
+    });
+    
     //End Auto options code
     //Start Television options code
     var fieldisieditpage = document.getElementById("priceData");
@@ -717,9 +743,9 @@ function addDomToPriceOptionsCinema(name, type) {
 
     if (chkExist == -1) {
         var model = document.getElementById("modelname").value;
-        var labeltext = "Price for " + name + " " + model + " Ad Per unit:";
-        var labelnumbertext = "Number of " + model + " for " + name + " Ad:";
-        var labeldurationtext = "Ad Duration of " + model + " for " + name + " Ad (in Sec):";
+        var labeltext = "Price for " + model + "'s " + name + " :";
+        var labelnumbertext = "Number of " + model + " for " + name + " :";
+        var labeldurationtext = "Ad Duration of " + model + " for " + name + "  (in Sec):";
         var iname = name.toLowerCase();
         var res = iname.split(' ').join('_');
         var inputname = "price_" + res;
@@ -768,8 +794,8 @@ function addDomToPriceOptionsCinema(name, type) {
         divrow.appendChild(labelhtm);
         divrow.appendChild(inputhtm);
 
-        divrowduration.appendChild(labeldurationhtm);
-        divrowduration.appendChild(inputdurationhtm);
+        // divrowduration.appendChild(labeldurationhtm);
+        // divrowduration.appendChild(inputdurationhtm);
         priceElement.appendChild(divrow);
 
         priceElement.appendChild(divrowduration);

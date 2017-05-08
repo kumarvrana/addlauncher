@@ -40,7 +40,7 @@
 						<hr>
 						<div class="row">
 							<div class="col-md-6">
-								<p class="font-3">{{$busstopad->number_value}} {{ucwords(str_replace('_', ' ', substr($busstopad->price_key, 6)))}} Ads for {{$busstopad->duration_value}} months</p>
+								<p class="font-3">{{$busstopad->number_value}} {{ucwords(str_replace('_', ' ', substr($busstopad->price_key, 6)))}} Ads<br> for <br> {{$busstopad->duration_value}} months</p>
 							</div>
 						<div class="col-md-6">	
 							<p class="font-2"><del class="lighter">Rs {{$busstopad->price_value}} <br></del>Rs {{$busstopad->price_value}}</p>

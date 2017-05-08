@@ -65,7 +65,7 @@
                                     <div class="product-price"><span>{{$product->title}}</span></div>
                                     <hr>
                                     <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
+                                        {{$product->location}} | {{$product->city}} | {{$product->state}}
                                     </div>
                                 </div>
                                 <div class="product-mark {{$st_class}}">{{$status}}</div>
@@ -91,7 +91,7 @@
                                     <div class="product-price"><span>{{$product->title}}</span></div>
                                     <hr>
                                     <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
+                                        {{$product->location}} | {{$product->city}} | {{$product->state}}
                                     </div>
                                 </div>
                                 <div class="product-mark {{$st_class}}">{{$status}}</div>

@@ -45,6 +45,8 @@
         var contactFormURL = "{{ route('Contact.PostContactForm') }}";
         var airportFilterURL = "{{ route('frontend.getFilterAirportAds')}}";
         var autoFilterURL = "{{ route('frontend.getFilterAutoAds')}}";
+        var busstopFilterURL = "{{ route('frontend.getFilterBusstopAds')}}";
+        var carFilterURL = "{{ route('frontend.getFilterCarAds')}}";
     </script>
     <script src="{{ URL::to( 'js/common.js' ) }}"></script>
 

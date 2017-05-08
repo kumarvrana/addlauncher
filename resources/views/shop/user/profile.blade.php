@@ -32,10 +32,10 @@
           <tbody>
            @PHP $i=1; @ENDPHP
              @foreach( $orders as $order)
-             @PHP $aa=$loop->iteration @ENDPHP
+             <?php $s_no = $loop->iteration ?>
               @foreach( $order->cart->items as $item)
                 <tr>
-                    <td class="col-xs-2" style="background-color: #fee998;">{{$aa}}</td>
+                    <td class="col-xs-2" style="background-color: #fee998;">{{$s_no}}</td>
                     <td class="col-xs-8" style="background-color: #fee998;"><strong>{{ucwords($item['item']['title'])}}</strong>&emsp;Qty: {{$item['qty']}}</td>
                     <td class="col-xs-2" style="background-color: #fee998;">Rs.{{$item['price']}}</td>
                 </tr>

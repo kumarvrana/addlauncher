@@ -49,4 +49,69 @@ class Carsprice extends Model
         return $car_price;
            
     }
+
+    public function FilterCarsAds($filterOption)
+    {
+        $priceFilter = (!empty($filterOption['pricerange'])) ? $filterOption['pricerange'] : null;
+        $locationFilter = (!empty($filterOption['locationFilter'])) ? $filterOption['locationFilter'] : null;
+        $categoryFilter = (!empty($filterOption['category'])) ? $filterOption['category'] : null;
+        $typeFilter = (!empty($filterOption['type'])) ? $filterOption['type'] : null;
+        $whereVariables = array();
+        $whereID = array();
+        if(isset($priceFilter)){
+            $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $priceFilter); // comparion operator
+            if($filter_priceCamparsion != '<>'){
+                $filter_price = preg_replace('/[^0-9]/', '', $priceFilter);
+                $whereVariables[] = ['price_value', $filter_priceCamparsion, $filter_price];
+            }else{
+                $filter_price = preg_replace('/[^0-9]/', '_', $priceFilter);
+                $filter_price = explode('_', $filter_price);
+            
+                $whereVariables[] = ['price_value', '>', $filter_price[0]];
+                $whereVariables[] = ['price_value', '<=', $filter_price[2]];
+            }
+            
+            
+        }
+        if(isset($categoryFilter)){
+            //foreach($categoryFilter as $category){
+                 $categoryFilter = "%$categoryFilter%";
+                 $whereVariables[] = ['price_key', 'LIKE', $categoryFilter];
+           // }
+        }
+
+        if(isset($typeFilter)){
+            //foreach($typeFilter as $type){
+                 $typeFilter = "%$typeFilter%";
+                 $whereVariables[] = ['option_type', 'LIKE', $typeFilter];
+           // }
+        }
+
+        if(isset($locationFilter)){
+            $locationFilter = "%$locationFilter%";
+            $cars = $this->getLocationfilter($locationFilter);
+            if(count($cars)){
+                foreach($cars as $car){
+                     $whereID[] = $car->id;
+                }
+           
+            }
+            
+        }
+        //dd($whereVariables);
+        if(isset($locationFilter)){
+            $carpriceOptions = Carsprice::where($whereVariables)->whereIn('cars_id', $whereID)->get(array('cars_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'));
+        }else{
+            $carpriceOptions = Carsprice::where($whereVariables)->get(array('cars_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'));
+        }
+        
+              
+        return $carpriceOptions;
+       
+    }
+
+    public function getLocationfilter($location)
+    {
+        return Cars::where('location', 'LIKE', $location)->orWhere('city', 'LIKE', $location)->get();
+    }
 }

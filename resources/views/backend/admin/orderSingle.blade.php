@@ -43,19 +43,29 @@
                                          @PHP
                                             $key = array_search($cart, $cartt['items']);
                                             $category = explode('_', $key);
+                                            $catFolder = ($category[0] == 'billboards') ? 'outdooradvertising' : $category[0];
                                          @ENDPHP
                                         <tr>
-                                        <td><img class="" src="{{asset('images/'.$category[0].'/'.$cart['item']['image'])}}" style="width: 72px; height: 72px;"></td>
+                                        <td><img class="" src="{{asset('images/'.$catFolder.'/'.$cart['item']['image'])}}" style="width: 72px; height: 72px;"></td>
                                             <td>
                                                 <div class="">
                                                       
                                                      <div class="">
-                                                         <h4 class=""> {{$cart['item']['title']}}|{{ucwords(str_replace('_', ' ', substr($cart['item']['price_key'],6)))}}</h4>
-                                                         <h5 class=""> {{$key}}</h5>
+                                                        @if($category[1] == 'tricycle')
+                                                            <h4 class=""> {{$cart['item']['title']}}| Tricycle}}</h4>
+                                                        @else
+                                                            @if($category[0] == 'televisions')
+                                                                <h4 class=""> {{$cart['item']['title']}}|{{ucwords(str_replace('_', ' ', substr($cart['item']['rate_key'],5)))}}</h4>
+                                                            @else
+                                                                <h4 class=""> {{$cart['item']['title']}}|{{ucwords(str_replace('_', ' ', substr($cart['item']['price_key'],6)))}}</h4>
+                                                            @endif
+                                                        @endif
+                                                         
+                                                         <h5 class=""> {!!substr($cart['item']['description'], 0, 100)!!}</h5>
                                                      </div>
                                                 </div>
                                             </td>
-                                            <td class="text-center">Rs.{{$cart['price']}}</td>
+                                            <td class="text-center">Rs. {{$cart['price']}}</td>
                                             <td class="text-center">{{$cart['qty']}}</td>
                                             <td>
                                                 <div>
@@ -132,7 +142,7 @@
                     </div>
                     <div class="panel-body">
                         <br>
-                        <strong>Order Total: </strong>Rs.{{money_format($cartt['totalPrice'])}}<br>
+                        <strong>Order Total: </strong><h4 class="text-danger">Rs. {{number_format($cartt['totalPrice'],2)}}</h4 class="text-danger"><br>
                         <address>
                         <strong>Paid By:</strong>  {{ucfirst($orders['payment_method'])}}<br>
                         </address>

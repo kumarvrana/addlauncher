@@ -20,7 +20,13 @@ class MainaddtypeController extends Controller
         $this->middleware('admin', ['only' => ['getAddList', 'getAddCategory', 'postAddCategory', 'getCatImageinList', 'getDeleteCategory',  'getEditCategory' , 'postUpdateCategory']]);
     }
 
-     public function getAddList(){
+    public function getIndex()
+    {
+        $ad_cats = Mainaddtype::orderBy('title')->get();
+        return view( 'shop.main-categories-page', ['mediacats' => $ad_cats]);
+    }
+
+    public function getAddList(){
         $cat_list  = Mainaddtype::orderBy('title')->get();
         return view('backend.admin.add-cat-list', ['categories' => $cat_list]);
     }

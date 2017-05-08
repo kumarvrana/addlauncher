@@ -10,4 +10,8 @@ class Cinemas extends Model
         'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'display_options', 'discount', 'cinemanumber', 'audiseats', 'audinumber', 'cinemacategory'
     ];
 
+    public function cinemasprice()
+    {
+        return $this->hasMany('App\Cinemasprice', 'cinemas_id');
+    }
 }

@@ -144,15 +144,16 @@
                         <input type="hidden" id="uncheckID" value="{{$television->id}}">
                         <input type="hidden" id="tablename" value="televisions">
                         
+                        
                          @foreach($televisionpricemeta as $televisionprice)
                          
                             <div id="p{{$televisionprice->rate_key}}" class="form-group">
                                 <label for="{{$televisionprice->rate_key}}">Rate for {{ucfirst(substr(str_replace("_", " ", $televisionprice->rate_key), 10))}} Ad  Per unit:</label>
-                                <input class="form-control" type="text" name="{{$televisionprice->rate_key}}" value="{{$televisionprice->time_band_value}}" required>
+                                <input class="form-control" type="text" name="{{$televisionprice->rate_key}}" value="{{$televisionprice->rate_value}}" required>
                             </div>
                             <div id="p{{$televisionprice->time_band_key}}" class="form-group">
                                 <label for="{{$televisionprice->time_band_key}}">Time band of {{ucfirst(substr(str_replace("_", " ", $televisionprice->time_band_key), 5))}} Ad:</label>
-                                <input class="form-control" type="text" name="{{$televisionprice->time_band_key}}" value="{{$televisionprice->rate_value}}" required>
+                                <input class="form-control" type="text" name="{{$televisionprice->time_band_key}}" value="{{$televisionprice->time_band_value}}" required>
                             </div>
                             <div id="p{{$televisionprice->exposure_key}}" class="form-group">
                                 <label for="{{$televisionprice->exposure_key}}">Exposure for {{ucfirst(substr(str_replace("_", " ", $televisionprice->exposure_key), 9))}} Ad:</label>

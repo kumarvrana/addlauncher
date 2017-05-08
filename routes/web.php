@@ -1,7 +1,7 @@
 <?php
 
 Route::get('/', [
-    'uses' => 'ProductContoller@getIndex',
+    'uses' => 'MainaddtypeController@getIndex',
     'as' => 'product.mainCats'
 ]);
 /** start admin panel routes **/
@@ -72,8 +72,6 @@ Route::post('/general-settings', [
 'uses' => 'GeneralSettingsController@UpdateGeneralSettings',
 'as' => 'dashboard.updategeneralsettings'
 ]); 
-
-
 
 
 Route::get('/citrustransfer-settings',[
@@ -627,16 +625,7 @@ Route::get('/category-list', [
 'uses' => 'MainaddtypeController@getAddList',
 'as' => 'dashboard.addCategoryList'
 ]);
-Route::get('/addproductform', [
-'uses' => 'ProductContoller@getproductform',
-'as' => 'dashboard.multistepproductform'
-]);
 
-
-Route::post('/addproductform',[
-'uses' => 'ProductContoller@postProduct',
-'as' => 'dashboard.postproductform'
-]);
 
 Route::get('/add-category',[
 'uses' => 'MainaddtypeController@getAddCategory',
@@ -663,71 +652,10 @@ Route::post('/edit-category/{editcatid}', [
 'uses' => 'MainaddtypeController@postUpdateCategory',
 'as' => 'dashboard.updatecategory'
 ]);
-
-Route::get('/products', [
-'uses' => 'ProductContoller@getAllProducts',
-'as' => 'dashboard.getproductlist'
-]);
-
-Route::get('/add-product', [
-'uses' => 'ProductContoller@getAddProduct',
-'as' => 'dashboard.getproduct'
-]);
-
-
-
-Route::post('/add-product',[
-'uses' => 'ProductContoller@postProduct',
-'as' => 'dashboard.postproduct'
-]);
-
-Route::get('/delete-product/{productID}', [
-'uses' => 'ProductContoller@getDeleteProduct',
-'as' => 'dashboard.getdeleteproduct'
-]);
-Route::get('/edit-product/{productID}', [
-'uses' => 'ProductContoller@getEditProduct',
-'as' => 'dashboard.getEditproduct'
-]);
-
-Route::post('/edit-product/{editProductID}', [
-'uses' => 'ProductContoller@updateProduct',
-'as' => 'dashboard.updateProduct'
-]);   
+  
 
 });
 //});
-/** end admin panel routes **/
-
-Route::get('/products', [
-'uses' => 'ProductContoller@getProducts',
-'as' => 'product.index'
-]);
-
-Route::get('/media-type/{catName}', [
-'uses' => 'ProductContoller@getProductsByCat',
-'as' => 'frontend.adProductsByName'
-]);
-
-/*Route::get('/add-to-cart/{id}', [
-'uses' => 'ProductContoller@getAddToCart',
-'as' => 'product.addtocart'
-]);*/
-Route::group(['middleware' => 'user'], function(){    
-/*Route::get('/shop/cart', [
-'uses' => 'productContoller@getCart',
-'as' => 'product.shoppingCart',
-'middleware' => 'auth'
-]);*/
-
-
-
-});
-
-Route::get('/product/{id}', [
-'uses' => 'ProductContoller@getProductSingle',
-'as'   => 'frontend.productsingle'
-]);
 
 
 
@@ -792,10 +720,10 @@ Route::get('/profile', [
 'as' => 'user.profile'
 ]);
 
-Route::get('/logout',[
+/*Route::get('/logout',[
 'uses' => 'UserController@getLogout',
 'as' => 'user.logout'
-]);
+]);*/
 
 // });
 
@@ -814,10 +742,6 @@ Route::get('/media/airports', [
 'uses' => 'AirportController@getfrontendAllAirportads',
 'as' => 'frontend.getallairports'
 ]);
-/*Route::get('/media/airport/{id}', [
-'uses' => 'AirportController@getfrontAirportad',
-'as' => 'frontend.airportsingle'
-]);*/
 
 Route::get('/media/airport/add-to-cart/{id}/{variation}', [
 'uses' => 'AirportController@getAddToCart',
@@ -829,10 +753,6 @@ Route::get('/media/airport/add-to-cartBySearch/{id}/{variation}/{fileroption}', 
 'as' => 'airport.addtocartAfterSearch'
 ]);
 
-Route::get('/media/airport/remove-from-cart/{id}/{variation}', [
-'uses' => 'AirportController@getRemoveFromCart',
-'as' => 'airport.removefromcart'
-]);
 Route::get('/media/airport/{airportOption}', [
 'uses' => 'AirportController@getfrontAirportadByOption',
 'as' => 'frontend.getfrontAirportadByOption'
@@ -861,9 +781,9 @@ Route::get('/media/auto/add-to-cart/{id}/{variation}', [
 'uses' => 'AutoController@getAddToCart',
 'as' => 'auto.addtocart'
 ]);
-Route::get('/media/auto/remove-from-cart/{id}/{variation}', [
-'uses' => 'AutoController@getRemoveFromCart',
-'as' => 'auto.removefromcart'
+Route::get('/media/auto/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'AutoController@getAddToCartBySearch',
+'as' => 'auto.addtocartAfterSearch'
 ]);
 
 Route::get('/media/autos/{autotype}', [
@@ -875,13 +795,10 @@ Route::get('/media/autos/{autotype}/{autoOption}', [
 'uses' => 'AutoController@getfrontAutoadByOption',
 'as' => 'frontend.getfrontAutoadByOption'
 ]);
-
 Route::get('/auto/filter/',[
 'uses' => 'AutoController@getFilterAutoAds',
 'as' => 'frontend.getFilterAutoAds'
 ]);
-
-
 // auto frontend ends
 
 // **********************************
@@ -966,10 +883,20 @@ Route::get('/media/busstop/add-to-cart/{id}/{variation}', [
 'uses' => 'BusStopController@getAddToCart',
 'as' => 'busstop.addtocart'
 ]);
+Route::get('/media/busstop/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'BusStopController@getAddToCartBySearch',
+'as' => 'busstop.addtocartAfterSearch'
+]);
 Route::get('/media/busstop/remove-from-cart/{id}/{variation}', [
 'uses' => 'BusStopController@getRemoveFromCart',
 'as' => 'busstop.removefromcart'
 ]);
+
+Route::get('/busstop/filter/',[
+'uses' => 'BusStopController@getFilterBusstopAds',
+'as' => 'frontend.getFilterBusstopAds'
+]);
+
 
 // busstop frontend ends
 
@@ -989,6 +916,10 @@ Route::get('/media/car/add-to-cart/{id}/{variation}', [
 'uses' => 'CarController@getAddToCart',
 'as' => 'car.addtocart'
 ]);
+Route::get('/media/car/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'CarController@getAddToCartBySearch',
+'as' => 'car.addtocartAfterSearch'
+]);
 Route::get('/media/car/remove-from-cart/{id}/{variation}', [
 'uses' => 'CarController@getRemoveFromCart',
 'as' => 'car.removefromcart'
@@ -1000,6 +931,10 @@ Route::get('/media/cars/{cartype}', [
 Route::get('/media/cars/{cartype}/{carOption}', [
 'uses' => 'CarController@getfrontCaradByOption',
 'as' => 'frontend.getfrontCaradByOption'
+]);
+Route::get('/car/filter/',[
+'uses' => 'CarController@getFilterCarAds',
+'as' => 'frontend.getFilterCarAds'
 ]);
 
 // car frontend ends
@@ -1119,16 +1054,6 @@ Route::get('/media/television/add-to-cart/{id}/{variation}', [
 Route::get('/media/television/remove-from-cart/{id}/{variation}', [
 'uses' => 'TelevisionController@getRemoveFromCart',
 'as' => 'television.removefromcart'
-]);
-
-Route::get('/media/televisions/{genre}', [
-'uses' => 'TelevisionController@getfrontTelevisionadByType',
-'as' => 'frontend.getfrontTelevisionadByType'
-]);
-
-Route::get('/media/televisions/{genre}/{televisionOption}', [
-'uses' => 'TelevisionController@getfrontTelevisionadByOption',
-'as' => 'frontend.getfrontTelevisionadByOption'
 ]);
 
 Route::get('/television/filter/',[

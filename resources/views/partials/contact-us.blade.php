@@ -62,7 +62,7 @@
                                     </div> <!-- end .form-group -->
                                     <div class="form-group">
                                         <div class="col-sm-10 col-sm-offset-2">
-                                            <button type="submit" name="submit" id="submitButton" class="button solid-button purple" title="Send Message">Send Message</button>
+                                            <button type="submit" name="submit" id="submitButton" class="btn thb-fill-style" title="Send Message">Send Message</button>
                 <div class="loader" style="display:none"></div>
                                             
                                             

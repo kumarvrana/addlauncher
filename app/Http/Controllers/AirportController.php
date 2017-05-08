@@ -25,7 +25,6 @@ class AirportController extends Controller
 
     //frontend function starts
     
-
     public function getfrontendAllAirportads()
     {
        $airport_options = array(
@@ -35,48 +34,28 @@ class AirportController extends Controller
                             );
 
        $location = 'Delhi NCR';
-          $ad_cats = Mainaddtype::orderBy('title')->get();
+       $ad_cats = Mainaddtype::orderBy('title')->get();
 
        return view('frontend-mediatype.airports.airportads-list', ['airport_options' => $airport_options, 'location' => $location,'mediacats' => $ad_cats]);
     }
 
-
     public function getfrontAirportadByOption($airportOption)
     {
-          
+
         $airports = new Airportsprice();
 
         $airports = $airports->getAirportByFilter($airportOption);
         
         return view('frontend-mediatype.airports.airport-single', ['airports' => $airports, 'airportOption' => $airportOption]);
     }
-    
-    public function getfrontAirportad($id)
-    {
-        $airportad = Airports::find($id);
-        if($airportad){
-            if($airportad->status === "3" || $airportad->status === "2"){
-                return redirect()->back();
-            }else{
-                $airportprice = Airportsprice::where('airports_id', $id)->get();
-                return view('frontend-mediatype.airports.airport-single', ['airportad' => $airportad, 'airportprice' => $airportprice]);
-            }
-        }else{
-            return redirect()->back();
-        }
-        
-     }
-    
-    
     // frontend functions ends
 
     //Backend functions below
 
-
     // get list of all the products in airport stop media type
-    public function getDashboardAirportList(){
+    public function getDashboardAirportList()
+    {
 
-        
         $airport_ads = Airports::all();
         return view('backend.mediatypes.airports.airport-list', ['airport_ads' => $airport_ads]);
     }
@@ -133,8 +112,6 @@ class AirportController extends Controller
 
         $lastinsert_ID = $airport->id;
 
-
-
         //airport display prices insertion
 
    	   if($request->has('price_unipole')){
@@ -149,8 +126,6 @@ class AirportController extends Controller
         if($request->has('price_luggage_trolley')){
             $this->addAirportPrice($lastinsert_ID, 'price_luggage_trolley', $request->input('price_luggage_trolley'), 'number_luggage_trolley', $request->input('number_luggage_trolley'), 'duration_luggage_trolley', $request->input('duration_luggage_trolley'));
         }
-        
-    
        
         //return to airport product list
        return redirect()->route('dashboard.getAirportList')->with('message', 'Successfully Added!');
@@ -168,7 +143,6 @@ class AirportController extends Controller
         $insert->number_value = $numvalue;
         $insert->duration_key = $durkey;
         $insert->duration_value = $durvalue;
-       
         $insert->save();
 
     }
@@ -179,27 +153,27 @@ class AirportController extends Controller
     {
         $delele_airportad = Airports::where('id', $airportadID)->first();
         $delele_airportad->delete();
-        
         $delete_airportadprice = Airportsprice::where('airports_id', $airportadID);
         $delete_airportadprice->delete();
-       
+
         return redirect()->route('dashboard.getAirportList')->with(['message' => "Successfully Deleted From the List!"]);
     }
 
     // update airport product
+
     public function getUpdateeAirportad($ID)
     {
         $airportData = Airports::find($ID);
         $airportpriceData = Airportsprice::where('airports_id', $ID)->get();
         $fieldData = array();
         foreach($airportpriceData as $priceairport){
-           $fieldData[] = ucwords(str_replace('_', ' ', substr($priceairport->price_key, 6)));
+        $fieldData[] = ucwords(str_replace('_', ' ', substr($priceairport->price_key, 6)));
         }
-
         $fieldDatas = serialize($fieldData);
         return view('backend.mediatypes.airports.airport-editform', ['airport' => $airportData, 'airportpricemeta' => $airportpriceData, 'fieldData' => $fieldDatas]);
     }
     //check and uncheck options remove
+
     public function getuncheckAirportadOptions(Request $request)
     {
         
@@ -207,9 +181,8 @@ class AirportController extends Controller
         $datta = array();
         foreach($displayoptions as $options){
 			$datta[] = strtolower(str_replace(' ', '_', $options));
-		
 		}
-               
+
         $count = Airportsprice::where([
                                     ['airports_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
@@ -230,12 +203,13 @@ class AirportController extends Controller
               
     }
 
+    // Update Airport product
+
     public function postUpdateeAirportad(Request $request, $ID)
     {
        $this->validate( $request, [
            'title' => 'required',
            'price' => 'numeric',
-           //'image' => 'required|image',
            'location' => 'required',
            'state' => 'required',
            'city' => 'required',
@@ -273,6 +247,7 @@ class AirportController extends Controller
        $editairport->update();
 
         //airport display prices insertion
+
         if($request->has('price_unipole')){
                        
             $this->updateAirportPrice($ID, 'price_unipole', $request->input('price_unipole'), 'number_unipole', $request->input('number_unipole'),'duration_unipole', $request->input('duration_unipole'));
@@ -287,10 +262,12 @@ class AirportController extends Controller
         }
      
         //return to airport product list
+
        return redirect()->route('dashboard.getAirportList')->with('message', 'Successfully Edited!');
     }
 
-    public function updateAirportPrice($id, $pricekey, $pricevalue, $numkey, $numvalue, $durkey, $durvalue){
+    public function updateAirportPrice($id, $pricekey, $pricevalue, $numkey, $numvalue, $durkey, $durvalue)
+    {
         $count = Airportsprice::where([
                                     ['airports_id', '=', $id],
                                     ['price_key', '=', $pricekey],
@@ -302,9 +279,8 @@ class AirportController extends Controller
                                     ['airports_id', '=', $id],
                                     ['price_key', '=', $pricekey],
                                 ])->update(['price_value' => $pricevalue, 'number_value' => $numvalue, 'duration_value' => $durvalue]);
-        }
-        
-   }
+        }  
+    }
 
    //Fliter Functions
    public function getFilterAirportAds(Request $request)
@@ -318,7 +294,7 @@ class AirportController extends Controller
             }
 
         }else{
-            echo "<strong>No Results Found!</strong>";
+            echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
         }
 
         $content = ob_get_contents();
@@ -395,6 +371,8 @@ class AirportController extends Controller
 
         return redirect()->back()->with(['status' => $status]);
     }
+
+    // Search Option
 
     public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)
     {

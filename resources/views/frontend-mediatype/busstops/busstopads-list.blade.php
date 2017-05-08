@@ -25,7 +25,7 @@
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
                 <div class="col-md-2">
-                  @include('partials.sidebar')
+                  @include('partials.filter-sidebar.busstop')
                 </div>
 
                 <div class="col-md-8">
@@ -65,7 +65,7 @@
                                     <div class="product-price"><span>{{$product->title}}</span></div>
                                     <hr>
                                     <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
+                                        {{$product->location}} | {{$product->city}} | {{$product->state}}
                                     </div>
                                 </div>
                                 <div class="product-mark {{$st_class}}">{{$status}}</div>
@@ -91,7 +91,7 @@
                                     <div class="product-price"><span>{{$product->title}}</span></div>
                                     <hr>
                                     <div class="product-name">
-                                        {{$product->location}}, {{$product->city}}, {{$product->state}}
+                                        {{$product->location}} | {{$product->city}} | {{$product->state}}
                                     </div>
                                 </div>
                                 <div class="product-mark {{$st_class}}">{{$status}}</div>

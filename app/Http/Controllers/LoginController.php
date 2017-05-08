@@ -18,13 +18,18 @@ class LoginController extends Controller
 
      public function getSignin()
      {
-        
+        if(Sentinel::check())
+             return redirect()->back();
+
          return view('shop.user.signin');
      }
 
      public function postSignin(Request $request)
      {
        
+        if(Sentinel::check())
+             return redirect()->back();
+                     
         $this->validate( $request, [
            'email' => 'required|email',
            'password' => 'required'
@@ -59,7 +64,7 @@ class LoginController extends Controller
         
      }
 
-     public function postLogout()
+     public function postLogout(Request $request)
      {
          Sentinel::logout();
          return redirect()->route('user.signin');

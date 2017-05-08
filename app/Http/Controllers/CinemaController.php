@@ -35,11 +35,15 @@ class CinemaController extends Controller
     
     public function getfrontCinemaad($id)
     {
-        $cinemaad = Cinemas::where('id', '=', $id)->get()->toArray();
-        $cinemaad = array_flatten($cinemaad);
-        $cinemapriceOptions = Cinemasprice::where('cinemas_id', '=', $id)->get(array('price_key', 'price_value', 'duration_key', 'duration_value'))->toArray();
-            
-        return view('frontend-mediatype.cinemas.cinema-single', ['products' => $cinemaad, 'productOptions' => $cinemapriceOptions]);
+        $cinemaad = Cinemas::find($id);
+        if($cinemaad){
+            if($cinemaad->status === "3" || $cinemaad->status === "2"){
+                return redirect()->back();
+            }
+            $cinemaads = Cinemasprice::where('cinemas_id', '=', $id)->get();            
+            return view('frontend-mediatype.cinemas.cinema-single', ['cinemas' => $cinemaads]);
+        }
+        
     }
     
     
@@ -118,18 +122,18 @@ class CinemaController extends Controller
         //cinema display prices insertion
 
       
-       if($request->has('price_rate_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_rate_per_week', $request->input('price_rate_per_week'), 'duration_rate_per_week', $request->input('duration_rate_per_week'));
+       if($request->has('price_video_ad')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_video_ad', $request->input('price_video_ad'), 'duration_video_ad', $request->input('duration_video_ad'));
         }
       
 
-       if($request->has('price_trailor_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'), 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
+       if($request->has('price_trailor_ad')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_trailor_ad', $request->input('price_trailor_ad'), 'duration_trailor_ad', $request->input('duration_trailor_ad'));
         } //can be used as no of seats or no of screens
 
        
-        if($request->has('price_mute_slide_per_week')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'), 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
+        if($request->has('price_mute_slide_ad')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_mute_slide_ad', $request->input('price_mute_slide_ad'), 'duration_mute_slide_ad', $request->input('duration_mute_slide_ad'));
         }
        
 
@@ -256,17 +260,17 @@ class CinemaController extends Controller
 
         //cinema display prices insertion
 
-       if($request->has('price_rate_per_week')){
-            $this->updateCinemaPrice($ID, 'price_rate_per_week', $request->input('price_rate_per_week'), 'duration_rate_per_week', $request->input('duration_rate_per_week'));
+       if($request->has('price_video_ad')){
+            $this->updateCinemaPrice($ID, 'price_video_ad', $request->input('price_video_ad'), 'duration_video_ad', $request->input('duration_video_ad'));
         }
 
-       if($request->has('price_trailor_per_week')){
-            $this->updateCinemaPrice($ID, 'price_trailor_per_week', $request->input('price_trailor_per_week'), 'duration_trailor_per_week', $request->input('duration_trailor_per_week'));
+       if($request->has('price_trailor_ad')){
+            $this->updateCinemaPrice($ID, 'price_trailor_ad', $request->input('price_trailor_ad'), 'duration_trailor_ad', $request->input('duration_trailor_ad'));
         } //can be used as no of seats or no of screens
 
        
-        if($request->has('price_mute_slide_per_week')){
-            $this->updateCinemaPrice($ID, 'price_mute_slide_per_week', $request->input('price_mute_slide_per_week'), 'duration_mute_slide_per_week', $request->input('duration_mute_slide_per_week'));
+        if($request->has('price_mute_slide_ad')){
+            $this->updateCinemaPrice($ID, 'price_mute_slide_ad', $request->input('price_mute_slide_ad'), 'duration_mute_slide_ad', $request->input('duration_mute_slide_ad'));
         }
         
 
@@ -424,7 +428,7 @@ class CinemaController extends Controller
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemove($cinema_Ad, $cinema_ad['id'], 'cinemas', $flag=true); //pass full cinema details, id and model name like "cinemas"
+        $cart->addorRemoveCinema($cinema_Ad, $cinema_ad['id'], 'cinemas', $flag=true); //pass full cinema details, id and model name like "cinemas"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');

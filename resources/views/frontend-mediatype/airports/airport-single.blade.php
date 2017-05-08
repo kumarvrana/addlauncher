@@ -57,7 +57,9 @@
 										@PHP
 											$options = $airport->price_value.'+'.$airport->price_key;
 											$session_key = 'airports'.'_'.$airport->price_key.'_'.$airport->airport->id;
-											$printsession = (array) Session::get('cart');														
+											$printsession = (array) Session::get('cart');				
+
+																				
 										@ENDPHP
 										<div class="clearfix"> 
 											<a class="glass" href="{{route('airport.addtocart', ['id' => $airport->airport->id, 'variation' => $options])}}">

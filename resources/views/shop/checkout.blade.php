@@ -109,9 +109,11 @@
                                         if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
                                         @ENDPHP
                                             
-                                            
-                                        <li>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}} <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
-
+                                        @if($imagefolder[0] == 'televisions')    
+                                            <li>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['rate_key'], 5)))}} <span><i class="fa fa-inr"></i> {{$product['item']['rate_value']}}</span></li>
+                                            @else
+                                             <li>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}} <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
+                                            @endif
                                         @endif
                                     @endforeach
                                     <li class="total">TOTAL <span class="bold"><i class="fa fa-inr"></i> {{ $total }}</span></li>

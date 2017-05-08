@@ -41,7 +41,7 @@
 								<hr>
 								<div class="row">
 									<div class="col-md-6">
-										<p class="font-3">{{$productOption['number_value']}} {{ucwords(str_replace('_', ' ', substr($productOption['price_key'], 6)))}} Ads for {{$productOption['duration_value']}} months</p>
+										<p class="font-3">{{$productOption['number_value']}} {{ucwords(str_replace('_', ' ', substr($productOption['price_key'], 6)))}} Ads<br> for  <br> {{$productOption['duration_value']}} months</p>
 									</div>
 								<div class="col-md-6">	
 									<p class="font-2"><del class="lighter">Rs {{$productOption['price_value']}} <br></del>Rs {{$productOption['price_value']}}</p>
