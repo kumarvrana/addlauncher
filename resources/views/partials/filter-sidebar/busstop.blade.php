@@ -12,10 +12,10 @@
         <!-- panel1  -->
         <div class="panel panel-default panel-filter" id="panel1">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Price in Rupee</h4>
+           <a data-toggle="collapse" href="#collapse1"> <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Price in Rupee</h4></a>
           </div>
 
-          <div class="">
+          <div id="collapse1" class="panel-collapse collapse">
             <div class="panel-body ">
               <ul class="list-group">
                 <li class="list-group-item "><label class="busstop"><input type="radio" class="adfilter" data-value="<=10000" value="<=10000" name="pricerange"> &ensp;< 10,000</label></li>
@@ -31,9 +31,9 @@
 
         <div class="panel panel-default panel-filter" id="panel2">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Top Location in Delhi NCR</h4>
+           <a data-toggle="collapse" href="#collapse2"> <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Top Location in Delhi NCR</h4></a>
           </div>
-          <div id="collapse2" class="">
+          <div id="collapse2" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="list-group">
                 <li class="list-group-item"><label class="busstop"><input type="radio" class="adfilter" data-value="east_delhi" value="East Delhi" name="locationFilter"> &ensp;East Delhi</label></li>
@@ -52,10 +52,10 @@
        
         <div class="panel panel-default panel-filter" id="panel3">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Category</h4>
+           <a data-toggle="collapse" href="#collapse3"> <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Ad Type</h4></a>
           </div>
 
-          <div class="">
+          <div id="collapse3" class="panel-collapse collapse">
             <div class="panel-body ">
               <ul class="list-group">
                 <li class="list-group-item"><label class="busstop"><input type="radio" class="adfilter" data-value="full" value="full" name="category"> &ensp;Full</label></li>

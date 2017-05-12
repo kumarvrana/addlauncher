@@ -27,34 +27,15 @@ class MetroController extends Controller
     public function getfrontendAllMetroads()
     {
        $metro_ads = Metros::all();
-       $ad_cats = Mainaddtype::orderBy('title')->get();
-       return view('frontend-mediatype.metros.metroads-list', ['products' => $metro_ads ,'mediacats' => $ad_cats]);
+       if(count($metro_ads)>0){
+            $mediatypes= new Mainaddtype();
+            $ad_cats = $mediatypes->mediatype('Metro');
+            return view('frontend-mediatype.metros.metroads-list', ['products' => $metro_ads, 'mediacat' => $ad_cats]);
+       }
+       return view('partials.comingsoon');
     }
 
-    /*public function getfrontMetroadByOption($metroOption)
-    {
-       $metro_ads = Metros::all()->toArray();
        
-        $metroOption1 = '%'.$metroOption.'%';
-        $metros = array();
-        foreach($metro_ads as $metro){
-            $count = Metrosprice::where([
-                                    ['metros_id', '=', $metro['id']],
-                                    ['price_key', 'LIKE', $metroOption1],
-                                   ])->get()->count();
-            if($count > 0){
-                 $metropriceOptions = Metrosprice::where([
-                                    ['metros_id', '=', $metro['id']],
-                                    ['price_key', 'LIKE', $metroOption1],
-                                   ])->get(array('price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-                array_push($metro, $metropriceOptions);
-                $metros[] = array_flatten($metro);
-            }
-       }
-       
-        return view('frontend-mediatype.metros.metro-single', ['products' => $metros, 'metroOption' => $metroOption]);
-    }*/
-    
     public function getfrontMetroad($id)
     {
         $metroad = Metros::where('id', '=', $id)->get()->toArray();

@@ -56,7 +56,7 @@
 
                     <div class="col-md-3">
                         <div class="owl-item active">
-                            <div class="single-product">
+                            <div class="single-product {{$st_class}}_cursor">
                                 <div class="product-img">
                                         <img class="second-img" src="{{asset('images/televisions/'.$television->image)}}" alt="product">
                                 </div>
@@ -64,14 +64,12 @@
                                     
                                     <div class="product-price"><span>{{$television->title}}</span></div>
                                     <hr>
-                                    <div class="product-name">
-                                        {{$television->location}} | {{$television->city}} | {{$television->state}}
+                                    <div class="btn thb-fill-style">
+                                      <span>  {{$television->location}} | {{$television->city}} | {{$television->state}}</span>
                                     </div>
                                 </div>
-                                <div class="product-mark sold_out">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{route('frontend.televisionsingle', ['id' => $television->id])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
+                                <div class="product-mark {{$st_class}}">{{$status}}</div>
+                                
                             </div>
                         </div>
                     </div>
@@ -82,6 +80,7 @@
 
                     <div class="col-md-3">
                         <div class="owl-item active">
+                        <a href="{{route('frontend.televisionsingle', ['id' => $television->id])}}">
                             <div class="single-product">
                                 <div class="product-img">
                                         <img class="second-img" src="{{asset('images/televisions/'.$television->image)}}" alt="product">
@@ -90,15 +89,14 @@
                                     
                                     <div class="product-price"><span>{{$television->title}}</span></div>
                                     <hr>
-                                    <div class="product-name">
-                                        {{$television->location}} | {{$television->city}} | {{$television->state}}
+                                    <div class="btn thb-fill-style">
+                                       <span> {{$television->location}} | {{$television->city}} | {{$television->state}}</span>
                                     </div>
                                 </div>
                                 <div class="product-mark available">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{route('frontend.televisionsingle', ['id' => $television->id])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
+                                
                             </div>
+                            </a>
                         </div>
                     </div>
 
@@ -113,17 +111,7 @@
                     <div class="col-md-12">
                         <div class="data-box">
                             <h2>About Television advertising in India</h2>
-
-                            @foreach($mediacats as $mediacat)
-
-                                @if($mediacat->label=='television') 
-
-                                    {!!$mediacat->description!!}
-
-                                @endif   
-
-                            @endforeach
-                            
+								{!!$mediacat->description!!}
                         </div>
                     </div>
                     

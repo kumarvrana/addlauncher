@@ -18,7 +18,7 @@
         @endif
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-         <h1><small>&emsp;ADVERTISE ON</small> <br><span>SHOPPINGMALL</span></h1>
+         <h1><small>&emsp;ADVERTISE ON</small> <br><span>SHOPPING MALLS</span></h1>
      </div>
 </section>       
 <section class="main-sec">
@@ -27,12 +27,12 @@
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
                 <div class="col-md-2">
-                  @include('partials.sidebar')
+                  @include('partials.filter-sidebar.shoppingmall')
                 </div>
 
                 <div class="col-md-8">
                     
-                  <div class="row"> <!-- row repeater starts here -->
+                  <div class="row" id="table-results"> <!-- row repeater starts here -->
                    
                     @foreach($shoppingmall_ads as $shoppingmall)
                         @PHP
@@ -56,7 +56,7 @@
 
                     <div class="col-md-3">
                         <div class="owl-item active">
-                            <div class="single-product">
+                            <div class="single-product {{$st_class}}_cursor">
                                 <div class="product-img">
                                         <img class="second-img" src="{{asset('images/shoppingmalls/'.$shoppingmall->image)}}" alt="product">
                                 </div>
@@ -64,14 +64,12 @@
                                     
                                     <div class="product-price"><span>{{$shoppingmall->title}}</span></div>
                                     <hr>
-                                    <div class="product-name">
-                                        {{$shoppingmall->location}} | {{$shoppingmall->city}} | {{$shoppingmall->state}}
+                                    <div class="btn thb-fill-style">
+                                        <span>{{$shoppingmall->location}} | {{$shoppingmall->city}} | {{$shoppingmall->state}}</span>
                                     </div>
                                 </div>
-                                <div class="product-mark sold_out">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{route('frontend.shoppingmallsingle', ['id' => $shoppingmall->id])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
+                                <div class="product-mark {{$st_class}}">{{$status}}</div>
+                                
                             </div>
                         </div>
                     </div>
@@ -82,6 +80,7 @@
 
                     <div class="col-md-3">
                         <div class="owl-item active">
+                        <a href="{{route('frontend.shoppingmallsingle', ['id' => $shoppingmall->id])}}">
                             <div class="single-product">
                                 <div class="product-img">
                                         <img class="second-img" src="{{asset('images/shoppingmalls/'.$shoppingmall->image)}}" alt="product">
@@ -90,15 +89,14 @@
                                     
                                     <div class="product-price"><span>{{$shoppingmall->title}}</span></div>
                                     <hr>
-                                    <div class="product-name">
-                                        {{$shoppingmall->location}} | {{$shoppingmall->city}} | {{$shoppingmall->state}}
+                                    <div class="btn thb-fill-style">
+                                       <span> {{$shoppingmall->location}} | {{$shoppingmall->city}} | {{$shoppingmall->state}}</span>
                                     </div>
                                 </div>
                                 <div class="product-mark available">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{route('frontend.shoppingmallsingle', ['id' => $shoppingmall->id])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
+                                
                             </div>
+                            </a>
                         </div>
                     </div>
 
@@ -114,16 +112,7 @@
                         <div class="data-box">
 
                             <h2>About Shoppingmall advertising in India</h2>
-
-                            @foreach($mediacats as $mediacat)
-
-                                @if($mediacat->label=='Shopping Malls') 
-                                
-                                    {!!$mediacat->description!!}
-
-                                @endif   
-
-                            @endforeach
+                                {!!$mediacat->description!!}
                             
                         </div>
                     </div>

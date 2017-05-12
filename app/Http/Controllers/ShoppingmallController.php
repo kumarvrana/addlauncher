@@ -30,32 +30,30 @@ class ShoppingmallController extends Controller
 
        $location = 'Delhi NCR';
 
-       $ad_cats = Mainaddtype::orderBy('title')->get();
+       $mediatypes = new Mainaddtype();
 
-       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['shoppingmall_ads' => $shoppingmall_ads , 'location' => $location ,'mediacats' => $ad_cats]);
+       $ad_cats = $mediatypes->mediatype('Shopping Malls');
+
+
+       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['shoppingmall_ads' => $shoppingmall_ads , 'location' => $location ,'mediacat' => $ad_cats]);
     }
 
-    public function getfrontShoppingmalladByOption($shoppingmallOption)
-    {
+    // public function getfrontShoppingmalladByOption($shoppingmallOption)
+    // {
           
-        $shoppingmalls = new Shoppingmallsprice();
+    //     $shoppingmalls = new Shoppingmallsprice();
 
-        $shoppingmalls = $shoppingmalls->getShoppingmallByFilter($shoppingmallOption);
+    //     $shoppingmalls = $shoppingmalls->getShoppingmallByFilter($shoppingmallOption);
         
-        return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmalls' => $shoppingmalls, 'shoppingmallOption' => $shoppingmallOption]);
-    }
+    //     return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmalls' => $shoppingmalls, 'shoppingmallOption' => $shoppingmallOption]);
+    // }
+    
     
     public function getfrontShoppingmallad($id)
     {
-        $shoppingmallad = Shoppingmalls::find($id);
-        $shoppingmallprice = Shoppingmallsprice::where('shoppingmalls_id', $id)->get();
-
-         if($shoppingmallad){
-            if($shoppingmallad->status === "3" || $shoppingmallad->status === "2"){
-                return redirect()->back();
-            }
-          } 
-        return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmallad' => $shoppingmallprice, 'title' => $shoppingmallad->title]);
+        $shoppingmallpricead = Shoppingmallsprice::where('shoppingmalls_id', $id)->get();
+                    
+        return view('frontend-mediatype.shoppingmalls.shoppingmall-single', ['shoppingmallads' => $shoppingmallpricead]);
         
      }
     
@@ -396,7 +394,7 @@ class ShoppingmallController extends Controller
             }
 
         }else{
-            echo "<strong>No Results Found!</strong>";
+             echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
         }
 
         $content = ob_get_contents();
@@ -457,7 +455,7 @@ class ShoppingmallController extends Controller
         $shoppingmall_ad = Shoppingmalls::where('id', $id)->first()->toArray();
 
         $shoppingmallPrice = new Shoppingmallsprice();
-        $shoppingmall_price = $shoppingmallPrice->getShoppingmallspriceCart($id, $variation);
+        $shoppingmall_price = $shoppingmallPrice->getShoppingmallsPriceCart($id, $variation);
                
         $shoppingmall_Ad = array_merge($shoppingmall_ad, $shoppingmall_price);
         
@@ -471,6 +469,27 @@ class ShoppingmallController extends Controller
         //Session::forget('cart');
 
         return redirect()->back()->with(['status' => $status]);
+    }
+
+    public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)
+    {
+        $shoppingmall_ad = Shoppingmalls::where('id', $id)->first()->toArray();
+        
+        $shoppingmallPrice = new Shoppingmallsprice();
+        $shoppingmall_price = $shoppingmallPrice->getShoppingmallsPriceCart($id, $variation);
+       
+        $shoppingmall_Ad = array_merge($shoppingmall_ad, $shoppingmall_price);
+       
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+                
+        $cart = new Cart($oldCart);
+
+        $status = $cart->addorRemove($shoppingmall_Ad, $shoppingmall_ad['id'], 'shoppingmalls', $flag=true); //pass full shoppingmall details, id and model name like "shoppingmalls"
+        
+        $request->session()->put('cart', $cart);
+        //Session::forget('cart');
+
+        return response(['status' => $status, 'quatity' => $cart->totalQty, 'total' => $cart->totalPrice], 200);
     }
 
  

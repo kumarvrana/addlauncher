@@ -42,6 +42,7 @@
                             @ENDPHP
                         <div class="col-md-3">
                                 <div class="owl-item active">
+                                <a href="{{route('frontend.getfrontCaradByOption', ['cartype' => $cartype,'carOption' => $key])}}">
                                     <div class="single-product">
                                         <div class="product-img">
                                                 <img class="second-img {{$key}}" src="{{asset('images/display/car/'.$cartype.'/'.$image)}}" alt="{{$key}}">
@@ -50,15 +51,14 @@
                                             
                                             <div class="product-price"><span>{{$value}}</span></div>
                                             <hr>
-                                            <div class="product-name">
-                                                Delhi NCR
+                                            <div class="btn thb-fill-style">
+                                                <span>Delhi NCR</span>
                                             </div>
                                         </div>
                                         <div class="product-mark"></div>
-                                        <div class="product-hover">
-                                            <div class="add-to-cart"><a href="{{route('frontend.getfrontCaradByOption', ['cartype' => $cartype,'carOption' => $key])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                        </div>
+                                        
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                         @endforeach

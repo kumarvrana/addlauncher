@@ -19,7 +19,7 @@
 
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-         <h1><span>{{ucwords(str_replace('_', ' ', $autotype))}}</span> AD</h1>
+     <h1><small>&emsp;ADVERTISE ON</small> <br><span>{{ucwords(str_replace('_', ' ', $autotype))}}</span></h1>
      </div>
 </section> 
 
@@ -42,6 +42,7 @@
                                             $image = $key.".jpg";
                                         @ENDPHP
                                 <div class="col-md-3">
+                                <a href="{{route('frontend.getfrontAutoadByOption', ['autotype' => $autotype,'autoOption' => $key])}}">
                                     <div class="single-product">
                                             <div class="product-img">
                                                     <img class="second-img {{$key}}" src="{{asset('images/display/auto/'.$image)}}" alt="{{$key}}">
@@ -50,15 +51,13 @@
                                                 
                                                 <div class="product-price"><span>{{$value}}</span></div>
                                                 <hr>
-                                                <div class="product-name">
-                                                    {{$location}}
+                                                <div class="btn thb-fill-style">
+                                                    <span>{{$location}}</span>
                                                 </div>
                                             </div>
-                                            <div class="product-mark"></div>
-                                            <div class="product-hover">
-                                                <div class="add-to-cart"><a href="{{route('frontend.getfrontAutoadByOption', ['autotype' => $autotype,'autoOption' => $key])}}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                            </div>
+                                            
                                     </div>
+                                </a>
                                 </div>
                                     @endforeach
                             </div>

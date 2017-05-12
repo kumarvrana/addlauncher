@@ -28,17 +28,18 @@ class BillboardController extends Controller
     
     public function getfrontendAllBillboardads()
     {
-       $billboard_options = array(
+        $billboard_options = array(
                                 'unipole' => 'Unipole',
                                 'hoarding' => 'Hoarding',
                                 'pole_kiosk' => 'Pole Kiosk',
                                 'i_walker' => 'I Walker'
                             );
 
-       $location = 'Delhi NCR';
-       $ad_cats = Mainaddtype::orderBy('title')->get();
+        $location = 'Delhi NCR';
+        $media_type = new Mainaddtype();
+        $ad_cats = $media_type->mediatype('Outdoor Advertising');
 
-       return view('frontend-mediatype.outdooradvertisings.outdooradvertisingads-list', ['billboard_options' => $billboard_options, 'location' => $location,'mediacats' => $ad_cats]);
+       return view('frontend-mediatype.outdooradvertisings.outdooradvertisingads-list', ['billboard_options' => $billboard_options, 'location' => $location, 'mediacat' => $ad_cats]);
     }
 
 
@@ -52,25 +53,23 @@ class BillboardController extends Controller
         return view('frontend-mediatype.outdooradvertisings.outdooradvertising-single', ['billboards' => $billboards, 'billboardOption' => $billboardOption]);
     }
     
-    public function getfrontBillboardad($id)
-    {
-        $billboardad = Billboards::find($id);
-        if($billboardad){
-            if($billboardad->status === "3" || $billboardad->status === "2"){
-                return redirect()->back();
-            }else{
-                $billboardprice = Billboardsprice::where('billboards_id', $id)->get();
-                return view('frontend-mediatype.outdooradvertisings.outdooradvertising-single', ['billboardad' => $billboardad, 'billboardprice' => $billboardprice]);
-            }
-        }else{
-            return redirect()->back();
-        }
+    // public function getfrontBillboardad($id)
+    // {
+    //     $billboardad = Billboards::find($id);
+    //     if($billboardad){
+    //         if($billboardad->status === "3" || $billboardad->status === "2"){
+    //             return redirect()->back();
+    //         }else{
+    //             $billboardprice = Billboardsprice::where('billboards_id', $id)->get();
+    //             return view('frontend-mediatype.outdooradvertisings.outdooradvertising-single', ['billboardad' => $billboardad, 'billboardprice' => $billboardprice]);
+    //         }
+    //     }else{
+    //         return redirect()->back();
+    //     }
         
-     }
+    //  }
     // frontend functions ends
     
-  
-
     //Backend functions below
 
 
@@ -324,7 +323,7 @@ class BillboardController extends Controller
             }
 
         }else{
-            echo "<strong>No Results Found!</strong>";
+            echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
         }
 
         $content = ob_get_contents();
@@ -338,7 +337,7 @@ class BillboardController extends Controller
        
        <div class="col-md-3 col-sm-3 "> 
         <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/billboards/'.$searchBillboard->billboard->image) ?>"> </div>
+            <div class=" cat-opt-img "> <img src="<?= asset('images/outdooradvertising/'.$searchBillboard->billboard->image) ?>"> </div>
             <p class="font-1"><?= $searchBillboard->billboard->title ?></p>
             <p class="font-2"><?= $searchBillboard->billboard->location ?>, <?= $searchBillboard->billboard->city ?>, <?= $searchBillboard->billboard->state ?></p>
             <div class="row">
@@ -377,7 +376,7 @@ class BillboardController extends Controller
     <?php
    }
 
-    //billboardt functions
+    //cart functions
    // add or remove item to billboardt
    public function getAddToCart(Request $request, $id, $variation)
    {
@@ -398,6 +397,29 @@ class BillboardController extends Controller
         //Session::forget('cart');
 
         return redirect()->back()->with(['status' => $status]);
+    }
+
+    // Search Option
+
+    public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)
+    {
+        $billboard_ad = Billboards::where('id', $id)->first()->toArray();
+        
+        $billboardPrice = new Billboardsprice();
+        $billboard_price = $billboardPrice->getBillboardspriceCart($id, $variation);
+       
+        $billboard_Ad = array_merge($billboard_ad, $billboard_price);
+       
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+                
+        $cart = new Cart($oldCart);
+
+        $status = $cart->addorRemove($billboard_Ad, $billboard_ad['id'], 'billboards', $flag=true); //pass full billboard details, id and model name like "billboards"
+        
+        $request->session()->put('cart', $cart);
+        //Session::forget('cart');
+
+        return response(['status' => $status, 'quatity' => $cart->totalQty, 'total' => $cart->totalPrice], 200);
     }
 
  

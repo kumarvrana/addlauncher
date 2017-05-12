@@ -2,7 +2,7 @@
 
 @section('title')
 
-    Comming Soon
+    Coming Soon
 
 @endsection
 
@@ -16,24 +16,13 @@
             </div>
         </div>
         @endif
-    <div class="container-fluid">
-    <div class="row cart-body">
-        <div class="col-md-8 col-md-offset-2 wrapper form-box">
-               <form role="form" class="registration-form" action="javascript:void(0);">
-               <fieldset>
-                    <div class="form-bottom">
-                        <div class="row">
-                            <div class="row">
-                                <div class="col-md-8 col-md-offset-2 ">
-                                    <img src="{{asset('images/comingsoon2.jpg')}}" class="img-responsive">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-                </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <img src="{{asset('images/comingsoon2.jpg')}}" class="img-responsive">
+            </div>
         </div>
     </div>
-    </div>        
+          
 
 @endsection

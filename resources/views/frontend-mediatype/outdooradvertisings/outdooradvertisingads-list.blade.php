@@ -2,9 +2,9 @@
 
 @section('title')
 
-    Outdoor Advertisings List |Ad Launcher
+    Outdoor Advertising | Media | Ad Launcher
 
-@endsection
+@endsection     
 
 @section('content')
         @if(Session::has('success'))
@@ -16,31 +16,31 @@
             </div>
         </div>
         @endif
-
-
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-         <h1><small>&emsp;ADVERTISE ON</small> <br><span>OUTDOORS</span></h1>
+         <h1><small>&emsp;ADVERTISE ON</small> <br><span>OUTDOOR</span></h1>
      </div>
-</section>      
+</section>       
 <section class="main-sec">
-        <div class="container-fluid con-2-main"> <!-- container fluid 1 starts here -->
-            <div class="row"> <!-- row starts here -->
-                <div class="col-md-2">
-                  @include('partials.sidebar')
-                </div>
+    <div class="container-fluid"> {{-- container fluid 1 starts here --}}
+        <div class="row"> {{-- row starts here --}}
+            <div class="col-md-2">
+                @include('partials.filter-sidebar.outdooradvertising')
+            </div>
 
-                <div class="col-md-8">
-           
-
-                  <div class="row"> <!-- row repeater starts here -->
+            <div class="col-md-8">
+              <div class="ad-sec">  
+                <div class="loader" style="display:none"></div>
+                <div class="data-box" > <!-- row repeater starts here -->
+                <div class="row" id="table-results">
                     
                     @foreach($billboard_options as $key => $value)
-                    @PHP
-                        $image = $key.".jpg";
-                    @ENDPHP
+                        @PHP
+                            $image = $key.".jpg";
+                        @ENDPHP
                     <div class="col-md-3">
                         <div class="owl-item active">
+                            <a href="{{ route('frontend.getfrontBillboardadByOption', ['billboardOption' => $key]) }}">
                             <div class="single-product">
                                 <div class="product-img">
                                         <img class="second-img {{$key}}" src="{{asset('images/outdooradvertising/'.$image)}}" alt="{{$key}}">
@@ -49,49 +49,39 @@
                                     
                                     <div class="product-price"><span>{{$value}}</span></div>
                                     <hr>
-                                    <div class="product-name">
-                                        Delhi NCR
+                                    <div class="btn thb-fill-style">
+                                        <span>{{$location}}</span>
                                     </div>
                                 </div>
-                                <div class="product-mark"></div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{ route('frontend.getfrontBillboardadByOption', ['billboardOption' => $key]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
+                                
                             </div>
+                            </a>
                         </div>
                     </div>
                     @endforeach
-        
-          </div> <!-- row repeater ends here -->
-          <div class="row cat-data">
+                </div>
+                </div> <!-- row repeater ends here -->
+
+                <div class="row cat-data">
                     <div class="col-md-12">
                         <div class="data-box">
-                            <h2>About Outdoor advertising in India</h2>
-                            @foreach($mediacats as $mediacat)
-
-                                @if($mediacat->label=='Outdoor Advertising') 
-
-                                    {!!$mediacat->description!!}
-
-                                @endif   
-
-                            @endforeach
+                            <h2>About Outdooradvertising in India</h2>
+                            {!! $mediacat->description !!}
                         </div>
                     </div>
                     
                 </div>
 
-               
-           
-        </div>
-        <div class="col-md-2">
+                </div>
+            </div>
+            <div class="col-md-2">
             @include('partials.sidebar-cart')
                 
             </div>
+            <!--div id="table-results"></div-->
         </div><!-- row ends here -->
-        </div><!-- container fluid 1 ends here -->
-
- </section>      
+    </div><!-- container fluid 1 ends here -->
+</section>       
     
 
 @endsection

@@ -20,11 +20,11 @@
                     @endforeach
                 </div>
             @endif
-            @if(Session::has('message'))
-                <div class="alert alert-success">
-                    <p>{{Session::get('message')}}</p>
-                </div>
-            @endif
+    @if(Session::has('message'))
+        <div class="alert alert-success">
+            <p>{{Session::get('message')}}</p>
+        </div>
+    @endif
   <form class="form" action="{{route('dashboard.postNewspaperForm')}}" method="post" enctype="multipart/form-data">
         <div class="step">
         
@@ -83,9 +83,6 @@
         <div class="step">
 
                @PHP 
-                    $printMedia_type = array('newspaper' => 'Newspaper', 'magazine' => 'Magazine');
-                   
-
                     $newspaper_options = array('page1' => 'Page1', 'page3' => 'Page3','last_page' => 'Last Page','any_page' => 'Any Page',);
                     
                     $indianExpress_display_options = array('full_page' => 'Full Page', 'half_page' => 'Half Page', 'mini_a4' => 'Mini A4', 'full_page_centre_spread' => 'Full Page Centre Spread', 'mini_a4_centre_spread' => 'Mini A4 Centre Spread', 'horizontal_strip' => 'Horizontal Strip', 'vertical_strip' => 'Vertical Strip');
@@ -112,32 +109,32 @@
                                 @foreach( $printMedia_type as $key => $value )
                                 <option value="{{$key}}">{{$value}}</option>
                                 @endforeach
-                            
-                            </select>
-                                
+                            </select>    
                     </div> 
                     <div class="form-group newspaper">
-                         <label for="newspaperlist">News Paper List (Delhi):</label>
-                            <select class="form-control" name="newspaperlist" id="newspaperlist" required="required">
-                                <option value="">--Select--</option>
-                                @foreach( $newspapers_list as $newspaper )
-                                <option value="{{$newspaper->name}}">{{$newspaper->name}}</option>
-                                @endforeach
-                            
-                            </select>
-                                
+                        <label for="newspaperlist">News Paper List (Delhi):</label>
+                        <select class="form-control" name="printmedia_name" id="newspaperlist" required="required">
+                            <option value="">--Select--</option>
+                            @foreach( $newspapers_list as $newspaper )
+                            <option value="{{$newspaper->name}}">{{$newspaper->name}}</option>
+                            @endforeach
+                        </select>            
                     </div>
-                     <div class="form-group magazine">
-                         <label for="magazinelist">Magazines List (Delhi):</label>
-                            <select class="form-control" name="magazinelist" id="magazinelist" required="required">
-                                <option value="">--Select--</option>
-                                @foreach( $magazine_list as $magazine )
-                                <option value="{{$magazine->name}}">{{$magazine->name}}</option>
-                                @endforeach
-                            
-                            </select>
-                                
+                    <div class="form-group magazine">
+                        <label for="magazinelist">Magazines List (Delhi):</label>
+                        <select class="form-control" name="printmedia_name" id="magazinelist" required="required">
+                            <option value="">--Select--</option>
+                            @foreach( $magazine_list as $magazine )
+                            <option value="{{$magazine->name}}">{{$magazine->name}}</option>
+                            @endforeach
+                        </select>
                     </div> 
+                    <div class="form-group magazine">
+                        <label for="genre">Magazine Genres: </label>
+                         @foreach($megazineGenre as $value)
+                        <label class='checkbox-inline'><input data-label='Magazine Ad Genre Options' name='genre[]' type='checkbox' value={{$value}}>{{$value}}</label>
+                        @endforeach
+                   </div> 
                     
                     <div class="form-group">
                         <label for="circulation">Circulation: </label>
@@ -145,31 +142,35 @@
                     </div>
 
                     <div class="form-group">
-                            <label for="language">Languages:</label>
-                            <select class="form-control" name="language" id="language" required="">
-                                <option value="">--Language--</option>
-                                @foreach( $languages as $language )
-                                    <option value="{{$language->name}}">{{$language->name}}</option>
-                                @endforeach
-                            </select>
+                        <label for="language">Languages:</label>
+                        <select class="form-control" name="language" id="language" required="">
+                            <option value="">--Language--</option>
+                            @foreach( $languages as $language )
+                                <option value="{{$language->name}}">{{$language->name}}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                 
+                    <div class="form-group magazine">
+                        <label for="magazinedisplay">Magazine Display Options: </label>
+                         @foreach($magezineOption as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Magazine Ad Display Options' onclick="addDomToPriceOptionsMegazine('{{$value}}',  'megazine')" name='magazinedisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                        @endforeach
+                   </div> 
                     
-                    <div class="form-group">
+                    <div class="form-group newspaper">
                         <label for="newspaperdisplay">Newspaper Display Options: </label>
-                             
-                    @foreach($newspaper_options as $key => $value)
+                        @foreach($newspaper_options as $key => $value)
                         <label class='checkbox-inline'><input data-label='Newspaper Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='newspaperdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-                                       
+                        @endforeach
                     </div> 
                       
                 @PHP 
                     $other_options = array('jacket_front_page' => 'Jacket Front Page', 'jacket_front_insider' => 'Jacket Front Inside','pointer_ad' => 'Pointer Ad','sky_bus' => 'Sky Bus','ear_panel' => 'Ear Panel','half_page' => 'Half Page','quarter_page' => 'Quarter Page','pamphlets' => 'Pamphlets','flyers' => 'Flyers');
                 @ENDPHP
 
-                    <div class="form-group">
+                    <div class="form-group newspaper">
                         <label for="otherdisplay">Other Display Options: </label>
                              
                     @foreach($other_options as $key => $value)
@@ -182,7 +183,7 @@
                     $classified_options = array('matrimonial' => 'Matrimonial', 'recruitment' => 'Recruitment','business' => 'Business','property' => 'Property','education' => 'Education','astrology' => 'Astrology','public_notices' => 'Public Notices','services' => 'Services','automobile' => 'Automobile','shopping' => 'Shopping');
                 @ENDPHP
 
-                    <div class="form-group">
+                    <div class="form-group newspaper">
                         <label for="classifieddisplay">Classified Display Options: </label>
                              
                     @foreach($classified_options as $key => $value)
@@ -195,7 +196,7 @@
                     $pricing_options = array('per_sq_cm' => 'per sq cm', 'per_day' => 'per Day','per_inserts' => 'per Inserts');
                 @ENDPHP
 
-                    <div class="form-group">
+                    <div class="form-group newspaper">
                         <label for="pricingdisplay">Pricing Options: </label>
                              
                     @foreach($pricing_options as $key => $value)
@@ -203,17 +204,7 @@
                     @endforeach
                                        
                     </div>        
-
-             
-
-
-                    
-                    <div class="form-group">
-                        <label for="number">Numbers Of Newspaper Display this Ad? : </label>
-                        <input class="form-control" type="text" name="number" required>
-                    </div>
-
-                    
+        
                     
                     <div class="form-group">
                         <label for="discount">Discount (%): </label>
@@ -247,7 +238,7 @@
         
         <button type="button" class="action back btn btn-info">Back</button>
         <button type="button" class="action next btn btn-info">Next</button>
-        <button type="submit" class="action submit btn btn-success">Add Product</button>    
+        <button type="submit" class="action submit btn btn-success">Add Print Media</button>    
     </form>
    
    </div>

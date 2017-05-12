@@ -10,6 +10,11 @@ class Busesprice extends Model
         'buses_id', 'price_key', 'price_value','number_key', 'number_value', 'duration_key', 'duration_value'
     ];
 
+     public function bus()
+    {
+        return $this->belongsTo('App\Buses', 'buses_id', 'id');
+    }
+
     public static function getBusByFilter($busOption)
     {
         
@@ -22,7 +27,7 @@ class Busesprice extends Model
         return $buspriceOptions;
     }
 
-    public static function getBusespriceCart($id, $option)
+    public static function getBusesPriceCart($id, $option)
     {
         $selectDisplayOpt = explode("+", $option);
                
@@ -35,24 +40,7 @@ class Busesprice extends Model
     
 
     public function FilterBusesAds($filterOption)
-    {
-         
-        $busest = Busesprice::where(function($query) use($filterOption){
-            
-            $priceFilter = (!empty($filterOption['pricerange'])) ? $filterOption['pricerange'] : null;
-            $locationFilter = (!empty($filterOption['locationFilter'])) ? $filterOption['locationFilter'] : [];
-            $categoryFilter = (!empty($filterOption['category'])) ? $filterOption['category'] : [];
-
-            if(isset($categoryFilter)){
-               foreach($categoryFilter as $category){
-                    $likeCat = "%$category%";
-                    $query->where('price_key', 'LIKE', $likeCat);
-                }
-            }
-
-       })->get(array('buses_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
-       
-        dd($busest);
+    {  
         $priceFilter = (!empty($filterOption['pricerange'])) ? $filterOption['pricerange'] : null;
         $locationFilter = (!empty($filterOption['locationFilter'])) ? $filterOption['locationFilter'] : null;
         $categoryFilter = (!empty($filterOption['category'])) ? $filterOption['category'] : null;
@@ -74,10 +62,10 @@ class Busesprice extends Model
             
         }
         if(isset($categoryFilter)){
-            foreach($categoryFilter as $category){
-                 $categoryFilter = "%$category%";
+            // foreach($categoryFilter as $category){
+                 $categoryFilter = "%$categoryFilter%";
                  $whereVariables[] = ['price_key', 'LIKE', $categoryFilter];
-            }
+            // }
         }
 
         if(isset($locationFilter)){

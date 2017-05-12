@@ -2,8 +2,9 @@
 <div class="page-sidebar">
 	<div class="col-md-12 filter-side">
 		<h3 class="text-center refine">Refine Your Search</h3>
-			
-		<a href="{{Request::url()}}" class="btn btn-primary btn-block">Clear All Filters</a>
+		<div class="clear_filter">
+    <a href="{{Request::url()}}" class="btn thb-fill-style">Clear All Filters</a>
+    </div>
 		<hr>
 		<div class="filter-box">
       <form id="airport-filter">
@@ -12,16 +13,15 @@
         <!-- panel1  -->
         <div class="panel panel-default panel-filter" id="panel1">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Price in Rupee</h4>
+            <a data-toggle="collapse" href="#collapse1"><h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Price in Rupee</h4></a>
           </div>
 
-          <div class="">
+          <div id="collapse1" class="panel-collapse collapse" >
             <div class="panel-body ">
               <ul class="list-group">
                 <li class="list-group-item"><label class="airport"><input type="radio" class="adfilter" data-value="<=10000" value="<=10000" name="pricerange"> &ensp;< 10,000</label></li>
                 <li class="list-group-item"><label class="airport"><input type="radio" class="adfilter" data-value="10000<>50000" value="10000<>50000" name="pricerange"> &ensp;10,001 to 50,000</label></li>
                 <li class="list-group-item"><label class="airport"><input type="radio" class="adfilter" data-value=">50000" value=">50000" name="pricerange"> &ensp;> 50,000</label></li>
-                <li class="list-group-item"></li>
               </ul>
             </div>
           </div>
@@ -31,9 +31,9 @@
 
         <div class="panel panel-default panel-filter" id="panel2">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Top Location in Delhi NCR</h4>
+            <a data-toggle="collapse" href="#collapse2"> <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Top Location in Delhi NCR</h4></a>
           </div>
-          <div id="collapse2" class="">
+          <div id="collapse2" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="list-group">
                 <li class="list-group-item"><label class="airport"><input type="radio" class="adfilter" data-value="east_delhi" value="East Delhi" name="locationFilter"> &ensp;East Delhi</label></li>
@@ -52,16 +52,15 @@
        
         <div class="panel panel-default panel-filter" id="panel3">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Category</h4>
+            <a data-toggle="collapse" href="#collapse3"><h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span>  Category </h4></a>
           </div>
 
-          <div class="">
+          <div id="collapse3" class="panel-collapse collapse" >
             <div class="panel-body ">
               <ul class="list-group">
                 <li class="list-group-item"><label class="airport"><input type="radio" class="adfilter" data-value="unipole" value="unipole" name="category"> &ensp;Unipole</label></li>
                 <li class="list-group-item"><label class="airport"><input type="radio" class="adfilter" data-value="backlit_panel" value="backlit_panel" name="category"> &ensp;Backlit Panel</label></li>
                 <li class="list-group-item"><label class="airport"><input type="radio" class="adfilter" data-value="luggage_trolley" value="luggage_trolley" name="category"> &ensp;Luggage Trolley</label></li>
-                <li class="list-group-item"></li>
               </ul>
             </div>
           </div>

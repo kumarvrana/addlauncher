@@ -27,10 +27,11 @@ class BusstopController extends Controller
     public function getfrontendAllBusstopads()
     {
        $busstop_ads = Busstops::all();
-          $ad_cats = Mainaddtype::orderBy('title')->get();
+       $mediatypes = new Mainaddtype();
+          $ad_cats = $mediatypes->mediatype('Bus Stops');
 
 
-       return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads,'mediacats' => $ad_cats]);
+       return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads,'mediacat' => $ad_cats]);
     }
     
     public function getfrontBusstopad($id)
@@ -103,8 +104,6 @@ class BusstopController extends Controller
         $busstop->save();
 
         $lastinsert_ID = $busstop->id;
-
-
 
         //busstop display prices insertion
 
@@ -385,7 +384,7 @@ class BusstopController extends Controller
         $busstop_ad = Busstops::where('id', $id)->first()->toArray();
         
         $busstopPrice = new Busstopsprice();
-        $busstop_price = $busstopPrice->getBusstopspriceCart($id, $variation);
+        $busstop_price = $busstopPrice->getBusstopsPriceCart($id, $variation);
        
         $busstop_Ad = array_merge($busstop_ad, $busstop_price);
        

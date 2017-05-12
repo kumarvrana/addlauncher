@@ -157,10 +157,29 @@ $("#table-results").on('click', '.add-cartButton', function(event) {
             $('.cartQuantity').text(status.quatity);
             $('.cartTotal').text(status.total);
             if (status.status == "removed") {
-                self.text('Add to Cart');
+                var HTMLtext = '<span class="fa fa-star"></span> Add to Cart';
+                self.html(HTMLtext);
             }
             if (status.status == "added") {
-                self.text('Remove From Cart');
+                var HTMLtext = '<span class="fa fa-minus-circle"></span> Remove From Cart';
+                self.html(HTMLtext);
             }
         });
 });
+
+
+$(document).ready(
+    function(){
+        $("#div-filter-1").hide();
+        $("#div-filter-2").hide();
+
+        $("#option-filter-1").click(function () {
+            $("#div-filter-1").show();
+            $("#div-filter-2").hide();
+        });
+        $("#option-filter-2").click(function () {
+            $("#div-filter-2").show();
+            $("#div-filter-1").hide();
+        });
+
+    });

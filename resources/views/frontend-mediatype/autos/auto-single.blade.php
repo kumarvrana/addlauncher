@@ -18,8 +18,8 @@
         @endif
 
 <section class="sec-banner">
-     <div class="jumbotron jumbo-1 text-center">
-         <h1><span>{{ucwords(str_replace('_', ' ', $autoOption))}}</span> OPTIONS</h1>
+<div class="jumbotron jumbo-1 text-center">
+         <h1><small>&emsp;ADVERTISE ON</small> <br><span>{{ucwords(str_replace('_', ' ', $autoOption))}}</span></h1>
      </div>
 </section>       
 <section class="main-sec">        

@@ -37,15 +37,12 @@ class Autosprice extends Model
 
     public static function getAutoPriceForCart($id, $option)
     {
+        $selectDisplayOpt = explode("+", $option);
+               
         $auto_price = static::where([
-                                        ['autos_id', '=', $id],
-                                        ['price_key', '=', $option],
-                                    ])
-                                    ->get(array('price_key', 'price_value','number_key',
-                                     'number_value', 'duration_key', 'duration_value', 'option_type'))
-                                    ->first()->toArray();
-
-
+                                    ['autos_id', '=', $id],
+                                    ['price_key', '=', $selectDisplayOpt[1]],
+                                ])->get(array('price_key','price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->first()->toArray();
         return $auto_price;
            
     }

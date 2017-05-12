@@ -27,8 +27,9 @@ class CinemaController extends Controller
     public function getfrontendAllCinemaads()
     {
        $cinema_ads = Cinemas::all();
-       $ad_cats = Mainaddtype::orderBy('title')->get();
-       return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads ,'mediacats' => $ad_cats]);
+       $mediatypes = new Mainaddtype();
+       $ad_cats = $mediatypes->mediatype('Cinemas');
+       return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads ,'mediacat' => $ad_cats]);
     }
 
     
@@ -296,98 +297,53 @@ class CinemaController extends Controller
 
    //Fliter Functions
    public function getFilterCinemaAds(Request $request){
-       $params = array_filter($request->all());
-       foreach($params as $key=>$value){
-            if($key == 'pricerange'){
-                
-                $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $value); // comparion operator
-                if($filter_priceCamparsion != '<>'){
-                     $filter_price = preg_replace('/[^0-9]/', '', $value);
-                     $cinemapriceOptions = Cinemasprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', $filter_priceCamparsion, $filter_price],
-                                    ])->get()->toArray();
-                }else{
-                     $filter_price = preg_replace('/[^0-9]/', '_', $value);
-                     $filter_price = explode('_', $filter_price);
-                    
-                     $cinemapriceOptions = Cinemasprice::where([
-                                    ['price_key', 'LIKE', 'price_%'],                                    
-                                    ['price_value', '>=', $filter_price[0]],
-                                    ['price_value', '<=', $filter_price[2]],
-                                    ])->get()->toArray();   
-                }
-                if(count($cinemapriceOptions)>0){
-                
-                foreach($cinemapriceOptions as $key => $value){
-                    $cinema_ads = Cinemas::find($value['cinemas_id'])->get()->toArray();
-                    $filterLike = substr($value['price_key'], 6);
-                    $cinemaOption1 = '%'.$filterLike;
-                    $cinemas = array();
-                    
-                    $cinemapriceOptions = Cinemasprice::where([
-                                ['cinemas_id', '=', $value['cinemas_id']],
-                                ['price_key', 'LIKE', $cinemaOption1],
-                                //['price_value', $filter_priceCamparsion, $filter_price],
-                                ])->get(array('price_key', 'price_value','duration_key', 'duration_value'))->toArray();
-                        
-                    array_push($cinema_ads, $cinemapriceOptions);
-                    $cinemas[] = array_flatten($cinema_ads);
-                     
-                   
-               
-                }
-                if(count($cinemas)>0){
-                    echo "<pre>";
-                    print_r($cinemas);
-                    echo "</pre>";
-                    foreach($cinemas as $searchCinema){
-                       $this->cinema_ads($searchCinema);
-                    }
-                
-                    }else{
-                        echo "<b>No results to display!</b>";
-                }
+       $cinemaPrice = new Cinemasprice();
+        
+        $filterResults = $cinemaPrice->FilterCinemasAds($request->all());
 
-            }else{
-                echo "<b>No results to display!</b>";
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchCinema){
+                $this->cinema_ads($searchCinema, $request->all());
             }
-                
-            
-            }
-            
+
+        }else{
+            echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
            
-            
-            if($key == 'locationFilter'){
-                
-            }
+        }
 
-            
-       }
         $content = ob_get_contents();
         ob_get_clean();
         return $content;
        
        
    }
-   public function cinema_ads($searchCinema)
+   public function cinema_ads($searchCinema, $fileroptions)
    {
        ?>
+       
        <div class="col-md-3 col-sm-3 "> 
         <div class="pro-item"> 
-            <div class=" cat-opt-img "> <img src="<?= asset('images/cinemas/'.$searchCinema[11]) ?>"> </div>
-            <p class="font-1"><?= $searchCinema[3] ?></p>
-            <p class="font-2"><?= $searchCinema[5] ?> | <?= $searchCinema[6] ?> | <?= $searchCinema[7] ?></p>
-            <p class="font-3"><?= $searchCinema[21]?> <?= ucwords(substr(str_replace('_', ' ', $searchCinema[18]), 6))?> for <?= $searchCinema[23]?> months</p>
-            <p class="font-2"><del class="lighter">Rs <?= $searchCinema[19]?> </del>Rs <?= $searchCinema[19]?> </p>
+            <div class=" cat-opt-img "> <img src="<?= asset('images/cinemas/'.$searchCinema->cinema->image) ?>"> </div>
+            <p class="font-1"><?= $searchCinema->cinema->title ?></p>
+            <p class="font-2"><?= $searchCinema->cinema->location ?>, <?= $searchCinema->cinema->city ?>, <?= $searchCinema->cinema->state ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchCinema->number_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchCinema->price_key), 6))?> <br>for <br> <?= $searchCinema->duration_value?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchCinema->price_value?> </del><br>Rs <?= $searchCinema->price_value?> </p>
+                </div>
+            
+            </div>
+
             <?php
-            $options = $searchCinema[19].'+'.$searchCinema[18];
-            $session_key = 'cinemas'.'_'.$searchCinema[18].'_'.$searchCinema[0];
+            $options = $searchCinema->price_value.'+'.$searchCinema->price_key;
+            $session_key = 'cinemas'.'_'.$searchCinema->price_key.'_'.$searchCinema->cinema->id;
             $printsession = (array) Session::get('cart');
                             
            ?>
             <div class="clearfix"> 
-                <a class="glass" href="<?= route('cinema.addtocart', ['id' => $searchCinema[0], 'variation' => $options]) ?>"><span class="fa fa-star"></span>
+                <button class="glass add-cartButton" data-href="<?= route('cinema.addtocartAfterSearch', ['id' => $searchCinema->cinema->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
                 <?php
                     if(count($printsession) > 0){
                      if(array_key_exists($session_key, $printsession['items'])){
@@ -399,7 +355,7 @@ class CinemaController extends Controller
                         echo "Add to Cart";
                     }
                 ?>
-            </a> 
+            </button> 
             </div>
         </div>
     </div>
@@ -434,6 +390,27 @@ class CinemaController extends Controller
         //Session::forget('cart');
 
         return redirect()->back()->with(['status' => 'added']);
+    }
+
+    public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)
+    {
+        $cinema_ad = Cinemas::where('id', $id)->first()->toArray();
+        
+        $cinemaPrice = new Cinemasprice();
+        $cinema_price = $cinemaPrice->getCinemasPriceCart($id, $variation);
+       
+        $cinema_Ad = array_merge($cinema_ad, $cinema_price);
+       
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+                
+        $cart = new Cart($oldCart);
+
+        $status = $cart->addorRemove($cinema_Ad, $cinema_ad['id'], 'cinemaes', $flag=true); //pass full cinema details, id and model name like "cinemaes"
+        
+        $request->session()->put('cart', $cart);
+        //Session::forget('cart');
+
+        return response(['status' => $status, 'quatity' => $cart->totalQty, 'total' => $cart->totalPrice], 200);
     }
 
  

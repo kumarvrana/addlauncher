@@ -11,10 +11,10 @@
         <!-- panel1  -->
         <div class="panel panel-default panel-filter" id="panel1">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Price in Rupee</h4>
+          <a data-toggle="collapse" href="#collapse1">  <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span>  Price in Rupee</h4></a>
           </div>
 
-          <div class="">
+          <div id="collapse1" class="panel-collapse collapse">
             <div class="panel-body ">
               <ul class="list-group">
                 <li class="list-group-item"><label class="auto"><input type="radio" class="adfilter" data-value="<=10000" value="<=10000" name="pricerange"> &ensp;< 10,000</label></li>
@@ -30,9 +30,9 @@
 
         <div class="panel panel-default panel-filter" id="panel2">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Top Location in Delhi NCR</h4>
+          <a data-toggle="collapse" href="#collapse2" >  <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Top Location in Delhi NCR</h4></a>
           </div>
-          <div id="collapse2" class="">
+          <div id="collapse2" class="panel-collapse collapse">
             <div class="panel-body">
               <ul class="list-group">
                 <li class="list-group-item"><label class="auto"><input type="radio" class="adfilter" data-value="east_delhi" value="East Delhi" name="locationFilter"> &ensp;East Delhi</label></li>
@@ -49,14 +49,14 @@
         <!-- panel3 -->
         <div class="panel panel-default panel-filter" id="panel3">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Category</h4>
+           <a data-toggle="collapse" href="#collapse3"> <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span>  Category</h4></a>
           </div>
 
-          <div class="">
+          <div class="panel-collapse collapse" id="collapse3">
             <div class="panel-body ">
               <ul class="list-group">
-                <li class="list-group-item"><label class="auto"><input type="radio" id="auto_rikshaw_filter" class="adfilter" data-value="auto_rikshaw" value="auto_rikshaw" name="type"> &ensp;Auto Rickshaw</label></li>
-                <li class="list-group-item"><label class="auto"><input type="radio" id="e_rikshaw_filter" class="adfilter" data-value="e_rikshaw" value="e_rikshaw" name="type"> &ensp;E Rickshaw</label></li>
+                <li class="list-group-item"><label class="auto"><input type="radio" id="option-filter-1" class="adfilter" data-value="auto_rikshaw" value="auto_rikshaw" name="type"> &ensp;Auto Rickshaw</label></li>
+                <li class="list-group-item"><label class="auto"><input type="radio" id="option-filter-2" class="adfilter" data-value="e_rikshaw" value="e_rikshaw" name="type"> &ensp;E Rickshaw</label></li>
                 
                 <li class="list-group-item"></li>
               </ul>
@@ -65,12 +65,12 @@
         </div>
   
        
-        <div class="panel panel-default panel-filter" id="panel4">
+        <div class="panel panel-default panel-filter" id="div-filter-1">
           <div class="panel-heading" >
-            <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Ad Types</h4>
+            <a data-toggle="collapse" href="#collapse4"><h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Ad Types</h4></a>
           </div>
 
-          <div class="">
+          <div id="collapse4" class="panel-collapse collapse in">
             <div class="panel-body ">
               <ul class="list-group auto_rikshaw">
                 <li class="list-group-item"><label class="auto"><input type="radio" class="adfilter" data-value="sticker" value="sticker" name="category"> &ensp;Sticker</label></li>
@@ -78,7 +78,17 @@
                 <li class="list-group-item"><label class="auto"><input type="radio" class="adfilter" data-value="backboard" value="backboard" name="category"> &ensp;Backboard</label></li>
                 <li class="list-group-item"><label class="auto"><input type="radio" class="adfilter" data-value="full_auto" value="full_auto" name="category"> &ensp;Full Auto</label></li>
               </ul>
+            </div>
+          </div>
+        </div>
 
+        <div class="panel panel-default panel-filter" id="div-filter-2">
+          <div class="panel-heading" >
+           <a data-toggle="collapse" href="#collapse5"> <h4 class="panel-title"><span class="glyphicon g-side glyphicon-minus" aria-hidden="true"></span> Ad Types</h4></a>
+          </div>
+
+          <div id="collapse5" class="panel-collapse collapse in">
+            <div class="panel-body">
               <ul class="list-group e_rikshaw">
                 <li class="list-group-item"><label class="auto"><input type="radio" class="adfilter" data-value="back_board" value="back_board" name="category"> &ensp;Back Board</label></li>
                 <li class="list-group-item"><label class="auto"><input type="radio" class="adfilter" data-value="stepney_tier" value="stepney_tier" name="category"> &ensp;Stepney Tier</label></li>
@@ -87,7 +97,9 @@
             </div>
           </div>
         </div>
-  
+        
+
+
  
 
       </div>

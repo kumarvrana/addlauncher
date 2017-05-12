@@ -37,10 +37,9 @@ class AutoController extends Controller
                         );
 
         $location = 'Delhi NCR';
-        $ad_cats = Mainaddtype::orderBy('title')->get();
-
-
-        return view('frontend-mediatype.autos.autoads-list', ['auto_type' => $auto_type, 'location' => $location, 'mediacats' => $ad_cats]);
+        $mediatype = new Mainaddtype();
+        $ad_cats = $mediatype->mediatype('Auto');
+        return view('frontend-mediatype.autos.autoads-list', ['auto_type' => $auto_type, 'location' => $location, 'mediacat' => $ad_cats]);
     }
     
     public function getfrontAutoadByType($autotype)
@@ -432,7 +431,7 @@ class AutoController extends Controller
             }
 
         }else{
-            echo "<img src='../images/oops.png' class='img-responsive oops-img'>";
+            echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
         }
 
         $content = ob_get_contents();
@@ -524,7 +523,7 @@ class AutoController extends Controller
         $auto_ad = Autos::where('id', $id)->first()->toArray();
         
         $autoPrice = new Autosprice();
-        $auto_price = $autoPrice->getAutospriceCart($id, $variation);
+        $auto_price = $autoPrice->getAutoPriceForCart($id, $variation);
        
         $auto_Ad = array_merge($auto_ad, $auto_price);
        

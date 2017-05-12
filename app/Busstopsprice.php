@@ -53,12 +53,14 @@ class Busstopsprice extends Model
         if(isset($categoryFilter)){
             //foreach($categoryFilter as $category){
                  $categoryFilter = "%$categoryFilter%";
+                 
                  $whereVariables[] = ['price_key', 'LIKE', $categoryFilter];
            // }
         }
 
         if(isset($locationFilter)){
             $locationFilter = "%$locationFilter%";
+            
             $busstops = $this->getLocationfilter($locationFilter);
             if(count($busstops)){
                 foreach($busstops as $busstop){
@@ -66,6 +68,8 @@ class Busstopsprice extends Model
                 }
            
             }
+
+         
             
         }
         //dd($whereVariables);
@@ -78,6 +82,12 @@ class Busstopsprice extends Model
               
         return $busstoppriceOptions;
        
+    }
+
+    public function getLocationfilter($location)
+    {
+        return Busstops::where('location', 'LIKE', $location)->orWhere('city', 'LIKE', $location)->get();
+        
     }
 
 }

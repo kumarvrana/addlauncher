@@ -16,77 +16,69 @@
             </div>
         </div>
         @endif
-
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-         <h1><span>{{$title}}</span> OPTIONS</h1>
+         <h1> OPTIONS</h1>
      </div>
-</section>       
+</section>         
 <section class="main-sec">        
-        <div class="container-fluid"> <!-- container fluid 1 starts here -->
-            <div class="row">
-                <div class="col-md-2">
-				@include('partials.sidebar')
-                    
-                </div>
-      
-				<div class="col-md-8">
-				
-					<div class="row">
-				
-					@if($shoppingmallad)
-						@foreach($shoppingmallad as $shoppingmall)
-						<div class="col-md-3 col-sm-3"> 
-							<div class="pro-item"> 
-								<div class=" cat-opt-img "> <img src="{{asset('images/display/shoppingmall/'.substr($shoppingmall->price_key, 6).'.jpg')}}"> </div>
-								<p class="font-1">{{$shoppingmall->shoppingmall->title}} | {{ucwords(str_replace('_', ' ', substr($shoppingmall->price_key, 6)))}}</p>
-								<p class="font-2">{{$shoppingmall->shoppingmall->location}} | {{$shoppingmall->shoppingmall->city}} | {{$shoppingmall->shoppingmall->state}}</p>
-								<hr>
-								<div class="row">
-									<div class="col-md-6">
-										<p class="font-3">{{$shoppingmall->duration_value}} {{ucwords(str_replace('_', ' ', substr($shoppingmall->price_key, 6)))}}<br> for <br> {{$shoppingmall->duration_value}} months</p>
-									</div>
-									<div class="col-md-6">
-										<p class="font-4"><del class="lighter">Rs {{$shoppingmall->price_value}} <br></del>Rs {{$shoppingmall->price_value}} </p>
-									</div>
-								</div>
-								@PHP
-								$options = $shoppingmall->price_value.'+'.$shoppingmall->price_key;
-								$session_key = 'shoppingmalls'.'_'.$shoppingmall->price_key.'_'.$shoppingmall->shoppingmall->id;
-								$printsession = (array) Session::get('cart');
-								@ENDPHP
-								
-								<div class="clearfix"> 
-									<a class="glass" href="{{route('shoppingmall.addtocart', ['id' => $shoppingmall->shoppingmall->id, 'variation' => $options])}}">
-									@if(count($printsession) > 0)
-										@if(array_key_exists($session_key, $printsession['items'])) 
-											<span class="fa fa-minus-circle"></span> Remove From Cart 
-										@else
-											<span class="fa fa-star"></span> Add to Cart 
-										@endif
-										@else
-											<span class="fa fa-star"></span> Add to Cart
-									@endif
-									</a> 
-								</div>
+	<div class="container-fluid"> <!-- container fluid 1 starts here -->
+		<div class="row">
+			<div class="col-md-2">
+			@include('partials.sidebar')
+			</div>
+			
+			<div class="col-md-8">
+			<div class="row">
+			@if($shoppingmallads)
+				@foreach($shoppingmallads as $shoppingmallad)
+				<div class="col-md-3 col-sm-3 "> 
+					<div class="pro-item"> 
+						<div class=" cat-opt-img"><img src="{{asset('images/shoppingmalls/'.$shoppingmallad->shoppingmall->image)}}"> </div>
+						<p class="font-1">{{$shoppingmallad->shoppingmall->title}}</p>
+						<p class="font-2">{{$shoppingmallad->shoppingmall->location}} | {{$shoppingmallad->shoppingmall->city}} | {{$shoppingmallad->shoppingmall->state}}</p>
+						<hr>
+						<div class="row">
+							<div class="col-md-6">
+								<p class="font-3">{{$shoppingmallad->number_value}} {{ucwords(str_replace('_', ' ', substr($shoppingmallad->price_key, 6)))}} Ads<br> for <br> {{$shoppingmallad->duration_value}} months</p>
 							</div>
+						<div class="col-md-6">	
+							<p class="font-2"><del class="lighter">Rs {{$shoppingmallad->price_value}} <br></del>Rs {{$shoppingmallad->price_value}}</p>
 						</div>
-						@endforeach
-					
-					@endif
-							
-					</div><!-- row before style ends here -->
-
-        		</div>
-
-        		<div class="col-md-2">
-            		@include('partials.sidebar-cart')
-        		</div>
-
-    		</div>
-    	</div><!-- container fluid 1 ends here -->
- </section>          
+						</div>
+						@PHP
+						$options = $shoppingmallad->price_value.'+'.$shoppingmallad->price_key;
+						$session_key = 'shoppingmalls'.'_'.$shoppingmallad->price_key.'_'.$shoppingmallad->shoppingmall->id;
+						$printsession = (array) Session::get('cart');
+									
+						@ENDPHP
+						<div class="clearfix"> 
+							<a class="glass" href="{{route('shoppingmall.addtocart', ['id' => $shoppingmallad->shoppingmall->id, 'variation' => $options])}}">
+							@if(count($printsession) > 0)
+								@if(array_key_exists($session_key, $printsession['items'])) 
+									<span class="fa fa-minus-circle"></span> Remove From Cart 
+								@else
+									<span class="fa fa-star"></span> Add to Cart 
+								@endif
+								@else
+									<span class="fa fa-star"></span> Add to Cart
+							@endif
+							</a> 
+						</div>
+					</div>
+				</div>
+				{{$shoppingmallad->shoppingmallsprice}}
+				@endforeach	
+			@endif
+			</div><!-- row before style ends here -->
+			</div>
+			<div class="col-md-2">
+			@include('partials.sidebar-cart')
+			</div>
+		</div>
+	</div><!-- container fluid 1 ends here -->
+           
 	
-       
+ </section>      
 
 @endsection

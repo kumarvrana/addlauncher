@@ -22,26 +22,30 @@
                     <!-- ==================checkout-content========== -->
         <section id="checkout-content">
          <form action="{{route('postCheckout')}}" method="post" id="checkout-form" class="form-horizontal">
+        
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 left-checkout" style="padding-left:0px;">
                         <div class="section-title">
                             <h2>billing details</h2>
                         </div>
+                        <div id="charge-error" class="alert alert-danger {{ !Session::has('message') ? 'hidden' : '' }}">
+                            {{ Session::get('message') }}
+                        </div>
                         <div class="row">
                             <div class="col-lg-6" style="padding-left:0px;">
                                 <label>First Name <span>*</span></label>
-                                <input type="text" placeholder="First Name" name="first-name" required>
+                                <input type="text" placeholder="First Name" value="{{old('first-name')}}" name="first-name" required>
                             </div>
                             <div class="col-lg-6 left_position_fix">
                                 <label>Last Name <span>*</span></label>
-                                <input type="text" placeholder="Last Name" name="last-name" required>
+                                <input type="text" placeholder="Last Name" value="{{old('last-name')}}" name="last-name" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12" style="padding-left:0px;">
                                 <label>Company Name</label>
-                                <input type="text" placeholder="Company Name" name="company-name" required>
+                                <input type="text" placeholder="Company Name" value="{{old('company-name')}}" name="company-name" required>
                             </div>
                         </div>
                         <div class="row">
@@ -102,7 +106,7 @@
                                         @ENDPHP
 
                                         @if($imagefolder[1] == 'tricycle')
-                                        <li>{{ $product['item']['title'] }} <span><i class="fa fa-inr"></i> {{$product['item']['price']}}</span></li>
+                                        <li><strong>{{ $product['item']['title'] }}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['price']}}</span></li>
                                         @else
 
                                         @PHP
@@ -110,23 +114,23 @@
                                         @ENDPHP
                                             
                                         @if($imagefolder[0] == 'televisions')    
-                                            <li>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['rate_key'], 5)))}} <span><i class="fa fa-inr"></i> {{$product['item']['rate_value']}}</span></li>
+                                            <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['rate_key'], 5)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['rate_value']}}</span></li>
                                             @else
-                                             <li>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}} <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
+                                             <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
                                             @endif
                                         @endif
                                     @endforeach
                                     <li class="total">TOTAL <span class="bold"><i class="fa fa-inr"></i> {{ $total }}</span></li>
                                          
                                 @endif
-                                    <li><input type="radio" name="adl-payment" value="cash-transfer"> Direct Bank Payment
+                                    <li><input type="radio" name="adl-payment" id="bank-button" value="cash-transfer"> <label for="bank-button">Direct Bank Payment</label>
                                         <div class="note">
                                             <div class="i fa fa-caret-up"></div>
                                             Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.
                                         </div>
                                     </li>
                                  
-                                    <li><input type="radio" name="adl-payment" value="stripe-payment" id="stripe-button"> Stripe <img src="{{asset('images/stripepayment.png')}}" alt="image" style="margin-left:12px; width: 120px;"> <a href="#"><span>What is Stripe?</span></a></li>
+                                    <li><input type="radio" name="adl-payment" value="stripe-payment" id="stripe-button"> <label for="stripe-button">Stripe</label> <img src="{{asset('images/stripepayment.png')}}" alt="image" style="margin-left:12px; width: 120px;"> <a href="#"><span>What is Stripe?</span></a></li>
                                     {{csrf_field()}}
                                     <hr>
                                     <li><input type="submit" id="adl-place-order" class="btn btn-primary place-order fa fa-arrow-circle-right" value="Place Order"></li>

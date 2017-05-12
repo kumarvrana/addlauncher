@@ -25,14 +25,14 @@
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
                 <div class="col-md-2">
-                  @include('partials.sidebar')
+                  @include('partials.filter-sidebar.cinema')
                 </div>
 
                 <div class="col-md-8">
                     <h2>Result Found:</h2>
            
 
-                  <div class="row"> <!-- row repeater starts here -->
+                  <div class="row" id="table-results"> <!-- row repeater starts here -->
                     
              @foreach( $products->chunk(3) as $productchunk)
                        @foreach( $productchunk as $product)
@@ -56,7 +56,7 @@
                       @ENDPHP
                     <div class="col-md-3">
                         <div class="owl-item active">
-                            <div class="single-product">
+                            <div class="single-product {{$st_class}}_cursor">
                                 <div class="product-img">
                                         <img class="second-img" src="{{asset('images/cinemas/'.$product->image)}}" alt="product">
                                 </div>
@@ -64,14 +64,11 @@
                                     
                                     <div class="product-price"><span>{{$product->title}}</span></div>
                                     <hr>
-                                    <div class="product-name">
-                                        {{$product->location}} | {{$product->city}} | {{$product->state}}
+                                    <div class="btn thb-fill-style">
+                                       <span> {{$product->location}} | {{$product->city}} | {{$product->state}}</span>
                                     </div>
                                 </div>
                                 <div class="product-mark {{$st_class}}">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart {{$st_class}}"><span class="fa fa-ban"></span> {{$status}}</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -82,6 +79,7 @@
 
                     <div class="col-md-3">
                         <div class="owl-item active">
+                        <a href="{{ route('frontend.cinemasingle', ['id' => $product->id]) }}">
                             <div class="single-product">
                                 <div class="product-img">
                                         <img class="second-img" src="{{asset('images/cinemas/'.$product->image)}}" alt="product">
@@ -90,15 +88,14 @@
                                     
                                     <div class="product-price"><span>{{$product->title}}</span></div>
                                     <hr>
-                                    <div class="product-name">
+                                    <div class="btn thb-fill-style">
                                         {{$product->location}} | {{$product->city}} | {{$product->state}}
                                     </div>
                                 </div>
                                 <div class="product-mark {{$st_class}}">{{$status}}</div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{ route('frontend.cinemasingle', ['id' => $product->id]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
+                               
                             </div>
+                            </a>
                         </div>
                     </div>
 
@@ -112,15 +109,7 @@
                     <div class="col-md-12">
                         <div class="data-box">
                             <h2>About Cinema advertising in India</h2>
-                            @foreach($mediacats as $mediacat)
-
-                                @if($mediacat->label=='Cinema') 
-
-                                    {!!$mediacat->description!!}
-
-                                @endif   
-
-                            @endforeach
+                            {!!$mediacat->description!!}
                         </div>
                     </div>
                     

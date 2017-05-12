@@ -33,10 +33,11 @@ class CarController extends Controller
                         );
 
         $location = 'Delhi NCR';
-        $ad_cats = Mainaddtype::orderBy('title')->get();
+        $mediatypes= new Mainaddtype();
+        $ad_cats = $mediatypes->mediatype('Cars');
 
 
-        return view('frontend-mediatype.cars.carads-list', ['car_type' => $car_type, 'location' => $location, 'mediacats' => $ad_cats]);
+        return view('frontend-mediatype.cars.carads-list', ['car_type' => $car_type, 'location' => $location, 'mediacat' => $ad_cats]);
     }
     
     // get cars by category
@@ -423,6 +424,29 @@ class CarController extends Controller
         //Session::forget('cart');
 
         return redirect()->back()->with(['status' => 'added']);
+    }
+
+    // Search Option
+
+    public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)
+    {
+        $car_ad = Cars::where('id', $id)->first()->toArray();
+        
+        $carPrice = new Carsprice();
+        $car_price = $carPrice->getCarspriceCart($id, $variation);
+       
+        $car_Ad = array_merge($car_ad, $car_price);
+       
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+                
+        $cart = new Cart($oldCart);
+
+        $status = $cart->addorRemove($car_Ad, $car_ad['id'], 'cars', $flag=true); //pass full car details, id and model name like "cars"
+        
+        $request->session()->put('cart', $cart);
+        //Session::forget('cart');
+
+        return response(['status' => $status, 'quatity' => $cart->totalQty, 'total' => $cart->totalPrice], 200);
     }
 
  

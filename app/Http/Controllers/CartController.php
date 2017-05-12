@@ -47,7 +47,7 @@ class CartController extends Controller
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $model = explode('_', $id);
-        if($model == 'televisions')
+        if($model[0] == 'televisions')
             $cart->removeTelevisionCartItem($id);
         else
             $cart->removeCartItem($id);

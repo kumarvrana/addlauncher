@@ -43,9 +43,33 @@ class CheckoutController extends Controller
 
      public function getThankyoupage($order)
      {
+          if(!Sentinel::check()){
+              return redirect()->route('user.signin');
+          }
           $order_data = Order::find($order);
-          $aftercashpayment = PaymentSetting::find(2);
-          return view('shop.thankyou', ['orders' => $order_data, 'settings'=> $aftercashpayment]);
+          $order_data_id= $order_data->user_id;
+          if($order_data->order_viewed){
+               return redirect('/');
+          }else{
+              $order_data->order_viewed = 1;
+              $order_data->save();
+          }
+          
+          $user = Sentinel::getUser();
+          $user_data_id=$user->id;
+          
+          if ( $order_data_id == $user_data_id ) {
+
+               $aftercashpayment = PaymentSetting::find(2);
+               return view('shop.thankyou', ['orders' => $order_data, 'settings'=> $aftercashpayment]);
+               
+          }
+          else{
+                return redirect('/');
+          }
+         
+         
+
      }
     
     public function getPaymentmethod($paymentMethod)
@@ -95,6 +119,9 @@ class CheckoutController extends Controller
                 $order = $this->postCheckoutCashtransfer($request->all());
             break;
             case 'stripe-payment':
+                if($request->input('stripeToken') == ''){
+                    return redirect()->back()->with('message', 'Stripe payment is not completed. Please Complete Stripe payement!');
+                }
                 $order = $this->postCheckout($request->all());
             break;
             case 'cirtus-payment':

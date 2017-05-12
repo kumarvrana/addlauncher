@@ -43,6 +43,7 @@
                     @ENDPHP
                     <div class="col-md-3">
                         <div class="owl-item active">
+                        <a href="{{ route('frontend.getfrontAutoadByType', ['autotype' => $key]) }}">
                             <div class="single-product">
                                 <div class="product-img">
                                         <img class="second-img {{$key}}" src="{{asset('images/autos/'.$image)}}" alt="{{$key}}">
@@ -51,15 +52,12 @@
                                     
                                     <div class="product-price"><span>{{$value}}</span></div>
                                     <hr>
-                                    <div class="product-name">
-                                        {{$location}}
+                                    <div class="btn thb-fill-style">
+                                       <span> {{$location}}</span>
                                     </div>
                                 </div>
-                                <div class="product-mark"></div>
-                                <div class="product-hover">
-                                    <div class="add-to-cart"><a href="{{ route('frontend.getfrontAutoadByType', ['autotype' => $key]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
-                                </div>
                             </div>
+                        </a>    
                         </div>
                     </div>
                     @endforeach
@@ -80,17 +78,7 @@
                     <div class="col-md-12">
                         <div class="data-box">
                             <h2>About Auto advertising in India</h2>
-
-                            @foreach($mediacats as $mediacat)
-
-                                @if($mediacat->label=='Auto') 
- 
-                                    {!!$mediacat->description!!}
-
-                                @endif   
-
-                            @endforeach
-                            
+                             {!!$mediacat->description!!}
                         </div>
                     </div>
                     

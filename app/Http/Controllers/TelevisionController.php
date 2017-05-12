@@ -29,8 +29,10 @@ public function __construct()
     {
 
         $television_ads = Televisions::all();
+        $media_type = new Mainaddtype();
+       $ad_cats = $media_type->mediatype('Television');
 
-        return view('frontend-mediatype.televisions.televisionads-list', ['televisions_ads' => $television_ads]);
+        return view('frontend-mediatype.televisions.televisionads-list', ['televisions_ads' => $television_ads, 'mediacat' => $ad_cats]);
     }
 
     public function getfrontTelevisionad($id)

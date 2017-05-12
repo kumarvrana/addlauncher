@@ -34,9 +34,10 @@ class AirportController extends Controller
                             );
 
        $location = 'Delhi NCR';
-       $ad_cats = Mainaddtype::orderBy('title')->get();
+       $media_type = new Mainaddtype();
+       $ad_cats = $media_type->mediatype('Airport');
 
-       return view('frontend-mediatype.airports.airportads-list', ['airport_options' => $airport_options, 'location' => $location,'mediacats' => $ad_cats]);
+       return view('frontend-mediatype.airports.airportads-list', ['airport_options' => $airport_options, 'location' => $location,'mediacat' => $ad_cats]);
     }
 
     public function getfrontAirportadByOption($airportOption)
@@ -305,6 +306,7 @@ class AirportController extends Controller
 
    public function airport_ads($searchAirport, $fileroptions)
    { 
+     
          ?>
        
        <div class="col-md-3 col-sm-3 "> 

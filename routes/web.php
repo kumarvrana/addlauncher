@@ -392,7 +392,7 @@ Route::post('/cat/edit-car/{ID}', [
 // *************************************  //
 
 
-//start Cinema media type routing
+//start Cinema media type routing 
 
 Route::get('/cat/cinema-list', [
 'uses' => 'CinemaController@getDashboardCinemaList',
@@ -808,22 +808,29 @@ Route::get('/media/outdoor-advertisings', [
 'uses' => 'BillboardController@getfrontendAllBillboardads',
 'as' => 'frontend.getallbillboards'
 ]);
-Route::get('/media/outdooradvertising/{id}', [
-'uses' => 'BillboardController@getfrontBillboardad',
-'as' => 'frontend.billboardsingle'
-]);
+// Route::get('/media/outdooradvertising/{id}', [
+// 'uses' => 'BillboardController@getfrontBillboardad',
+// 'as' => 'frontend.billboardsingle'
+// ]);
 
-Route::get('/media/outdooradvertising/add-to-cart/{id}/{variation}', [
+Route::get('/media/outdoor-advertising/add-to-cart/{id}/{variation}', [
 'uses' => 'BillboardController@getAddToCart',
 'as' => 'billboard.addtocart'
 ]);
-Route::get('/media/outdooradvertising/remove-from-cart/{id}/{variation}', [
-'uses' => 'BillboardController@getRemoveFromCart',
-'as' => 'billboard.removefromcart'
+
+Route::get('/media/outdoor-advertising/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'BillboardController@getAddToCartBySearch',
+'as' => 'billboard.addtocartAfterSearch'
 ]);
+
 Route::get('/media/outdoor-advertisings/{billboardOption}', [
 'uses' => 'BillboardController@getfrontBillboardadByOption',
 'as' => 'frontend.getfrontBillboardadByOption'
+]);
+
+Route::get('/outdoor-advertising/filter/',[
+'uses' => 'BillboardController@getFilterBillboardAds',
+'as' => 'frontend.getFilterBillboardAds'
 ]);
 
 // billboard frontend ends
@@ -851,14 +858,10 @@ Route::get('/media/bus/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
 'as' => 'bus.addtocartAfterSearch'
 ]);
 
-Route::get('/media/bus/remove-from-cart/{id}/{variation}', [
-'uses' => 'BusController@getRemoveFromCart',
-'as' => 'bus.removefromcart'
-]);
-Route::get('/media/bus/{busOption}', [
-'uses' => 'BusController@getfrontBusadByOption',
-'as' => 'frontend.getfrontBusadByOption'
-]);
+// Route::get('/media/bus/{busOption}', [
+// 'uses' => 'BusController@getfrontBusadByOption',
+// 'as' => 'frontend.getfrontBusadByOption'
+// ]);
 
 Route::get('/bus/filter/',[
 'uses' => 'BusController@getFilterBusAds',
@@ -886,10 +889,6 @@ Route::get('/media/busstop/add-to-cart/{id}/{variation}', [
 Route::get('/media/busstop/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
 'uses' => 'BusStopController@getAddToCartBySearch',
 'as' => 'busstop.addtocartAfterSearch'
-]);
-Route::get('/media/busstop/remove-from-cart/{id}/{variation}', [
-'uses' => 'BusStopController@getRemoveFromCart',
-'as' => 'busstop.removefromcart'
 ]);
 
 Route::get('/busstop/filter/',[
@@ -920,10 +919,7 @@ Route::get('/media/car/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
 'uses' => 'CarController@getAddToCartBySearch',
 'as' => 'car.addtocartAfterSearch'
 ]);
-Route::get('/media/car/remove-from-cart/{id}/{variation}', [
-'uses' => 'CarController@getRemoveFromCart',
-'as' => 'car.removefromcart'
-]);
+
 Route::get('/media/cars/{cartype}', [
 'uses' => 'CarController@getfrontCaradByType',
 'as' => 'frontend.getfrontCaradByType'
@@ -955,9 +951,13 @@ Route::get('/media/cinema/add-to-cart/{id}/{variation}', [
 'uses' => 'CinemaController@getAddToCart',
 'as' => 'cinema.addtocart'
 ]);
-Route::get('/media/cinema/remove-from-cart/{id}/{variation}', [
-'uses' => 'CinemaController@getRemoveFromCart',
-'as' => 'cinema.removefromcart'
+Route::get('/cinema/filter/',[
+'uses' => 'CinemaController@getFilterCinemaAds',
+'as' => 'frontend.getFilterCinemaAds'
+]);
+Route::get('/media/cinema/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'CinemaController@getAddToCartBySearch',
+'as' => 'cinema.addtocartAfterSearch'
 ]);
 
 // cinema frontend ends
@@ -1024,13 +1024,15 @@ Route::get('/media/shoppingmall/add-to-cart/{id}/{variation}', [
 'uses' => 'ShoppingmallController@getAddToCart',
 'as' => 'shoppingmall.addtocart'
 ]);
-Route::get('/media/shoppingmall/remove-from-cart/{id}/{variation}', [
-'uses' => 'ShoppingmallController@getRemoveFromCart',
-'as' => 'shoppingmall.removefromcart'
+
+Route::get('/shoppingmall/filter/',[
+'uses' => 'ShoppingmallController@getFilterShoppingmallAds',
+'as' => 'frontend.getFilterShoppingmallAds'
 ]);
-Route::get('/media/shoppingmalls/{shoppingmallOption}', [
-'uses' => 'ShoppingmallController@getfrontShoppingmalladByOption',
-'as' => 'frontend.getfrontShoppingmalladByOption'
+
+Route::get('/media/shoppingmall/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'ShoppingmallController@getAddToCartBySearch',
+'as' => 'shoppingmall.addtocartAfterSearch'
 ]);
 
 // shoppingmall frontend ends
@@ -1050,10 +1052,6 @@ Route::get('/media/television/{id}', [
 Route::get('/media/television/add-to-cart/{id}/{variation}', [
 'uses' => 'TelevisionController@getAddToCart',
 'as' => 'television.addtocart'
-]);
-Route::get('/media/television/remove-from-cart/{id}/{variation}', [
-'uses' => 'TelevisionController@getRemoveFromCart',
-'as' => 'television.removefromcart'
 ]);
 
 Route::get('/television/filter/',[

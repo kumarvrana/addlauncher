@@ -16,17 +16,17 @@ class Shoppingmallsprice extends Model
     }
 
    
-     public static function getShoppingmallByFilter($shoppingmallOption)
-    {
+    //  public static function getShoppingmallByFilter($shoppingmallOption)
+    // {
         
-         $shoppingmallOption1 = '%'.$shoppingmallOption.'%';
+    //      $shoppingmallOption1 = '%'.$shoppingmallOption.'%';
         
-        $shoppingmallpriceOptions = static::where('price_key', 'LIKE', $shoppingmallOption1)
-                                ->get(array('shoppingmalls_id', 'price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'));
+    //     $shoppingmallpriceOptions = static::where('price_key', 'LIKE', $shoppingmallOption1)
+    //                             ->get(array('shoppingmalls_id', 'price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'));
         
        
-        return $shoppingmallpriceOptions;
-    }
+    //     return $shoppingmallpriceOptions;
+    // }
 
     public static function getShoppingmallspriceCart($id, $option)
     {
@@ -42,23 +42,7 @@ class Shoppingmallsprice extends Model
 
     public function FilterShoppingmallsAds($filterOption)
     {
-         
-        $shoppingmallest = Shoppingmallsprice::where(function($query) use($filterOption){
-            
-            $priceFilter = (!empty($filterOption['pricerange'])) ? $filterOption['pricerange'] : null;
-            $locationFilter = (!empty($filterOption['locationFilter'])) ? $filterOption['locationFilter'] : [];
-            $categoryFilter = (!empty($filterOption['category'])) ? $filterOption['category'] : [];
-
-            if(isset($categoryFilter)){
-               foreach($categoryFilter as $category){
-                    $likeCat = "%$category%";
-                    $query->where('price_key', 'LIKE', $likeCat);
-                }
-            }
-
-       })->get(array('shoppingmalls_id','price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'))->toArray();
        
-        dd($shoppingmallest);
         $priceFilter = (!empty($filterOption['pricerange'])) ? $filterOption['pricerange'] : null;
         $locationFilter = (!empty($filterOption['locationFilter'])) ? $filterOption['locationFilter'] : null;
         $categoryFilter = (!empty($filterOption['category'])) ? $filterOption['category'] : null;
@@ -80,10 +64,10 @@ class Shoppingmallsprice extends Model
             
         }
         if(isset($categoryFilter)){
-            foreach($categoryFilter as $category){
-                 $categoryFilter = "%$category%";
+            //foreach($categoryFilter as $category){
+                 $categoryFilter = "%$categoryFilter%";
                  $whereVariables[] = ['price_key', 'LIKE', $categoryFilter];
-            }
+           // }
         }
 
         if(isset($locationFilter)){

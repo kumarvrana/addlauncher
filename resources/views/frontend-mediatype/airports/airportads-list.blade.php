@@ -66,17 +66,7 @@
                     <div class="col-md-12">
                         <div class="data-box">
                             <h2>About Airport & Airline advertising in India</h2>
-                           
-                          @foreach($mediacats as $mediacat)
-
-                                @if($mediacat->label=='Airport') 
- 
-                                    {!!$mediacat->description!!}
-
-                                @endif   
-
-                            @endforeach
-                            
+                            {!! $mediacat->description !!}
                         </div>
                     </div>
                     

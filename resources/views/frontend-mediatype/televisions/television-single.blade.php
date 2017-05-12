@@ -19,7 +19,7 @@
 
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-         <h1><span>{{$title}}</span> OPTIONS</h1>
+     <h1><small>&emsp;ADVERTISE ON</small> <br><span>{{$title}}</span></h1>
      </div>
 </section>       
 <section class="main-sec">        

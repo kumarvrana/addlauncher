@@ -1121,3 +1121,113 @@ function removeItemTelevision(name, genre) {
     deletedurNode.remove();
 
 }
+
+function addDomToPriceOptionsMegazine(name, printmedia_type){
+    //var genre = printmedia_type;
+    var chkExist = fieldData.indexOf(name);
+   
+    if (chkExist == -1) {
+        var labeltext = "Price for " + name + " Megazine Ad Per unit:";
+        var labelnumbertext = "Number of Times Megazine print "+ name + " Ad(in 1 month):";
+        
+        var iname = name.toLowerCase();
+        var res = iname.split(' ').join('_');
+        var inputname = "price_" + res;
+        var megazineduration = "number_" + res;
+       
+        var priceElement = document.getElementById('pricing-options-step');
+
+        var divrow = document.createElement('div');
+        divrow.className = 'form-group';
+        divrow.id = 'p' + inputname;
+
+        var divrownum = document.createElement('div');
+        divrownum.className = 'form-group';
+        divrownum.id = 'p' + megazineduration;
+
+        
+        //iput field
+        var labelhtm = document.createElement('label');
+        labelhtm.setAttribute("for", inputname);
+        labelhtm.innerText = labeltext;
+
+        var inputhtm = document.createElement("input"); //input element, text
+        inputhtm.setAttribute('type', "text");
+        inputhtm.setAttribute('name', inputname);
+        inputhtm.setAttribute('class', "form-control");
+        inputhtm.setAttribute('id', inputname);
+        inputhtm.setAttribute('required', 'required');
+        inputhtm.setAttribute('placeholder', 'put value as number eg: 35345');
+
+        //number of buses
+        var labelnumhtm = document.createElement('label');
+        labelnumhtm.setAttribute("for", megazineduration);
+        labelnumhtm.innerText = labelnumbertext;
+
+        var inputnumhtm = document.createElement("input"); //input element, text
+        inputnumhtm.setAttribute('type', "text");
+        inputnumhtm.setAttribute('name', megazineduration);
+        inputnumhtm.setAttribute('class', "form-control");
+        inputnumhtm.setAttribute('id', megazineduration);
+        inputnumhtm.setAttribute('required', 'required');
+        inputnumhtm.setAttribute('placeholder', 'How many times this megazine print in a month eg: 1');
+
+        //Duration of buses
+      
+        fieldData.push(name);
+        if (fieldisi) {
+            fieldisi.value = JSON.stringify(fieldData);
+        }
+        divrow.appendChild(labelhtm);
+        divrow.appendChild(inputhtm);
+        divrownum.appendChild(labelnumhtm);
+        divrownum.appendChild(inputnumhtm);
+        
+        priceElement.appendChild(divrow);
+        priceElement.appendChild(divrownum);
+        
+    } else {
+        removeItemMegazine(name, printmedia_type);
+    }
+}
+
+function removeItemMegazine(name, genre) {
+
+    var iname = name.toLowerCase();
+    var res = iname.split(' ').join('_');
+
+    var numberTimeMagezinePrints = "number_" + res;
+    var inputname = "price_" + res;
+    
+    var divId = 'p' + inputname;
+    var divnumId = 'p' + numberTimeMagezinePrints;
+
+    fieldData.splice(fieldData.indexOf(name), 1);
+    if (fieldisi) {
+        editfieldData.splice(editfieldData.indexOf(name), 1);
+        var id = document.getElementById("uncheckID").value;
+        var tableName = document.getElementById("tablename").value;
+        var update_options = '';
+        fieldisi.value = JSON.stringify(fieldData);
+        $.ajax({
+                method: 'GET',
+                url: uncheckDeleteURL,
+                data: {
+                    id: id,
+                    price_key: inputname,
+                    printmedia_type: genre,
+                    number_key: numberTimeMagezinePrints,
+                    //exposure_key: durationbuses,
+                    displayoptions: JSON.stringify(fieldData)
+                }
+            })
+            .done(function(msg) {
+                console.log(msg);
+            });
+    }
+
+    var deleteNode = document.getElementById(divId);
+    deleteNode.remove();
+    var deletenumNode = document.getElementById(divnumId);
+    deletenumNode.remove();    
+}

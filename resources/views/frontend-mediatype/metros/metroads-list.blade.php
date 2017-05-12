@@ -112,15 +112,7 @@
                     <div class="col-md-12">
                         <div class="data-box">
                             <h2>About Metro advertising in India</h2>
-                            @foreach($mediacats as $mediacat)
-
-                                @if($mediacat->label=='Metro') 
-
-                                    {!!$mediacat->description!!}
-
-                                @endif   
-
-                            @endforeach
+                            {!!$mediacat->description!!}
                         </div>
                     </div>
                     

@@ -62,7 +62,7 @@
                     dataFilter = '#metro-filter';
                     break;
 
-                    case 'outdoor-advertising':
+                    case 'billboard':
                     filterURL = outdoor_advertisingFilterURL;
                     dataFilter = '#outdoor-advertising-filter';
                     break;
