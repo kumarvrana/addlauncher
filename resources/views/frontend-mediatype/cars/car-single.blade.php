@@ -37,7 +37,7 @@
 					@if($cars)
 					@if($carOption == 'tricycle')
 						@foreach($cars as $car)
-						<div class="col-md-3 col-sm-3 "> 
+						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 "> 
 							<div class="pro-item"> 
 								<div class=" cat-opt-img "> <img src="{{asset('images/cars/'.$car->image)}}"> </div>
 								<p class="font-1">{{$car->title}}</p>
@@ -74,7 +74,7 @@
 						@endforeach
 						@else
 						@foreach($cars as $car)
-						<div class="col-md-3 col-sm-3"> 
+						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
 							<div class="pro-item"> 
 								<div class=" cat-opt-img "> <img src="{{asset('images/cars/'.$car->car->image)}}"> </div>
 								<p class="font-1">{{$car->car->title}}</p>

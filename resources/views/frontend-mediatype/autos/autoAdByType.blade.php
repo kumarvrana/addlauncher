@@ -17,11 +17,7 @@
         </div>
         @endif
 
-<section class="sec-banner">
-     <div class="jumbotron jumbo-1 text-center">
-     <h1><small>&emsp;ADVERTISE ON</small> <br><span>{{ucwords(str_replace('_', ' ', $autotype))}}</span></h1>
-     </div>
-</section> 
+@include('banner.autoBanner')
 
 <section class="main-sec">        
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
@@ -41,7 +37,7 @@
                                         @PHP
                                             $image = $key.".jpg";
                                         @ENDPHP
-                                <div class="col-md-3">
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                 <a href="{{route('frontend.getfrontAutoadByOption', ['autotype' => $autotype,'autoOption' => $key])}}">
                                     <div class="single-product">
                                             <div class="product-img">

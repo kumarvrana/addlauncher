@@ -85,12 +85,12 @@
                 
             <div class="step-header">Airport Ad Display Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Airport">
-                @PHP
-                    $airport_options = array('unipole' => 'Unipole', 'backlit_panel' => 'Backlit Panel', 'luggage_trolley' => 'Luggage Trolley');
-                @ENDPHP
+                
                 <div class="panel panel-primary">
-                    <div class="panel-heading "><h3 class="panel-title">Airport Options</h3></div><div class="panel-body">
-                    <div class="form-group">
+                    <div class="panel-heading "><h3 class="panel-title">Airport Options</h3>
+                    </div>
+                    <div class="panel-body">
+                    <!--div class="form-group">
                         <label for="airportdisplay">Airport Ad Display Options: </label>
                              
                     @foreach($airport_options as $key => $value)
@@ -107,11 +107,53 @@
                     <div class="form-group">
                         <label for="airportsnumber">Discount (%): </label>
                         <input class="form-control" type="text" name="airportdiscount" placeholder="put an integer value for discount like 5 or 10">
-                    </div>
+                    </div-->
+                    <!-- replicate fields start here -->
+                    <p><a href="#" data-index="1" class="btn btn-primary copy" rel=".full-html">Add Main Option +</a></p>
+                        <div class="full-html" id="room_fileds">
+                            <div class="form-group" >
+                                <label>Select Location</label>
+                                <select required data-index="1" id="location" class="form-control" name="airport_location" class="location">
+                                    <option value="">Select Location</option>
+                                    <?php foreach($airport_locations as $key => $value){ ?>
+                                    <option value="<?= $key ?>"><?= $value ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Category</label>
+                                <select required data-index="1" id="displayoptions" name="airport_category" class="form-control displayoption">
+                                <option value="">Select Category</option>
+                                <?php foreach($airport_options as $key => $value){?>
+                                    <option value="<?= $key ?>"><?= $value ?></option>
+                                <?php } ?>
+                                
+                                </select>
+                            </div> 
+                            
+                            <div class="form-group">
+                                <label for="dimensions"> Dimensions: </label>
+                                <input type="text" name="airport_dimensions" placeholder="Dimensions" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="price"> Price: </label>
+                                <input type="text" name="airport_price" placeholder="Price" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="units"> Units: </label>
+                                <input type="text" name="airport_units" placeholder="Units" class="form-control" required>
+                            </div>
+                                                       
+                        </div>
+                        <hr/>
+                        <!-- replicate field ends here-->
+                        <div class="form-group">
+                            <label for="airportdiscount">Discount (%): </label>
+                            <input class="form-control" type="text" name="airportdiscount" placeholder="put an integer value for discount like 5 or 10">
+                        </div>
                     </div>
                 </div>
 
-                <div class="step-header">Pricing Options</div>
                     <div id="light-content" class="alert alert-info">
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
@@ -126,6 +168,10 @@
             <div class="form-group">
                 <label for="image">Ad Image:</label>
                 <input type="file" id="image" name="image" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="reference_mail">Reference mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{old('reference_mail')}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>

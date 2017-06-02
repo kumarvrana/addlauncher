@@ -30,22 +30,17 @@ public function __construct()
 
         $television_ads = Televisions::all();
         $media_type = new Mainaddtype();
-       $ad_cats = $media_type->mediatype('Television');
+        $ad_cats = $media_type->mediatype('Television');
+        $location_filter = Televisions::select('location')->distinct()->get();
 
-        return view('frontend-mediatype.televisions.televisionads-list', ['televisions_ads' => $television_ads, 'mediacat' => $ad_cats]);
+        return view('frontend-mediatype.televisions.televisionads-list', ['televisions_ads' => $television_ads, 'mediacat' => $ad_cats,'filter_location'=>$location_filter]);
     }
 
     public function getfrontTelevisionad($id)
     {
-        $televisionad = Televisions::find($id);
-        $televisionprice = Televisionsprice::where('television_id', $id)->get();
-
-         if($televisionad){
-            if($televisionad->status === "3" || $televisionad->status === "2"){
-                return redirect()->back();
-            }
-          } 
-        return view('frontend-mediatype.televisions.television-single', ['televisionad' => $televisionprice, 'title' => $televisionad->title]);
+         $televisionpricead = Televisionsprice::where('television_id', $id)->get();
+                    
+        return view('frontend-mediatype.televisions.television-single', ['televisionads' => $televisionpricead]);
     
         
      }
@@ -107,7 +102,8 @@ public function __construct()
                 'news_options' => serialize($request->input('newsdisplay')),
                 //'display_options' => serialize($request->input('televisiondisplay')),
                 'discount' => $request->input('discount'),
-                'television_number' => $request->input('televisionsnumber')
+                'television_number' => $request->input('televisionsnumber'),
+                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $television->save();
@@ -180,8 +176,7 @@ public function __construct()
         $televisionpriceData = Televisionsprice::where('television_id', $ID)->get();
         $fieldData = array();
         foreach($televisionpriceData as $pricetelevision){
-            //dd($pricetelevision);
-           $fieldData[] = ucwords(str_replace('_', ' ', substr($pricetelevision->rate_key, 10)));
+           $fieldData[] = ucwords(str_replace('_', ' ', substr($pricetelevision->rate_key, 5)));
         }
 
         $fieldDatas = serialize($fieldData);
@@ -251,6 +246,7 @@ public function __construct()
          $edittelevision->discount = $request->input('discount');
          //$edittelevision->display_options = serialize($request->input('televisiondisplay'));
          $edittelevision->television_number = $request->input('televisionnumber');
+         $edittelevision->reference_mail = $request->input('reference_mail');
 
          
         if($request->hasFile('image')){
@@ -312,6 +308,75 @@ public function __construct()
         
    }
 
+    //Fliter Functions
+   public function getFilterTelevisionAds(Request $request)
+   {
+        
+        $televisionPrice = new Televisionsprice();
+        
+        $filterResults = $televisionPrice->FilterTelevisionsAds($request->all());
+
+        if(count($filterResults)>0){
+            foreach($filterResults as $searchTelevision){
+                $this->television_ads($searchTelevision, $request->all());
+            }
+
+        }else{
+            echo "<img src='../images/oops.jpg' class='img-responsive oops-img'>";
+           
+        }
+
+        $content = ob_get_contents();
+        ob_get_clean();
+        return $content;
+  
+   }
+
+   public function television_ads($searchTelevision, $fileroptions)
+   { 
+         ?>
+       
+       <div class="col-md-3 col-sm-3 "> 
+        <div class="pro-item"> 
+            <div class=" cat-opt-img "> <img src="<?= asset('images/televisions/'.$searchTelevision->television->image) ?>"> </div>
+            <p class="font-1"><?= $searchTelevision->television->title ?></p>
+            <p class="font-2"><?= $searchTelevision->television->location ?>, <?= $searchTelevision->television->city ?>, <?= $searchTelevision->television->state ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="font-3"><?= $searchTelevision->time_band_value ?> <?= ucwords(substr(str_replace('_', ' ', $searchTelevision->rate_key), 5))?> <br>for <br> <?= $searchTelevision->exposure_value?> months</p>
+                    </div>
+                <div class="col-md-6">
+                        <p class="font-4"><del class="lighter">Rs <?= $searchTelevision->rate_value?> </del><br>Rs <?= $searchTelevision->rate_value?> </p>
+                </div>
+            
+            </div>
+
+            <?php
+            $options = $searchTelevision->rate_value.'+'.$searchTelevision->rate_key;
+            $session_key = 'televisions'.'_'.$searchTelevision->rate_key.'_'.$searchTelevision->television->id;
+            $printsession = (array) Session::get('cart');
+                            
+           ?>
+            <div class="clearfix"> 
+                <button class="glass add-cartButton" data-href="<?= route('television.addtocartAfterSearch', ['id' => $searchTelevision->television->id, 'variation' => $options, 'fileroption' => http_build_query($fileroptions)]) ?>"><span class="fa fa-star"></span>
+                <?php
+                    if(count($printsession) > 0){
+                     if(array_key_exists($session_key, $printsession['items'])){
+                       echo "Remove From Cart"; 
+                    }else{
+                        echo "Add to Cart"; 
+                    }
+                    }else{
+                        echo "Add to Cart";
+                    }
+                ?>
+            </button> 
+            </div>
+        </div>
+    </div>
+    <?php
+   }
+
     //cart functions
    // add or remove item to cart
 
@@ -320,23 +385,23 @@ public function __construct()
         $flag= true;
         $television_ad = Televisions::where('id', $id)->first()->toArray();
        
-        $selectDisplayOpt = explode("+", $variation);
+        $televisionPrice = new Televisionsprice();
 
-        $televisionprice = new Televisionsprice();
-        $television_price = $televisionprice->getTelevisionPriceCart($id, $selectDisplayOpt[1]);
+        $television_price = $televisionPrice->getTelevisionsPriceCart($id, $variation);
+
         
-        $television_ad = array_merge($television_ad, $television_price);
-
+        $television_Ad = array_merge($television_ad, $television_price);
+       
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemoveTelevision($television_ad, $television_ad['id'], 'televisions', $flag); //pass full television details, id and model name like "televisions"
+        $status = $cart->addorRemoveTelevision($television_Ad, $television_ad['id'], 'televisions', $flag=true); //pass full television details, id and model name like "televisions"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');
 
-        return redirect()->back()->with(['status' => 'added']);
+        return redirect()->back()->with(['status' => $status]);
     }
 
 }

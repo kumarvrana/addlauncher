@@ -150,6 +150,8 @@
                                     <td>{{$item['qty']}}</td>
                                     @if($imagefolder[0] == 'televisions')
                                     <td>Rs. {{$item['item']['rate_value']}}</td>
+                                    @elseif($imagefolder[0] == 'airports')
+                                    <td>Rs. {{$item['item']['optionprice']}}</td>
                                     @else
                                     <td>Rs. {{$item['item']['price_value']}}</td>
                                     @endif

@@ -16,11 +16,8 @@
             </div>
         </div>
         @endif
-<section class="sec-banner">
-     <div class="jumbotron jumbo-1 text-center">
-         <h1><small>&emsp;ADVERTISE ON</small> <br><span>OUTDOOR</span></h1>
-     </div>
-</section>       
+     @include('banner.outdoorBanner')
+     
 <section class="main-sec">
     <div class="container-fluid"> {{-- container fluid 1 starts here --}}
         <div class="row"> {{-- row starts here --}}
@@ -38,7 +35,7 @@
                         @PHP
                             $image = $key.".jpg";
                         @ENDPHP
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="owl-item active">
                             <a href="{{ route('frontend.getfrontBillboardadByOption', ['billboardOption' => $key]) }}">
                             <div class="single-product">

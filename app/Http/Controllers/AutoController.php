@@ -16,8 +16,6 @@ use App\Cart;
 use App\Order;
 
 
-
-
 class AutoController extends Controller
 {
 
@@ -39,7 +37,9 @@ class AutoController extends Controller
         $location = 'Delhi NCR';
         $mediatype = new Mainaddtype();
         $ad_cats = $mediatype->mediatype('Auto');
-        return view('frontend-mediatype.autos.autoads-list', ['auto_type' => $auto_type, 'location' => $location, 'mediacat' => $ad_cats]);
+        $location_filter = Autos::select('location')->distinct()->get();
+
+        return view('frontend-mediatype.autos.autoads-list', ['auto_type' => $auto_type, 'location' => $location, 'mediacat' => $ad_cats,'filter_location'=>$location_filter]);
     }
     
     public function getfrontAutoadByType($autotype)
@@ -62,6 +62,7 @@ class AutoController extends Controller
             case 'tricycle':
 
                 $auto_ads = Autos::where('autotype', $autotype)->get();
+                
 
                 return view('frontend-mediatype.autos.auto-single', [
                                                                     'autos' => $auto_ads,
@@ -73,11 +74,12 @@ class AutoController extends Controller
          }
 
         $location = 'Delhi NCR';
-        
+        $location_filter = Autos::select('location')->distinct()->get();
         return view('frontend-mediatype.autos.autoAdByType', [
                                                     'options' => $options,
                                                     'autotype' => $autotype,
-                                                    'location' => $location
+                                                    'location' => $location,
+                                                    'filter_location'=>$location_filter
                                                     ]
                     );
     }
@@ -189,7 +191,8 @@ class AutoController extends Controller
                 'erikshaw_options' => serialize($request->input('erikshawdisplay')),
                 'light_option' => $request->input('autolighting'),
                 'discount' => $request->input('autodiscount'),
-                'auto_number' => $request->input('autosnumber')
+                'auto_number' => $request->input('autosnumber'),
+                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $auto->save();

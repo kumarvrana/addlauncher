@@ -24,11 +24,12 @@ class DashboardController extends Controller
     public function getDashboard()
     {
         $orders = Order::latest()->limit(10)->offset(0)->get();
+
         $orders->transform(function($order, $key){
             $order->cart = unserialize($order->cart);
             return $order;
         });
-       
+      
         return view('backend.admin.index', ['orders' => $orders]);
     }
 

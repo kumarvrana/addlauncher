@@ -17,42 +17,61 @@ use App\Order;
 
 class CinemaController extends Controller
 {
-    
+    protected $additionlsAds;
+    protected $cinema_options;
+    protected $cinema_category;
     public function __construct()
     {
         $this->middleware('admin', ['only' => ['getDashboardCinemaList', 'getDashboardCinemaForm', 'postDashboardCinemaForm', 'addCinemaPrice', 'getDeleteCinemaad', 'getUpdateeCinemaad', 'getuncheckCinemaadOptions']]);
+        $this->cinema_options = array('video_ad' => 'Video Ad', 'trailor_ad' => 'Trailor Ad', 'mute_slide_ad' => 'Mute Slide Ad');
+        $this->cinema_category = array('gold' => 'Gold', 'platinum' => 'Platinum', 'silver' => 'Silver'); 
+        $this->additionlsAds = array(
+                                    'ticket_jackets' => 'Ticket Jackets',
+                                    'seat_branding' => 'Seat Branding',
+                                    'audi_door_branding' => 'Audi Door Branding',
+                                    'popcorn_tub_branding' => 'Popcorn Tub Branding',
+                                    'coffee_tree_branding' => 'Coffee Tree Branding',
+                                    'washroom_branding' => 'Washroom Branding',
+                                    'women_frisking_cell' => 'Women Frisking Cell'
+                                );
     }
     //frontend function starts
     
     public function getfrontendAllCinemaads()
     {
        $cinema_ads = Cinemas::all();
+       if(count($cinema_ads) <= 0){
+            return view('partials.comingsoon');
+       }
        $mediatypes = new Mainaddtype();
        $ad_cats = $mediatypes->mediatype('Cinemas');
-       return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads ,'mediacat' => $ad_cats]);
-    }
+       $location_filter = Cinemas::select('location')->distinct()->get();
 
-    
-    
-    public function getfrontCinemaad($id)
-    {
-        $cinemaad = Cinemas::find($id);
-        if($cinemaad){
-            if($cinemaad->status === "3" || $cinemaad->status === "2"){
-                return redirect()->back();
-            }
-            $cinemaads = Cinemasprice::where('cinemas_id', '=', $id)->get();            
-            return view('frontend-mediatype.cinemas.cinema-single', ['cinemas' => $cinemaads]);
-        }
-        
+       return view('frontend-mediatype.cinemas.cinemaads-list', ['products' => $cinema_ads,'mediacat' => $ad_cats, 'filter_location'=>$location_filter]);
     }
     
+    public function getfrontCinemaad($slug)
+    {
+        $cinema = new Cinemas();
+        $id = $cinema->getIDFromSlug($slug);
+        $generalCinemaoptions = Cinemasprice::where([
+                                    ['cinemas_id', '=', $id],
+                                    ['option_type', '=', 'general'],
+                                ])->get();
+
+        $additionalCinemaoptions = Cinemasprice::where([
+                                    ['cinemas_id', '=', $id],
+                                    ['option_type', '=', 'additional'],
+                                ])->get();
+       $location_filter = Cinemas::select('location')->distinct()->get();
+
+
+        return view('frontend-mediatype.cinemas.cinema-single', ['generalCinemaads' => $generalCinemaoptions, 'additionalCinemaads' => $additionalCinemaoptions,'filter_location'=>$location_filter]);
+    }
     
     // frontend functions ends
 
     //Backend functions below
-
-
     // get list of all the products in cinema stop media type
     public function getDashboardCinemaList(){
         $cinema_ads = Cinemas::all();
@@ -62,7 +81,10 @@ class CinemaController extends Controller
     // get form of cinema stop media type
      public function getDashboardCinemaForm()
     {
-        return view('backend.mediatypes.cinemas.cinema-addform');
+        return view('backend.mediatypes.cinemas.cinema-addform', ['cinema_options' =>  $this->cinema_options,
+                         'cinema_category'=> $this->cinema_category,
+                         'additionlsAds' => $this->additionlsAds]
+                         );
     }
 
     // post list of all the products in cinema media type
@@ -94,6 +116,8 @@ class CinemaController extends Controller
             Image::make($file)->resize(800, 400)->save($location);
         }
 
+        
+
         $cinema = new Cinemas([
                 'title' => $request->input('title'),
                 'price' => $request->input('price'),
@@ -107,13 +131,16 @@ class CinemaController extends Controller
                 'references' => $request->input('reference'),
                 'status' => $request->input('status'),
                 'display_options' => serialize($request->input('cinemadisplay')),
-        
+                'additional_adsoption'=> serialize($request->input('additionalsAds')),
                 'discount' => $request->input('cinemadiscount'),
                 'cinemanumber' => $request->input('cinemasnumber'),
                 'audiseats' => $request->input('audiseats'),
                 'audinumber' => $request->input('audinumber'),
-                'cinemacategory' => $request->input('cinemacategory')
+                'cinemacategory' => $request->input('cinemacategory'),
+                'reference_mail' => $request->input('reference_mail')
         ]);
+
+        $cinema->slug = $cinema->getUniqueSlug($request->input('title'));
 
         $cinema->save();
 
@@ -121,22 +148,41 @@ class CinemaController extends Controller
 
 
         //cinema display prices insertion
-
       
        if($request->has('price_video_ad')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_video_ad', $request->input('price_video_ad'), 'duration_video_ad', $request->input('duration_video_ad'));
-        }
-      
+            $this->addCinemaPrice($lastinsert_ID, 'price_video_ad', $request->input('price_video_ad'), 'duration_video_ad', $request->input('duration_video_ad'), 'general');
+        }      
 
        if($request->has('price_trailor_ad')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_trailor_ad', $request->input('price_trailor_ad'), 'duration_trailor_ad', $request->input('duration_trailor_ad'));
-        } //can be used as no of seats or no of screens
-
+            $this->addCinemaPrice($lastinsert_ID, 'price_trailor_ad', $request->input('price_trailor_ad'), 'duration_trailor_ad', $request->input('duration_trailor_ad'), 'general');
+        } 
        
         if($request->has('price_mute_slide_ad')){
-            $this->addCinemaPrice($lastinsert_ID, 'price_mute_slide_ad', $request->input('price_mute_slide_ad'), 'duration_mute_slide_ad', $request->input('duration_mute_slide_ad'));
+            $this->addCinemaPrice($lastinsert_ID, 'price_mute_slide_ad', $request->input('price_mute_slide_ad'), 'duration_mute_slide_ad', $request->input('duration_mute_slide_ad'), 'general');
         }
        
+        if($request->has('price_ticket_jackets')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_ticket_jackets', $request->input('price_ticket_jackets'), 'duration_ticket_jackets', $request->input('duration_ticket_jackets'), 'additional');
+        }
+
+        if($request->has('price_seat_branding')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_seat_branding', $request->input('price_seat_branding'), 'duration_seat_branding', $request->input('duration_seat_branding'), 'additional');
+        }
+        if($request->has('price_audi_door_branding')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_audi_door_branding', $request->input('price_audi_door_branding'), 'duration_audi_door_branding', $request->input('duration_audi_door_branding'), 'additional');
+        }
+        if($request->has('price_popcorn_tub_branding')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_popcorn_tub_branding', $request->input('price_popcorn_tub_branding'), 'duration_popcorn_tub_branding', $request->input('duration_popcorn_tub_branding'), 'additional');
+        }
+        if($request->has('price_coffee_tree_branding')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_coffee_tree_branding', $request->input('price_coffee_tree_branding'), 'duration_coffee_tree_branding', $request->input('duration_coffee_tree_branding'), 'additional');
+        }
+        if($request->has('price_washroom_branding')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_washroom_branding', $request->input('price_washroom_branding'), 'duration_washroom_branding', $request->input('duration_washroom_branding'), 'additional');
+        }
+        if($request->has('price_women_frisking_cell')){
+            $this->addCinemaPrice($lastinsert_ID, 'price_women_frisking_cell', $request->input('price_women_frisking_cell'), 'duration_women_frisking_cell', $request->input('duration_women_frisking_cell'), 'additional');
+        }
 
        
         //return to cinema product list
@@ -144,16 +190,16 @@ class CinemaController extends Controller
     }
 
     //insert price data to cinema price table
-    public function addCinemaPrice($id, $pricekey, $pricevalue, $durkey, $durvalue)
+    public function addCinemaPrice($id, $pricekey, $pricevalue, $durkey, $durvalue, $optionType)
     {
         $insert = new Cinemasprice();
 
-       $insert->cinemas_id = $id;
+        $insert->cinemas_id = $id;
         $insert->price_key = $pricekey;
         $insert->price_value = $pricevalue;
         $insert->duration_key = $durkey;
         $insert->duration_value = $durvalue;
-       
+        $insert->option_type = $optionType;
         $insert->save();
 
     }
@@ -171,18 +217,21 @@ class CinemaController extends Controller
     }
 
     // update cinema product
-    public function getUpdateeCinemaad($ID)
+    public function getUpdateeCinemaad($ID, Cinemasprice $cinemasprice)
     {
         $cinemaData = Cinemas::find($ID);
-        $cinemapriceData = Cinemasprice::where('cinemas_id', $ID)->get();
+        $cinemapriceData = $cinemasprice->where('cinemas_id', $ID)->get();
         $fieldData = array();
         foreach($cinemapriceData as $pricecinema){
             $fieldData[] = ucwords(str_replace('_', ' ', substr($pricecinema->price_key, 6)));
         }
 
        $fieldDatas = serialize($fieldData);
-        return view('backend.mediatypes.cinemas.cinema-editform', ['cinema' => $cinemaData, 'cinemapricemeta' => $cinemapriceData, 'fieldData' => $fieldDatas]);
+        return view('backend.mediatypes.cinemas.cinema-editform', ['cinema_options' =>  $this->cinema_options,
+                         'cinema_category'=> $this->cinema_category,
+                         'additionlsAds' => $this->additionlsAds, 'cinema' => $cinemaData, 'fieldData' => $fieldDatas, 'generalOptions' => serialize($cinemasprice->getGeneralOptions($ID)), 'additionalOptions' => serialize($cinemasprice->getAdditionalOptions($ID))]);
     }
+
     //check and uncheck options remove
     public function getuncheckCinemaadOptions(Request $request)
     {
@@ -197,7 +246,7 @@ class CinemaController extends Controller
                                     ['price_key', '=', $request['price_key']],
                                 ])->count();
         if($count > 0){
-            Cinemas::where('id', $request['id'])->update(['display_options' => serialize($datta)]);
+            Cinemas::where('id', $request['id'])->update([$request['option'] => serialize($datta)]);
             $cinemas = Cinemasprice::where([
                                     ['cinemas_id', '=', $request['id']],
                                     ['price_key', '=', $request['price_key']],
@@ -242,11 +291,14 @@ class CinemaController extends Controller
          $editcinema->status = $request->input('status');
          $editcinema->references = $request->input('reference');
          $editcinema->display_options = serialize($request->input('cinemadisplay'));
+         $editcinema->additional_adsoption = serialize($request->input('additionalsAds'));
          $editcinema->cinemanumber = $request->input('cinemasnumber');
          $editcinema->discount = $request->input('cinemadiscount');
          $editcinema->audiseats = $request->input('audiseats');
          $editcinema->audinumber = $request->input('audinumber');
          $editcinema->cinemacategory = $request->input('cinemacategory');
+         $editcinema->reference_mail = $request->input('reference_mail');
+         $editcinema->slug = $editcinema->slug;
          
         if($request->hasFile('image')){
             $file = $request->file('image');
@@ -261,31 +313,54 @@ class CinemaController extends Controller
 
         //cinema display prices insertion
 
+      
        if($request->has('price_video_ad')){
-            $this->updateCinemaPrice($ID, 'price_video_ad', $request->input('price_video_ad'), 'duration_video_ad', $request->input('duration_video_ad'));
-        }
+            $this->updateCinemaPrice($ID, 'price_video_ad', $request->input('price_video_ad'), 'duration_video_ad', $request->input('duration_video_ad'), 'general');
+        }      
 
        if($request->has('price_trailor_ad')){
-            $this->updateCinemaPrice($ID, 'price_trailor_ad', $request->input('price_trailor_ad'), 'duration_trailor_ad', $request->input('duration_trailor_ad'));
-        } //can be used as no of seats or no of screens
-
+            $this->updateCinemaPrice($ID, 'price_trailor_ad', $request->input('price_trailor_ad'), 'duration_trailor_ad', $request->input('duration_trailor_ad'), 'general');
+        } 
        
         if($request->has('price_mute_slide_ad')){
-            $this->updateCinemaPrice($ID, 'price_mute_slide_ad', $request->input('price_mute_slide_ad'), 'duration_mute_slide_ad', $request->input('duration_mute_slide_ad'));
+            $this->updateCinemaPrice($ID, 'price_mute_slide_ad', $request->input('price_mute_slide_ad'), 'duration_mute_slide_ad', $request->input('duration_mute_slide_ad'), 'general');
         }
-        
+       
+        if($request->has('price_ticket_jackets')){
+            $this->updateCinemaPrice($ID, 'price_ticket_jackets', $request->input('price_ticket_jackets'), 'duration_ticket_jackets', $request->input('duration_ticket_jackets'), 'additional');
+        }
+
+        if($request->has('price_seat_branding')){
+            $this->updateCinemaPrice($ID, 'price_seat_branding', $request->input('price_seat_branding'), 'duration_seat_branding', $request->input('duration_seat_branding'), 'additional');
+        }
+        if($request->has('price_audi_door_branding')){
+            $this->updateCinemaPrice($ID, 'price_audi_door_branding', $request->input('price_audi_door_branding'), 'duration_audi_door_branding', $request->input('duration_audi_door_branding'), 'additional');
+        }
+        if($request->has('price_popcorn_tub_branding')){
+            $this->updateCinemaPrice($ID, 'price_popcorn_tub_branding', $request->input('price_popcorn_tub_branding'), 'duration_popcorn_tub_branding', $request->input('duration_popcorn_tub_branding'), 'additional');
+        }
+        if($request->has('price_coffee_tree_branding')){
+            $this->updateCinemaPrice($ID, 'price_coffee_tree_branding', $request->input('price_coffee_tree_branding'), 'duration_coffee_tree_branding', $request->input('duration_coffee_tree_branding'), 'additional');
+        }
+        if($request->has('price_washroom_branding')){
+            $this->updateCinemaPrice($ID, 'price_washroom_branding', $request->input('price_washroom_branding'), 'duration_washroom_branding', $request->input('duration_washroom_branding'), 'additional');
+        }
+        if($request->has('price_women_frisking_cell')){
+            $this->updateCinemaPrice($ID, 'price_women_frisking_cell', $request->input('price_women_frisking_cell'), 'duration_women_frisking_cell', $request->input('duration_women_frisking_cell'), 'additional');
+        }
+
 
         //return to cinema product list
        return redirect()->route('dashboard.getCinemaList')->with('message', 'Successfully Edited!');
     }
 
-    public function updateCinemaPrice( $id, $pricekey, $pricevalue, $durkey, $durvalue){
+    public function updateCinemaPrice( $id, $pricekey, $pricevalue, $durkey, $durvalue, $optionType){
         $count = Cinemasprice::where([
                                     ['cinemas_id', '=', $id],
                                     ['price_key', '=', $pricekey],
                                 ])->count();
         if($count < 1){
-            $this->addCinemaPrice($id, $pricekey, $pricevalue, $durkey, $durvalue);
+            $this->addCinemaPrice($id, $pricekey, $pricevalue, $durkey, $durvalue, $optionType);
         }else{
             $update = Cinemasprice::where([
                                     ['cinemas_id', '=', $id],
@@ -366,17 +441,12 @@ class CinemaController extends Controller
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)
    {
-        $cinema_ad = Cinemas::where('id', $id)->first()->toArray();
-        
-        $selectDisplayOpt = explode("+", $variation);
+       $cinema_ad = Cinemas::where('id', $id)->first()->toArray();
+       
+        $cinemaPrice = new Cinemasprice();
 
-        $main_key = substr($selectDisplayOpt[1], 6);
+        $cinema_price = $cinemaPrice->getCinemasPriceCart($id, $variation);
 
-        $cinema_price = Cinemasprice::where([
-                                    ['cinemas_id', '=', $id],
-                                    ['price_key', '=', $selectDisplayOpt[1]],
-                                ])->first()->toArray();
-        
         
         $cinema_Ad = array_merge($cinema_ad, $cinema_price);
        
@@ -384,12 +454,12 @@ class CinemaController extends Controller
                 
         $cart = new Cart($oldCart);
 
-        $cart->addorRemoveCinema($cinema_Ad, $cinema_ad['id'], 'cinemas', $flag=true); //pass full cinema details, id and model name like "cinemas"
+        $status = $cart->addorRemove($cinema_Ad, $cinema_ad['id'], 'cinemas', $flag=true); //pass full cinema details, id and model name like "cinemas"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');
 
-        return redirect()->back()->with(['status' => 'added']);
+        return redirect()->back()->with(['status' => $status]);
     }
 
     public function getAddToCartBySearch(Request $request, $id, $variation, $fileroption)

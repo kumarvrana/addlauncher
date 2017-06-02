@@ -102,7 +102,8 @@ class MetroController extends Controller
                 'display_options' => serialize($request->input('metrodisplay')),
                 'light_option' => $request->input('metrolight'),
                 'discount' => $request->input('metrodiscount'),
-                'metronumber' => $request->input('metrosnumber')
+                'metronumber' => $request->input('metrosnumber'),
+                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $metro->save();
@@ -233,6 +234,7 @@ class MetroController extends Controller
          $editmetro->display_options = serialize($request->input('metrodisplay'));
           $editmetro->metronumber = $request->input('metrosnumber');
           $editmetro->discount = $request->input('metrodiscount');
+          $editmetro->reference_mail = $request->input('reference_mail');
 
         if($request->hasFile('image')){
             $file = $request->file('image');

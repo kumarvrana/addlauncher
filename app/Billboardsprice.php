@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Billboardsprice extends Model
 {
     protected $fillable = [
-        'billboards_id', 'price_key', 'price_value', 'number_key', 'number_value' , 'duration_key' , 'duration_value'
+        'billboards_id', 'price_key', 'price_value', 'number_key', 'number_value' , 'duration_key' , 'duration_value','ad_code'
     ];
 
      public function billboard()
@@ -43,29 +43,20 @@ class Billboardsprice extends Model
     public function FilterBillboardsAds($filterOption)
     {
 
-        $priceFilter = (!empty($filterOption['pricerange'])) ? $filterOption['pricerange'] : null;
+        $minpriceFilter = (!empty($filterOption['minpricerange'])) ? $filterOption['minpricerange'] : 0;
+        $maxpriceFilter = (!empty($filterOption['maxpricerange'])) ? $filterOption['maxpricerange'] : 500000;
         $locationFilter = (!empty($filterOption['locationFilter'])) ? $filterOption['locationFilter'] : null;
         $categoryFilter = (!empty($filterOption['category'])) ? $filterOption['category'] : null;
         $whereVariables = array();
         $whereID = array();
-        if(isset($priceFilter)){
-            $filter_priceCamparsion = preg_replace('/[0-9]+/', '', $priceFilter); // comparion operator
-            if($filter_priceCamparsion != '<>'){
-                $filter_price = preg_replace('/[^0-9]/', '', $priceFilter);
-                $whereVariables[] = ['price_value', $filter_priceCamparsion, $filter_price];
-            }else{
-                $filter_price = preg_replace('/[^0-9]/', '_', $priceFilter);
-                $filter_price = explode('_', $filter_price);
-            
-                $whereVariables[] = ['price_value', '>', $filter_price[0]];
-                $whereVariables[] = ['price_value', '<=', $filter_price[2]];
-            }
-            
-            
+        if(isset($minpriceFilter) || isset($maxpriceFilter)){
+            $whereVariables[] = ['price_value', '>=', $minpriceFilter];
+            $whereVariables[] = ['price_value', '<=', $maxpriceFilter];
         }
+            
         if(isset($categoryFilter)){
             //foreach($categoryFilter as $category){
-                 $categoryFilter = "%$category%";
+                 $categoryFilter = "%$categoryFilter%";
                  $whereVariables[] = ['price_key', 'LIKE', $categoryFilter];
             //}
         }

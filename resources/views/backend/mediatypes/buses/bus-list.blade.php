@@ -53,32 +53,14 @@
                 <td>{{$busad->city}}</td>
                 <td>{{$busad->state}}</td>
                 <td>
-               
                     <img src="{{asset('images/buses/'.$busad->image)}}" alt="{{$busad->title}}" width="50px" height="50px" class="img-responsive">
-                
                 </td>
-                @PHP
-                    if($busad->status){
-                        switch($busad->status){
-                            case 1:
-                                $status = 'Available';
-                            break;
-                            case 2:
-                                $status = 'Sold Out';
-                            break;
-                            case 3:
-                                $status = 'Coming Soon';
-                            break;
-                        }
-                    }
-                @ENDPHP
-                <td>{{$status}}</td>
+               
+                <td>{{$busad->status}}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="...">
-                        <a type="button" href="{{route('dashboard.editbusesad', ['ID' => $busad->id])}}" class="btn btn-primary">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-</a>
-                        <a type="button" type="button" href="{{route('dashboard.deleteBusad', ['busadID' => $busad->id])}}" class="btn btn-danger">Delete <i class="fa fa-trash" aria-hidden="true"></i>
-</a>
+                        <a type="button" href="{{route('dashboard.editbusesad', ['ID' => $busad->id])}}" class="btn btn-primary">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a type="button" type="button" href="{{route('dashboard.deleteBusad', ['busadID' => $busad->id])}}" class="btn btn-danger">Delete <i class="fa fa-trash" aria-hidden="true"></i></a>
                      </div>
                 </td>
                 

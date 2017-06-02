@@ -33,8 +33,8 @@
                     <input type="text" id="title" name="title" class="form-control" placeholder="Name of the product" value="{{$billboard->title}}" required>
                 </div>
                 <div class="form-group">
-                    <label for="price">Ad Price:</label>
-                    <input type="text" id="price" name="price" class="form-control" value="{{$billboard->price}}" placeholder="Put Base price here eg: 1213" required>
+                    <label for="size">Ad Size:</label>
+                    <input type="text" id="size" name="size" class="form-control" value="{{$billboard->size}}" placeholder="Put Base size here eg: 1213" required>
                 </div>
                 <div class="form-group">
                     <label for="location">Location:</label>
@@ -146,6 +146,10 @@
             <div class="form-group">
                 <label for="image">Ad Image:</label>
                 <input type="file" id="image" name="image" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="reference_mail">Reference Mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{$billboard->reference_mail}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>

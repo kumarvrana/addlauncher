@@ -329,6 +329,8 @@
                                         <td>{{$item['qty']}}</td>
                                         @if($imagefolder[0] == 'televisions')
                                         <td>Rs. {{number_format($item['item']['rate_value'], 2)}}</td>
+                                        @elseif($imagefolder[0] == 'airports')
+                                        <td>Rs. {{number_format($item['item']['optionprice'], 2)}}</td>
                                         @else
                                         <td>Rs. {{number_format($item['item']['price_value'], 2)}}</td>
                                         @endif

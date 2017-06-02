@@ -38,16 +38,17 @@
 						@if($billboards)
 							@foreach($billboards as $billboard)
 								
-								<div class="col-md-3 col-sm-3 "> 
+								<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
 									<div class="pro-item"> 
 										<div class=" cat-opt-img "> <img src="{{asset('images/outdooradvertising/'.$billboard->billboard->image)}}"> </div>
 										<p class="font-1">{{$billboard->billboard->title}}</p>
-										<p class="font-2">{{$billboard->billboard->location}} | {{$billboard->billboard->city}} 
-										| {{$billboard->billboard->state}}</p>
+										<p class="font-2">{{$billboard->billboard->landmark}} <br> <span class="cityfont">{{$billboard->billboard->city}} </span>
+										</p>
 										<hr>
 										<div class="row">
 											<div class="col-md-6">
-												<p class="font-3">{{$billboard->number_value}} {{ucwords(str_replace('_', ' ', $billboardOption))}}<br> for <br> {{$billboard->duration_value}} months</p>
+												<p class="font-3">1 Ad Per Month<br>
+												<span><span class="text-danger">Size: </span>{{$billboard->billboard->size}}</span>
 											</div>
 											<div class="col-md-6">
 												<p class="font-4"><del class="lighter">Rs {{$billboard->price_value}} <br></del>Rs {{$billboard->price_value}} </p>

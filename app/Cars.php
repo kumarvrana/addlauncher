@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cars extends Model
 {
      protected $fillable = [
-        'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'cartype', 'display_options','numberofcars','discount'
+        'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'cartype', 'display_options','numberofcars','discount','reference_mail'
     ];
 
     public function carsprice()

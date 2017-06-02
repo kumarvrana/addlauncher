@@ -33,9 +33,10 @@ class ShoppingmallController extends Controller
        $mediatypes = new Mainaddtype();
 
        $ad_cats = $mediatypes->mediatype('Shopping Malls');
+       $location_filter = Shoppingmalls::select('location')->distinct()->get();
 
 
-       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['shoppingmall_ads' => $shoppingmall_ads , 'location' => $location ,'mediacat' => $ad_cats]);
+       return view('frontend-mediatype.shoppingmalls.shoppingmallads-list', ['shoppingmall_ads' => $shoppingmall_ads , 'location' => $location ,'mediacat' => $ad_cats,'filter_location'=>$location_filter]);
     }
 
     // public function getfrontShoppingmalladByOption($shoppingmallOption)
@@ -114,7 +115,8 @@ class ShoppingmallController extends Controller
                 'display_options' => serialize($request->input('shoppingmalldisplay')),
                 'light_option' => $request->input('shoppingmalllighting'),
                 'discount' => $request->input('discount'),
-                'numberofshoppingmalls' => $request->input('shoppingmallsnumber')
+                'numberofshoppingmalls' => $request->input('shoppingmallsnumber'),
+                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $shoppingmall->save();
@@ -288,6 +290,7 @@ class ShoppingmallController extends Controller
          $editshoppingmall->display_options = serialize($request->input('shoppingmalldisplay'));
           $editshoppingmall->numberofshoppingmalls = $request->input('shoppingmallsnumber');
           $editshoppingmall->discount = $request->input('discount');
+          $editshoppingmall->reference_mail = $request->input('reference_mail');
 
         if($request->hasFile('image')){
             $file = $request->file('image');

@@ -5,6 +5,13 @@
 @endsection
 
 @section('content')
+
+<section class="sec-banner">
+    <div class="jumbotron jumbo-1 text-center">
+        <h1> Checkout</h1>
+    </div>
+</section>    
+
         <div class="container-fluid">
             <div class="row cart-body">
                 
@@ -115,8 +122,10 @@
                                             
                                         @if($imagefolder[0] == 'televisions')    
                                             <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['rate_key'], 5)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['rate_value']}}</span></li>
+                                            @elseif($imagefolder[0] == 'airports')
+                                                <li><strong>{{ $product['item']['title'] }} | {{ $product['item']['displayoption']}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['optionprice']}}</span></li>
                                             @else
-                                             <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
+                                                <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
                                             @endif
                                         @endif
                                     @endforeach

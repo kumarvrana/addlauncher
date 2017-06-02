@@ -35,9 +35,11 @@ class CarController extends Controller
         $location = 'Delhi NCR';
         $mediatypes= new Mainaddtype();
         $ad_cats = $mediatypes->mediatype('Cars');
+        $location_filter = Cars::select('location')->distinct()->get();
 
 
-        return view('frontend-mediatype.cars.carads-list', ['car_type' => $car_type, 'location' => $location, 'mediacat' => $ad_cats]);
+
+        return view('frontend-mediatype.cars.carads-list', ['car_type' => $car_type, 'location' => $location, 'mediacat' => $ad_cats, 'filter_location'=>$location_filter]);
     }
     
     // get cars by category
@@ -50,13 +52,15 @@ class CarController extends Controller
                                 'doors' => 'Doors'
                             );
 
-        $location = 'Delhi NCR';    
+        $location = 'Delhi NCR';
+        $location_filter = Cars::select('location')->distinct()->get();    
 
         
         return view('frontend-mediatype.cars.carAdByType', [
                                                     'options' => $options,
                                                     'cartype' => $cartype,
-                                                    'location' => $location
+                                                    'location' => $location,
+                                                    'filter_location'=>$location_filter
                                                     ]
                     );
 
@@ -146,7 +150,8 @@ class CarController extends Controller
                 'display_options' => serialize($request->input('cardisplay')),
                 // 'light_option' => $request->input('aplighting'),
                 'discount' => $request->input('cardiscount'),
-                'numberofcars' => $request->input('carnumber')
+                'numberofcars' => $request->input('carnumber'),
+                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $car->save();
@@ -279,6 +284,7 @@ class CarController extends Controller
          $editcar->display_options = serialize($request->input('cardisplay'));
          $editcar->numberofcars = $request->input('carnumber');
          $editcar->discount = $request->input('cardiscount');
+         $editcar->reference_mail = $request->input('reference_mail');
 
         if($request->hasFile('image')){
             $file = $request->file('image');

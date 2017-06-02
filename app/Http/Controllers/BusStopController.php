@@ -28,10 +28,11 @@ class BusstopController extends Controller
     {
        $busstop_ads = Busstops::all();
        $mediatypes = new Mainaddtype();
-          $ad_cats = $mediatypes->mediatype('Bus Stops');
+       $ad_cats = $mediatypes->mediatype('Bus Stops');
+       $location_filter = Busstops::select('location')->distinct()->get();
 
 
-       return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads,'mediacat' => $ad_cats]);
+       return view('frontend-mediatype.busstops.busstopads-list', ['products' => $busstop_ads,'mediacat' => $ad_cats, 'filter_location'=>$location_filter]);
     }
     
     public function getfrontBusstopad($id)
@@ -98,7 +99,8 @@ class BusstopController extends Controller
                 'display_options' => serialize($request->input('busstopdisplay')),
                 'light_option' => $request->input('bslighting'),
                 'discount' => $request->input('busstopdiscount'),
-                'stopinnumber' => $request->input('busstopsnumber')
+                'stopinnumber' => $request->input('busstopsnumber'),
+                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $busstop->save();
@@ -231,6 +233,7 @@ class BusstopController extends Controller
          $editbusstop->light_option = $request->input('bslighting');
           $editbusstop->stopinnumber = $request->input('busstopsnumber');
           $editbusstop->discount = $request->input('busstopdiscount');
+          $editbusstop->reference_mail = $request->input('reference_mail');
 
         if($request->hasFile('image')){
             $file = $request->file('image');
@@ -360,9 +363,9 @@ class BusstopController extends Controller
    {
         $busstop_ad = Busstops::where('id', $id)->first()->toArray();
        
-        $busPrice = new Busstopsprice();
+        $busstopPrice = new Busstopsprice();
 
-        $busstop_price = $busPrice->getBusstopsPriceCart($id, $variation);
+        $busstop_price = $busstopPrice->getBusstopsPriceCart($id, $variation);
 
         
         $busstop_Ad = array_merge($busstop_ad, $busstop_price);

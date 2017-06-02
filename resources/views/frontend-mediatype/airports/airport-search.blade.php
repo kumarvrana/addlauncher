@@ -30,7 +30,7 @@
 					<div class="row">
 						@if($airports)
 							@foreach($airports as $product)
-								<div class="col-md-3 col-sm-3 "> 
+								<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
 									<div class="pro-item"> 
 										<div class=" cat-opt-img "> <img src="{{asset('images/airports/'.$product[11])}}"> </div>
 										<p class="font-1">{{$product[3]}}</p>

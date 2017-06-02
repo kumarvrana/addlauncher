@@ -40,15 +40,20 @@
                     @else
                          @if($category[0] == 'televisions')
                             <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['rate_key'],5)))}}</b>|{{$item['qty']}}</li>
+
+                         @elseif($category[0] == 'airports')
+                            <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', $item['item']['displayoption']))}}</b>|{{$item['qty']}}</li>
+
                          @else
                             <li>{{$item['item']['title']}}|<b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b>|{{$item['qty']}}</li>
+
                         @endif
                     @endif
                  @endforeach
                  </ul></td>
                  <td><ul>
                  @foreach( $order->cart->items as $item)
-                    <li>Rs.{{$item['item']['price']}}</li>
+                    <li>Rs.{{$item['item']['optionprice']}}</li>
                  @endforeach
                  </ul></td>
                  <td>{{$order->cart->totalPrice}}</td>

@@ -57,6 +57,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     
 @yield('scripts')
+<script src="{{ URL::to( 'js/rel.js' ) }}"></script>
 <script src="{{ URL::to( 'js/admin-panel.js' ) }}"></script>
+
 </body>
 </html>

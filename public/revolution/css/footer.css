@@ -1,97 +1,21 @@
-.black-strip{
-        background: #232323;
-    height: 25px;
-    margin-bottom: 100px;
-}
-body{
-    font-family: Lato, sans-serif;
-}
 
-.head-sty{
-        font-size: 15px !important;
-    margin-bottom: 15px;
-       color: #000;
-    font-weight: 500;
-    margin-left: 3px !important;
-}
-
-.para-sty{
-        font-size: 11px;
-        padding: 0px 22px 0px 5px;
-}
-
-.gray-strip {
-    border: 10px solid #757575;
-}
-.sty-btm{
-          margin-top: 30px;
-    margin-bottom: 85px;
-    margin-right:0;
-
-}
-
-.a-sty::before {
-    width: 2px;
-    height: 11px;
-    background-color: #9e9e9e;
-    display: inline-block;
-    content: '';
-    margin: 0px 2px;
-    padding: 0;
-}
-.para-sty::after {
-    width: 2px;
-    height: 11px;
-    background-color: #9e9e9e;
-    display: inline-block;
-    content: '';
-    margin: 0px 2px;
-    padding: 0;
-}
-.a-sty{
-        color: #000;
-    text-decoration: none;
-}
-.a-sty-one{
-        color: #000;
-    text-decoration: none;
-}
-.a-sty:hover{
-        color: #38b1e2;
-    text-decoration: none;
-
-}
 .metro-sty{
     font-weight: bold;
 }
-.sty-h-loc{
-        font-size: 15px;
-    margin-left: -13px;
-    font-weight: bold;
-}
-.add-sty{
-    margin-bottom: 12px;
-        font-size: 13px;
-}
+
+.
 .space-top{
     margin-top: 30px;
 }
+.space-top-m strong {
+    color: white;
+}
 .accont-sty{
-    color: #000;
+    color: #38b1e2;
     font-weight: bold;
 }
-.cover-colr{
-     width: 100%;
-    max-width: 100%;
-    border: 1px solid #cdd5d4;
-    margin-top: 0px;
-    background: #d6d6d6;
 
-}
-.padd-sty{
-            margin-bottom: 30px !important;
-    margin-top: 50px !important;
-}
+
 .car-pad{
     margin-bottom: 110px !important;
 }

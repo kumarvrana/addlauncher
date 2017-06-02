@@ -6,7 +6,7 @@
 
 @section('content')
     
-  <!--   <section class="oslide">
+ <section class="oslide visible-sm visible-xs">
         <div class="owl-carousel">
             <div class="item">
               <img src="{{asset('images/ss1.jpg')}}">
@@ -16,8 +16,8 @@
             </div>
             
         </div>
-    </section> -->
-    <div class="first-slider">
+    </section> 
+    <div class="first-slider hidden-sm hidden-xs">
             <div id="rev_slider_211_1_wrapper" class="rev_slider_wrapper fullwidthbanner-container" data-alias="webproductlighthero" style="background-color:rgb(10, 174, 229);margin:0px auto;padding:0px;margin-top:0px;margin-bottom:0px;">
                 <!-- START REVOLUTION SLIDER 5.1.1RC fullwidth mode -->
                 <div id="rev_slider_211_1" class="rev_slider fullwidthabanner" style="display:none;" data-version="5.1.1RC">
@@ -71,8 +71,7 @@
                             </div>
 
                             <!-- LAYER NR. 10 -->
-                            <div class="tp-caption WebProduct-Title   tp-resizeme rs-parallaxlevel-7" id="slide-699-layer-7" data-x="['left','left','left','left']" data-hoffset="['30','30','200','80']" data-y="['middle','middle','top','top']" data-voffset="['0','0','177','160']" data-fontsize="['90','90','75','60']" data-lineheight="['90','90','75','60']" data-width="none" data-height="none" data-whitespace="nowrap" data-transform_idle="o:1;" data-transform_in="x:-50px;opacity:0;s:1000;e:Power2.easeOut;" data-transform_out="opacity:0;s:1500;e:Power4.easeIn;s:1500;e:Power4.easeIn;" data-start="1000" data-splitin="none" data-splitout="none" data-responsive_offset="on" style="z-index: 14; white-space: nowrap;">Does What It
-                                <br/>Says!
+                            <div class="tp-caption WebProduct-Title   tp-resizeme rs-parallaxlevel-7" id="slide-699-layer-7" data-x="['left','left','left','left']" data-hoffset="['30','30','200','80']" data-y="['middle','middle','top','top']" data-voffset="['0','0','177','160']" data-fontsize="['90','90','75','60']" data-lineheight="['90','90','75','60']" data-width="none" data-height="none" data-whitespace="nowrap" data-transform_idle="o:1;" data-transform_in="x:-50px;opacity:0;s:1000;e:Power2.easeOut;" data-transform_out="opacity:0;s:1500;e:Power4.easeIn;s:1500;e:Power4.easeIn;" data-start="1000" data-splitin="none" data-splitout="none" data-responsive_offset="on" style="z-index: 14; white-space: nowrap;">Right To AD!
                             </div>
 
                             <!-- LAYER NR. 11 -->
@@ -100,13 +99,13 @@
         </div>
 
 
-    <section class="sec-cat-box" >
-        <div class="container animated fadeInUp">
+    <section class="sec-cat-box ">
+        <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="section-title">
-                        <h2>What Are You Looking For?</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore. et dolore magna aliqua. </p>
+                    <div class="section-title wow fadeInUp">
+                        <h2>Explore Every Advertising Medium With Us</h2>
+                        <p>Location, Price, Dimensions and Availability wise exact preview of advertising mediums. </p>
                     </div>
                     
                 </div>
@@ -123,8 +122,8 @@
                     $variate = array(5, 6, 7);
                 @ENDPHP
                     @foreach($mediacats as $mediacat)  
-                    <div class="@PHP if($remainder != 0){if(in_array($i, $variate)){ echo 'col-md-4'; }else{ echo 'col-md-3'; } }else{ echo 'col-md-3';}@ENDPHP">
-                        <div class="package-box width-439-226">
+                    <div class="@PHP if($remainder != 0){if(in_array($i, $variate)){ echo 'col-md-4'; }else{ echo 'col-md-3 col-sm-6 col-xs-12'; } }else{ echo 'col-md-3 col-sm-6 col-xs-12';}@ENDPHP">
+                        <div class="package-box width-439-226 wow zoomIn">
                                 <div class="destination-box">
                                     <a href="{{$mediacat->slug}}" class="similar-destination banner">
                                       <img  alt="" class="img-responsive" src="{{asset('images/'.$mediacat->image)}}" style="display: block;">
@@ -146,7 +145,54 @@
     <!--   end of section sec-cat-box -->
 
 
+   {{-- <div class="section padding-top-bottom-med">
+        <div class="parallax-2" style="background-position: 50% 200px;"></div>
+    
+        <div class="containerSec container">
+            <div class="col-md-12">
+                <div class="play-video wow fadeInUp">
+                    <h4>Smooth parallax</h4>
+                    <p>Play fullscreen video.</p>
+                    <a href="http://www.youtube.com/embed/L9szn1QQfas?autoplay=1" class="fancybox  fancybox.iframe"><div class="button"><em class=" lnr lnr-chevron-right"></em></div></a>
+                </div>
+            </div>
+        </div>  
+    </div>
+    --}}
 
+
+    
+    <section class="home-info-box" >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 wow fadeInUp">
+                <div class="section-title">
+                	<h2>Why Add Launcher?</h2>
+                </div>
+                
+                </div>
+                <div class="col-md-12 wow fadeInUp">
+
+                    <p>Addlauncher is a digital solution to browse, select and publish desirable advertisement out of all the available advertising mediums within your city. Originated with an idea of empowering every potential/prospective individual unit or enterprise to procure their advertising aspirations in a convenient and competitive manner.</p>
+                    <p>Addlauncher.com is one stop virtual advertising solution for small businesses, large enterprises, organizations, institutions and global brands.</p>
+                    <ol>
+                    	<li>Virtual preview of all major advertising  mediums.</li>
+						<li>Custom Advertising  solutions out of the vast advertising portfolio.</li>
+						<li>Authenticated info regarding location, rates, accessibility and visibility.</li>
+						<li>Compatible payment modes as per customer’s convenience.</li>
+						<li>Transparent transactional and refund policies.</li>
+						<li>Active and responsive support.</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    
+    
+
+	
     
 
     

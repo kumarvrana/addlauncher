@@ -128,6 +128,10 @@
                 <input type="file" id="image" name="image" class="form-control" required>
             </div>
             <div class="form-group">
+                <label for="reference_mail">Reference mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{old('reference_mail')}}" class="form-control" required>
+            </div>
+            <div class="form-group">
                     <label for="reference">Other Reference:</label>
                     <textarea id="reference" name="reference" class="form-control">{{old('reference')}}</textarea>
                 </div>

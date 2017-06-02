@@ -16,7 +16,6 @@
             </div>
         </div>
         @endif
-
 <section class="sec-banner">
 <div class="jumbotron jumbo-1 text-center">
          <h1><small>&emsp;ADVERTISE ON</small> <br><span>{{ucwords(str_replace('_', ' ', $airportOption))}}</span></h1>
@@ -38,32 +37,31 @@
 						@if($airports)
 							@foreach($airports as $airport)
 								
-								<div class="col-md-3 col-sm-3 "> 
+								<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
 									<div class="pro-item"> 
 										<div class=" cat-opt-img "> <img src="{{asset('images/airports/'.$airport->airport->image)}}"> </div>
 										<p class="font-1">{{$airport->airport->title}}</p>
 										<p class="font-2">{{$airport->airport->location}} | {{$airport->airport->city}} 
 										| {{$airport->airport->state}}</p>
+										<p class="font-2">Dimension: {{$airport->dimensions}}</p>
 										<hr>
 										<div class="row">
 											<div class="col-md-6">
-												<p class="font-3">{{$airport->number_value}} {{ucwords(str_replace('_', ' ', $airportOption))}}<br> for <br> {{$airport->duration_value}} months</p>
+												<p class="font-3"> {{ucwords(str_replace('_', ' ', $airportOption))}} Ad<br> for <br> 1 months</p>
 											</div>
 											<div class="col-md-6">
-												<p class="font-4"><del class="lighter">Rs {{$airport->price_value}} <br></del>Rs {{$airport->price_value}} </p>
+												<p class="font-4"><del class="lighter">Rs {{$airport->optionprice}} <br></del>Rs {{$airport->optionprice}} </p>
 											</div>
+											
 										</div>
 										
 										@PHP
-											$options = $airport->price_value.'+'.$airport->price_key;
-											$session_key = 'airports'.'_'.$airport->price_key.'_'.$airport->airport->id;
-											$printsession = (array) Session::get('cart');				
-
-																				
+											$session_key = 'airports'.'_'.$airport->id.'_'.$airport->airport->id;
+											$printsession = (array) Session::get('cart');
 										@ENDPHP
 										<div class="clearfix"> 
-											<a class="glass" href="{{route('airport.addtocart', ['id' => $airport->airport->id, 'variation' => $options])}}">
-											
+											<a class="glass" href="{{route('airport.addtocart', ['id' => $airport->airport->id, 'variation' => $airport->id])}}">
+
 										 @if(count($printsession) > 0)
 											 @if(array_key_exists($session_key, $printsession['items'])) 
 												<span class="fa fa-minus-circle"></span> Remove From Cart 

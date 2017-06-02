@@ -1,6 +1,8 @@
 
 
-  <div class="nav-container visible-lg visible-md">
+  {{-- 
+
+  <div class="nav-container">
     <div class="nav1">
       <div class="nav2">
         <div id="pt_custommenu" class="pt_custommenu">
@@ -8,10 +10,9 @@
             <div id="pt_menu_home" class="pt_menu">
               <div class="parentMenu">
 
-                <a href="#" class="category-link"> Category <em class="lnr lnr-chevron-right"></em><em class="lnr lnr-chevron-right"></em></a>
                 @if(!empty($mediacats))
                   @foreach($mediacats as $mediacat) 
-                    <a href="{{env('APP_URL')}}{{$mediacat->slug}}"><span class="cat-menu-img {{str_replace(' ','_', strtolower($mediacat->title))}}"></span> {{$mediacat->label}}</a>
+                    <a href="{{env('APP_URL')}}{{$mediacat->slug}}"><span class="cat-menu-img {{str_replace(' ','_', strtolower($mediacat->title))}} hidden-md hidden-sm hidden-xs "></span> {{$mediacat->label}}</a>
                   @endforeach
                 @endif
                 
@@ -21,9 +22,14 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> 
+
+  --}}
+
+  
   
 </div>
 </div> <!-- end of fixed-div -->
+</div><!-- end of desktop_menu -->
 
 

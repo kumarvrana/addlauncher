@@ -81,19 +81,7 @@
 
         </div>
         <div class="step">
-
-               @PHP 
-                    $newspaper_options = array('page1' => 'Page1', 'page3' => 'Page3','last_page' => 'Last Page','any_page' => 'Any Page',);
-                    
-                    $indianExpress_display_options = array('full_page' => 'Full Page', 'half_page' => 'Half Page', 'mini_a4' => 'Mini A4', 'full_page_centre_spread' => 'Full Page Centre Spread', 'mini_a4_centre_spread' => 'Mini A4 Centre Spread', 'horizontal_strip' => 'Horizontal Strip', 'vertical_strip' => 'Vertical Strip');
-
-                    $indianExpress_premium_position_options = array('page_3_horizontal_solus' => 'Page 3 Horizontal Solus', 'inside_front_cover' => 'Inside Front Cover', 'inside_back_cover' => 'Inside_Back_Cover', 'back_page' => 'Back Page');
-
-                    $indianExpress_innovations_options = array('front_false_cover' => 'Front False Cover', 'front_and_back_false_cover' => 'Front And Back False Cover', 'front_gate_fold' => 'Front Gate Fold', 'reverse_gate_fold' => 'Reverse Gate Fold', 'front_and_back_tab' => 'Front And Back Tab', 'front_tab' => 'Front Tab');
-
-                    $indianExpress_businessAven_options = array('full_page' => 'Full Page', 'half_page' => 'Half Page', 'quarter_page' => 'Quarter Page');
-                @ENDPHP
-                
+ 
             <div class="step-header">Newspaper/Magazine General Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Newspaper">
 
@@ -162,49 +150,10 @@
                     <div class="form-group newspaper">
                         <label for="newspaperdisplay">Newspaper Display Options: </label>
                         @foreach($newspaper_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Newspaper Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='newspaperdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Newspaper Ad Display Options' onclick="addDomToPriceOptionsNewspaper('{{$value}}', 'newspaper')" name='newspaperdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                         @endforeach
                     </div> 
-                      
-                @PHP 
-                    $other_options = array('jacket_front_page' => 'Jacket Front Page', 'jacket_front_insider' => 'Jacket Front Inside','pointer_ad' => 'Pointer Ad','sky_bus' => 'Sky Bus','ear_panel' => 'Ear Panel','half_page' => 'Half Page','quarter_page' => 'Quarter Page','pamphlets' => 'Pamphlets','flyers' => 'Flyers');
-                @ENDPHP
-
-                    <div class="form-group newspaper">
-                        <label for="otherdisplay">Other Display Options: </label>
-                             
-                    @foreach($other_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Other Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='otherdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-                                       
-                    </div>   
-
-                    @PHP           
-                    $classified_options = array('matrimonial' => 'Matrimonial', 'recruitment' => 'Recruitment','business' => 'Business','property' => 'Property','education' => 'Education','astrology' => 'Astrology','public_notices' => 'Public Notices','services' => 'Services','automobile' => 'Automobile','shopping' => 'Shopping');
-                @ENDPHP
-
-                    <div class="form-group newspaper">
-                        <label for="classifieddisplay">Classified Display Options: </label>
-                             
-                    @foreach($classified_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Classified Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='classifieddisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-                                       
-                    </div>  
-
-                      @PHP           
-                    $pricing_options = array('per_sq_cm' => 'per sq cm', 'per_day' => 'per Day','per_inserts' => 'per Inserts');
-                @ENDPHP
-
-                    <div class="form-group newspaper">
-                        <label for="pricingdisplay">Pricing Options: </label>
-                             
-                    @foreach($pricing_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='pricing Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='pricingdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-                                       
-                    </div>        
-        
+                   
                     
                     <div class="form-group">
                         <label for="discount">Discount (%): </label>
@@ -228,6 +177,10 @@
             <div class="form-group">
                 <label for="image">Ad Image:</label>
                 <input type="file" id="image" name="image" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="reference_mail">Reference mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{old('reference_mail')}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>

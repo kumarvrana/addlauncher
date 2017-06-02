@@ -1,0 +1,1234 @@
+
+/*START OF AIRPORTS STYLE*/
+
+
+.sec-banner_airport{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.airport-head-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/airport-anim/airport-anim-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+}
+
+.airplane-anim, .port-bus-anim, .port-truck-anim, .port-trolley-anim{
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+img.airplane-clip{
+	width:auto !important;
+}
+
+.airplane-anim{
+	left:-600px;
+	animation-name:airplane-anim;
+	 -webkit-animation:airplane-anim;
+	animation-duration: 59s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+
+}
+@-webkit-keyframes airplane-anim{
+	0%{left:-600px;top:-200px;transform:rotate(30deg);}
+	10%{left:300px;top:75px;transform:rotate(0deg);}
+	20%{left:500px;top:85px;transform:rotate(-3deg);}
+	22%{left:500px;top:85px;transform:rotate(0deg);}
+    30%{left:500px;top:85px;transform:rotate(0deg);}
+    47%{left:1300px;top:85px;transform:rotate(-3deg);}
+    55%{left:2000px;top:-200px;transform:rotate(-6deg);}
+	100%{left:2000px;top:-600px;transform:rotate(-6deg);}
+}
+
+@keyframes airplane-anim{
+	0%{left:-600px;top:-200px;transform:rotate(30deg);}
+	10%{left:300px;top:75px;transform:rotate(0deg);}
+	20%{left:500px;top:85px;transform:rotate(-3deg);}
+	22%{left:500px;top:85px;transform:rotate(0deg);}
+    30%{left:500px;top:85px;transform:rotate(0deg);}
+    47%{left:1300px;top:85px;transform:rotate(-3deg);}
+    55%{left:2000px;top:-200px;transform:rotate(-6deg);}
+	100%{left:2000px;top:-600px;transform:rotate(-6deg);}
+}
+
+
+
+
+
+
+.port-bus-anim{
+	right:-200px;
+	top:155px;
+	animation-name:port-bus-anim;
+	 -webkit-animation:port-bus-anim;
+	animation-duration: 59s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+
+}
+@-webkit-keyframes port-bus-anim{
+	0%{right:-200px;}
+	25%{right:1000px;}
+	28%{right:1000px;}
+	30%{right:1000px;transform:rotateY(0deg);}
+	49.9%{right:1000px;transform:rotateY(0deg);}
+	50%{right:1000px;transform:rotateY(180deg);}
+	75%{right:-200px;transform:rotateY(180deg);}
+	100%{right:-200px;transform:rotateY(180deg);}
+}
+@keyframes port-bus-anim{
+	0%{right:-200px;}
+	25%{right:1000px;}
+	28%{right:1000px;}
+	30%{right:1000px;transform:rotateY(0deg);}
+	49.9%{right:1000px;transform:rotateY(0deg);}
+	50%{right:1000px;transform:rotateY(180deg);}
+	75%{right:-200px;transform:rotateY(180deg);}
+	100%{right:-200px;transform:rotateY(180deg);}
+}
+
+
+
+
+
+
+.port-truck-anim{
+	left:-200px;
+	top:135px;
+	transform:rotateY(180deg);
+	animation-name:port-truck-anim;
+	 -webkit-animation:port-truck-anim;
+	animation-duration: 59s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+
+}
+@-webkit-keyframes port-truck-anim{
+	0%{left:-200px;}
+	25%{left:480px;}
+	28%{left:480px;}
+	30%{left:480px;transform:rotateY(180deg);}
+	52.9%{left:480px;transform:rotateY(180deg);}
+	53%{left:480px;transform:rotateY(0deg);}
+	75%{left:-200px;transform:rotateY(0deg);}
+	100%{left:-200px;transform:rotateY(0deg);}
+}
+@keyframes port-truck-anim{
+	0%{left:-200px;}
+	25%{left:480px;}
+	28%{left:480px;}
+	30%{left:480px;transform:rotateY(180deg);}
+	52.9%{left:480px;transform:rotateY(180deg);}
+	53%{left:480px;transform:rotateY(0deg);}
+	75%{left:-200px;transform:rotateY(0deg);}
+	100%{left:-200px;transform:rotateY(0deg);}
+}
+
+
+
+
+
+.port-trolley-anim{
+	left:1500px;
+	top:135px;
+	animation-name:port-trolley-anim;
+	 -webkit-animation:port-trolley-anim;
+	animation-duration: 59s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+
+}
+@-webkit-keyframes port-trolley-anim{
+	0%{left:1500px;}
+	25%{left:1050px;}
+	50%{left:1500px;}
+	75%{left:1050px;}
+	100%{left:1500px;;}
+	
+}
+
+@keyframes port-trolley-anim{
+	0%{left:1500px;}
+	25%{left:1050px;}
+	50%{left:1500px;}
+	75%{left:1050px;}
+	100%{left:1500px;;}
+	
+}
+
+/*END OF AIRPORT STYLE*/
+
+/*START OF AUTO STYLE*/
+
+
+.sec-banner-autos{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.autos-head-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/auto-head-anim/auto-anim-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+
+}
+
+.auto-anim, .red-car-anim, .white-car-anim, .flying-plane-anim{
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+img.autos-clip{
+	width:56px;
+}
+
+
+
+.auto-anim{
+	right: -300px;
+    top: 175px;
+	animation-name:autos-anim;
+	 -webkit-animation:autos-anim;
+	animation-duration: 49s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes autos-anim{
+	0%{right:-300px;}	
+	100%{right:2300px;}
+	
+}
+@keyframes autos-anim{
+	0%{right:-300px;}
+	100%{right:2300px;}
+	
+}
+
+
+
+.red-car-anim{
+	right: -400px;
+    top: 170px;
+	transform:rotateY(0deg);
+	animation-name:reds-car-anim;
+	 -webkit-animation:reds-car-anim;
+	animation-duration: 40s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes reds-car-anim{
+	0%{right: -400px;}	
+	100%{right:2400px%;}
+	
+}
+@keyframes reds-car-anim{
+	0%{right: -400px;}	
+	100%{right:2400px;}
+	
+}
+
+
+
+
+
+.white-car-anim{
+	left: -100px;
+    top: 138px;
+	transform: rotateY(180deg);
+	animation-name:rickshaw-anim;
+	 -webkit-animation:rickshaw-anim;
+	animation-duration: 20s;;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes rickshaw-anim{
+	0%{left: -100px;}	
+	100%{left:2400px;}
+	
+}
+
+@keyframes rickshaw-anim{
+	0%{left: -400px;}	
+	100%{left:2400px;}
+	
+}
+
+.flying-plane-anim{
+	right: -10px;
+    top: 21px;
+    transform:rotateY(0deg);
+	animation-name:flying-plane-anim;
+	 -webkit-animation:flying-plane-anim;
+	animation-duration: 80s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes flying-plane-anim{
+
+	0%{right: -10px;transform:rotateY(0deg);}	
+	40%{right:2300px;transform:rotateY(0deg);}
+	41%{right:2300px;transform:rotateY(180deg);}
+	61%{right:2300px;transform:rotateY(180deg);}
+	100%{right: -10px;transform:rotateY(180deg);}
+
+}
+
+@keyframes flying-plane-anim{
+
+	
+	0%{right: -10px;transform:rotateY(0deg);}	
+	45%{right:2300px;transform:rotateY(0deg);}
+	46%{right:2300px;transform:rotateY(180deg);}
+	56%{right:2300px;transform:rotateY(180deg);}
+	100%{right: -10px;transform:rotateY(180deg);}
+	
+}
+
+
+
+/*END OF autos STYLE*/
+
+/*START OF Bus STYLE*/
+
+
+.sec-banner-bus{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.bus-head-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/bus-anim/bus-head-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+
+}
+
+.bus-bus3-anim, .bus-bus2-anim, .bus-bus1-anim, .balloon-anim, .bus-static{
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+img.bus-clip{
+	width:auto;
+}
+
+
+.bus-static {
+    left: 50%;
+    top: 188px;
+}
+    
+
+
+
+
+.bus-bus3-anim{
+	right: -100px;
+    top: 167px;
+	animation-name:bus-bus3-anim;
+	 -webkit-animation:bus-bus3-anim;
+	animation-duration: 30s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+
+}
+@-webkit-keyframes bus-bus3-anim{
+	0%{right:-100px;}	
+	100%{right:2300px;}
+	
+}
+@keyframes bus-bus3-anim{
+	0%{right:-100px;}
+	100%{right:2300px;}
+	
+}
+
+
+
+
+
+
+.bus-bus2-anim{
+	right: -200px;
+    top: 160px;
+	transform:rotateY(0deg);
+	animation-name:bus-bus2-anim;
+	 -webkit-animation:bus-bus2-anim;
+	animation-duration: 40s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes bus-bus2-anim{
+	0%{right: -200px;}	
+	100%{right:2200px%;}
+	
+}
+@keyframes bus-bus2-anim{
+	0%{right: -200px;}	
+	100%{right:2200px;}
+	
+}
+
+
+
+
+
+.bus-bus1-anim{
+	left: -300px;
+    top: 137px;
+	transform: rotateY(180deg);
+	animation-name:bus-bus1-anim;
+	 -webkit-animation:bus-bus1-anim;
+	animation-duration: 35s;;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes bus-bus1-anim{
+	0%{left: -300px;}	
+	100%{left:2400px;}
+	
+}
+
+@keyframes bus-bus1-anim{
+	0%{left: -300px;}	
+	100%{left:2400px;}
+	
+}
+
+.balloon-anim{
+	right: 300px;
+    top: 21px;
+	animation-name:balloon-anim;
+	 -webkit-animation:balloon-anim;
+	animation-duration: 100s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
+
+}
+@-webkit-keyframes balloon-anim{
+
+	0%{right: 300px;}	
+	40%{right:1600px;}
+	41%{right:1600px;}
+	61%{right:1600px;}
+	100%{right:300px;}
+
+}
+
+@keyframes balloon-anim{
+
+	
+	0%{right: 300px;}	
+	45%{right:1600px;}
+	46%{right:1600px;}
+	56%{right:1600px;}
+	100%{right:300px;}
+	
+}
+
+
+/*END OF bus STYLE*/
+
+
+/*START OF bus stop STYLE*/
+
+
+
+.sec-banner-bus-stop{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.bus-stop-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/bus-stop-anim/bus-head-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+
+}
+
+.big-bus-anim, .public-anim{
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+img.bus-stop-clip{
+	width:auto;
+}
+
+
+
+    
+
+
+.public-anim {
+    left: 45%;
+    top: 86px;
+    visibility:visible;
+    animation-name:public-anim;
+	 -webkit-animation:public-anim;
+	animation-duration: 45s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes public-anim{
+
+	0%{visibility:visible;}	
+	27%{visibility:visible;}
+	28%{visibility:hidden;}
+	50%{visibility:hidden;}
+	51%{visibility:hidden;}
+	70%{visibility:hidden;}
+	71%{visibility:visible;}
+	75%{visibility:visible;}
+	100%{visibility:visible;}
+}
+
+@keyframes public-anim{
+
+	
+	0%{visibility:visible;}	
+	27%{visibility:visible;}
+	28%{visibility:hidden;}
+	50%{visibility:hidden;}
+	51%{visibility:hidden;}
+	70%{visibility:hidden;}
+	71%{visibility:visible;}
+	75%{visibility:visible;}
+	100%{visibility:visible;}
+	
+}
+
+.big-bus-anim {
+    right: -30%;
+    top: 48px;
+    transform:rotateY(0deg);
+	animation-name:big-bus-anim;
+	 -webkit-animation:big-bus-anim;
+	animation-duration: 45s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes big-bus-anim{
+
+	0%{right:-30%;transform:rotateY(0deg);}	
+	25%{right:45%;transform:rotateY(0deg);}
+	30%{right:45%;transform:rotateY(0deg);}
+	50%{right:110%;transform:rotateY(0deg);}
+	51%{right:110%;transform:rotateY(180deg);}
+	70%{right:45%;transform:rotateY(180deg);}
+	75%{right:45%;transform:rotateY(180deg);}
+	90%{right:-30%;transform:rotateY(180deg);}
+	100%{right:-30%;transform:rotateY(180deg);}
+
+}
+
+@keyframes big-bus-anim{
+
+	
+	0%{right:-30%;transform:rotateY(0deg);}	
+	25%{right:45%;transform:rotateY(0deg);}
+	30%{right:45%;transform:rotateY(0deg);}
+	50%{right:110%;transform:rotateY(0deg);}
+	51%{right:110%;transform:rotateY(180deg);}
+	70%{right:45%;transform:rotateY(180deg);}
+	75%{right:45%;transform:rotateY(180deg);}
+	90%{right:-30%;transform:rotateY(180deg);}
+	100%{right:-30%;transform:rotateY(180deg);}
+	
+}
+
+
+/*END OF bus-stops STYLE*/
+
+/*END OF CARS STYLE*/
+
+
+
+
+.sec-banner-cars{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.cars-head-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/auto-head-anim/auto-anim-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+
+}
+
+.white-car1-anim, .red-car1-anim, .red-car2-anim, .flying-plane2-anim{
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+img.autos-clip{
+	width:auto;
+}
+
+
+
+.red-car2-anim{
+	right: -300px;
+    top: 162px;
+    filter: saturate(0);
+    transform:rotateY(180deg);
+	animation-name:red-car2-anim;
+	 -webkit-animation:red-car2-anim;
+	animation-duration: 35s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes red-car2-anim{
+	0%{right:-300px;}	
+	100%{right:2300px;}
+	
+}
+@keyframes red-car2-anim{
+	0%{right:-300px;}
+	100%{right:2300px;}
+	
+}
+
+
+
+.red-car1-anim{
+	right: -400px;
+    top: 170px;
+	transform:rotateY(180deg);
+	animation-name:red-car1-anim;
+	 -webkit-animation:red-car1-anim;
+	animation-duration: 40s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes red-car1-anim{
+	0%{right: -400px;}	
+	100%{right:2400px%;}
+	
+}
+@keyframes red-car1-anim{
+	0%{right: -400px;}	
+	100%{right:2400px;}
+	
+}
+
+
+
+
+
+.white-car1-anim{
+	left: -100px;
+    top: 133px;
+	transform: rotateY(180deg);
+	animation-name:white-car1-anim;
+	 -webkit-animation:white-car1-anim;
+	animation-duration: 20s;;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes white-car1-anim{
+	0%{left: -100px;}	
+	100%{left:2400px;}
+	
+}
+
+@keyframes white-car1-anim{
+	0%{left: -400px;}	
+	100%{left:2400px;}
+	
+}
+
+.flying-plane2-anim{
+	right: -10px;
+    top: 21px;
+    transform:rotateY(0deg);
+	animation-name:flying-plane2-anim;
+	 -webkit-animation:flying-plane2-anim;
+	animation-duration: 80s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes flying-plane2-anim{
+
+	0%{right: -10px;transform:rotateY(0deg);}	
+	40%{right:2300px;transform:rotateY(0deg);}
+	41%{right:2300px;transform:rotateY(180deg);}
+	61%{right:2300px;transform:rotateY(180deg);}
+	100%{right: -10px;transform:rotateY(180deg);}
+
+}
+
+@keyframes flying-plane2-anim{
+
+	
+	0%{right: -10px;transform:rotateY(0deg);}	
+	45%{right:2300px;transform:rotateY(0deg);}
+	46%{right:2300px;transform:rotateY(180deg);}
+	56%{right:2300px;transform:rotateY(180deg);}
+	100%{right: -10px;transform:rotateY(180deg);}
+	
+}
+
+/*END OF cars STYLE*/
+
+
+/*START OF Movie theatre STYLE*/
+
+
+	.sec-banner-movie-theatre{
+		position: relative;
+		overflow:hidden;
+
+	}
+
+	.movie-theatre-anim {
+		width: 100%;
+		height: 218px;
+		background-image: url(../images/header-animation/movie-theatre/movie-theatre-bg.png);
+		background-repeat: no-repeat;
+		background-position-x:50%;
+
+	}
+
+	.movie-screen-anim, .screen-light-anim, .text-screen-anim{
+		position: absolute;
+		width: auto;
+		height: auto;
+	}
+
+	img.movie-theatre-clip{
+		width:auto;
+	}
+
+
+	.screen-light-anim {
+		width: 100%;
+		height:149px;
+		background-image:url(../images/header-animation/movie-theatre/screen-light-clip.png);
+		animation: screen-light-anim 0.3s steps(4) infinite;
+		background-repeat: no-repeat;
+		background-position-x: 50%;
+		top: 20px;
+		opacity:0.4;
+	}
+	@-webkit-keyframes screen-light-anim{
+
+		100%{background-position-y:-595px;}
+
+	}
+
+	@keyframes screen-light-anim{
+
+		100%{background-position-y:-595px;}
+
+	}
+
+	.text-screen-anim {
+		width: 100%;
+		height:113px;
+		background-image:url(../images/header-animation/movie-theatre/text-screen-clip.png);
+		animation: text-screen-anim 6s steps(15) infinite;
+		animation-fill-mode:both;
+		background-repeat: no-repeat;
+		background-position-x: 50%;
+		top: 38px;
+		filter:sepia(1);
+		opacity:0.4;
+
+	}
+	@-webkit-keyframes text-screen-anim{
+
+		50%{background-position-y:3378px;}   
+		100%{background-position-y:-1689px;}
+
+	}
+
+	@keyframes text-screen-anim{
+		70%{background-position-y:-1689px;} 
+		100%{background-position-y:1689px;}
+
+	}
+
+	/*END OF movie theatre STYLE*/
+
+	/*start OF metro STYLE*/
+
+.sec-banner-metro{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.metro-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/delhi-metro/metro-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+
+}
+
+.metro-bridge-static, .metro-train-anim, .flying-plane3-anim{
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+img.metro-clip{
+	width:auto;
+}
+
+
+
+.metro-bridge-static {
+    top: 137px;
+    width:100%;
+    height:78px;
+    background-image:url(../images/header-animation/delhi-metro/metro-bridge-clip.png);
+    background-repeat: no-repeat;
+    background-position-x:50% 
+
+}
+
+
+
+.metro-train-anim {
+    right: -1000px;
+    top: 71px;
+    transform: rotateY(0deg);
+    animation-name: metro-train-anim;
+    -webkit-animation: metro-train-anim;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes metro-train-anim{
+
+	0%{right:-1000px;transform:rotateY(0deg);}
+	49%{right:2500px;transform:rotateY(0deg);}
+	50%{right:2500px;transform:rotateY(180deg);}
+	51%{right:2500px;transform:rotateY(180deg);}	
+	100%{right:-1000px;transform:rotateY(180deg);}
+
+}
+
+@keyframes metro-train-anim{
+    
+    0%{right:-1000px;transform:rotateY(0deg);}
+	49%{right:2500px;transform:rotateY(0deg);}
+	50%{right:2500px;transform:rotateY(180deg);}
+	51%{right:2500px;transform:rotateY(180deg);}	
+	100%{right:-1000px;transform:rotateY(180deg);}
+
+	
+}
+
+.flying-plane3-anim{
+	right: -10px;
+    top: 21px;
+    transform:rotateY(0deg);
+	animation-name:flying-plane3-anim;
+	 -webkit-animation:flying-plane3-anim;
+	animation-duration: 80s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes flying-plane3-anim{
+
+	0%{right: -10px;transform:rotateY(0deg);}	
+	40%{right:2300px;transform:rotateY(0deg);}
+	41%{right:2300px;transform:rotateY(180deg);}
+	61%{right:2300px;transform:rotateY(180deg);}
+	100%{right: -10px;transform:rotateY(180deg);}
+
+}
+
+@keyframes flying-plane3-anim{
+
+	
+	0%{right: -10px;transform:rotateY(0deg);}	
+	45%{right:2300px;transform:rotateY(0deg);}
+	46%{right:2300px;transform:rotateY(180deg);}
+	56%{right:2300px;transform:rotateY(180deg);}
+	100%{right: -10px;transform:rotateY(180deg);}
+	
+}
+
+/*end OF metro STYLE*/
+
+/*start OF outdoor STYLE*/
+
+.sec-banner-outdoors{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.outdoors-head-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/outdoor-anim/outdoors-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+
+}
+
+.red-car1-anim, .red-car2-anim, .above-road-static{
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+img.autos-clip{
+	width:auto;
+}
+
+.above-road-static {
+    left: 35%;
+    top: 102px;
+}
+
+.red-car2-anim{
+	right: -300px;
+    top: 170px;
+    filter: saturate(0);
+    transform:rotateY(180deg);
+	animation-name:red-car2-anim;
+	 -webkit-animation:red-car2-anim;
+	animation-duration: 25s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes red-car2-anim{
+	0%{right:-300px;}	
+	100%{right:2300px;}
+	
+}
+@keyframes red-car2-anim{
+	0%{right:-300px;}
+	100%{right:2300px;}
+	
+}
+
+
+
+.red-car1-anim{
+	right: -400px;
+    top: 170px;
+	transform:rotateY(180deg);
+	animation-name:red-car1-anim;
+	 -webkit-animation:red-car1-anim;
+	animation-duration: 30s;
+	animation-iteration-count: infinite;
+    animation-timing-function: ease;
+
+}
+@-webkit-keyframes red-car1-anim{
+	0%{right: -400px;}	
+	100%{right:2400px%;}
+	
+}
+@keyframes red-car1-anim{
+	0%{right: -400px;}	
+	100%{right:2400px;}
+	
+}
+
+/*end OF outdoor STYLE*/
+
+
+/*start OF shopping-malls STYLE*/
+
+
+.sec-banner-shopping-malls{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.shopping-malls-anim {
+    width: 100%;
+    height: 218px;
+    background-image: url(../images/header-animation/shopping-malls/shopping-malls-bg.png);
+    background-repeat: no-repeat;
+    background-position-x:50%;
+
+}
+
+
+.standee-anim {
+    width: 150px;
+    height: 50px;
+    background-color: white;
+    border: 3px solid black;
+    top: 101px;
+    position: absolute;
+    left: 307px;
+    animation-name:standee-anim;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+}
+
+@keyframes standee-anim{
+    
+    0%{background-color: white;}
+    25%{background-color: #ffe100;}
+    50%{background-color: #00dbe3;}
+    75%{background-color: #ffe100;}
+    100%{background-color: white;}
+}
+
+.standee-anim2 {
+    width: 150px;
+    height: 50px;
+    background-color: white;
+    border: 3px solid black;
+    top: 101px;
+    position: absolute;
+    left: 995px;
+    animation-name:standee-anim2;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+}
+
+@keyframes standee-anim2{
+    
+    0%{background-color: white;}
+    25%{background-color: #37e35c;}
+    50%{background-color: #ffe100;}
+    75%{background-color: #37e35c;}
+    100%{background-color: white;}
+}
+
+p.standee-text {
+    padding: 0;
+    text-align: center;
+    margin-top: 9px;
+    font-family: sans-serif;
+    font-size: 15px;
+    color: #001c76;
+    font-weight: bold;
+
+}
+
+p.standee-text::after {
+    content: '';
+    width: 146px;
+    height: 27px;
+    background-color: rgba(52, 52, 52, 0.34);
+    display: block;
+    position: absolute;
+    top: 48px;
+    border: 3px solid black;
+
+}
+
+/*end OF shopping-malls STYLE*/
+
+/*start OF print media STYLE*/
+
+
+.sec-banner-print-media{
+	position: relative;
+	overflow:hidden;
+	
+}
+
+.print-media-anim {
+    width: 100%;
+    height: 218px;
+    background-repeat: no-repeat;
+    background-position-x:50%;
+    background-color: #26B3FF;
+
+}
+
+.machine-anim {
+    background-image: url(../images/header-animation/print-media-anim/machine-clip.gif);
+    width: 985px;
+    height: 218px;
+    position: absolute;
+    top: 0;
+    left: 490px;
+    background-repeat: no-repeat;
+   
+}
+
+
+.newspaper-anim {
+    background-image: url(../images/header-animation/print-media-anim/newspaper-bg.png);
+    width: 251px;
+    height: 199px;
+    position: absolute;
+    top: 10px;
+    left: 85px;
+    background-repeat: no-repeat;
+     box-shadow: 1px 1px 20px rgb(36, 100, 134);
+    background-color: #2589be;
+}
+
+.newspaper-anim::after {
+    content: '';
+    display: block;
+    color: black;
+    font-family: serif;
+    animation-name:newspaper-anim-after;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    font-size: 11px;
+    line-height: 1;
+    width: 100px;
+    top: 49px;
+    position: absolute;
+    left: 129px;
+
+}
+
+@keyframes newspaper-anim-after{
+    0%{content:'Print';}
+    2%{content:'Print Media';}
+    4%{content:'Print Media refers';}
+    6%{content:'Print Media refers to';}
+    8%{content:'Print Media refers to paper';}
+    10%{content:'Print Media refers to paper advertising';}
+    12%{content:'Print Media refers to paper advertising which';}
+    14%{content:'Print Media refers to paper advertising which is';}
+    16%{content:'Print Media refers to paper advertising which is dispersed';}
+    18%{content:'Print Media refers to paper advertising which is dispersed in';}
+    20%{content:'Print Media refers to paper advertising which is dispersed in the';}
+    22%{content:'Print Media refers to paper advertising which is dispersed in the form';}
+    24%{content:'Print Media refers to paper advertising which is dispersed in the form of';}
+    26%{content:'Print Media refers to paper advertising which is dispersed in the form of physical';}
+    28%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed';}
+    30%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release';}
+    32%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of';}
+    34%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books,';}
+    36%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines,';}
+    38%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals';}
+    40%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and';}
+    42%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters';}
+    44%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to';}
+    44%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to get';}
+    46%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to get across';}
+    48%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to get across consumers,';}
+    50%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to get across consumers, business';}
+    52%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to get across consumers, business customers';}
+    54%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to get across consumers, business customers and';}
+    56%{content:'Print Media refers to paper advertising which is dispersed in the form of physical printed release of books, magazines, journals and newsletters to get across consumers, business customers and prospects.';}
+  
+}
+
+.magazine-anim {
+    background-color: transparent;
+    width: 246px;
+    height: 163px;
+    position: absolute;
+    top: 25px;
+    right: 85px;
+    background-repeat: no-repeat;
+    
+    background-position-x: 100%;
+    background-image: url(../images/header-animation/print-media-anim/magazine-page2.png);
+}
+
+.magazine-page-anim {
+    width: 123px;
+    height: 163px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: white;
+    background-image: url(../images/header-animation/print-media-anim/magazine-page.png);
+    transform-origin: 0%;
+    transform: rotateY(180deg);
+    animation-name:magazine-page-anim;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    
+}
+
+@keyframes magazine-page-anim{
+    0%{transform: rotateY(0deg);background-image: url(../images/header-animation/print-media-anim/magazine-bg.png);} 
+    10%{transform: rotateY(90deg);background-image: url(../images/header-animation/print-media-anim/magazine-bg.png);} 
+    11%{transform: rotateY(92deg);background-image: url(../images/header-animation/print-media-anim/magazine-page.png);}
+    25%{transform: rotateY(180deg);background-image: url(../images/header-animation/print-media-anim/magazine-page.png);}
+    45%{transform: rotateY(180deg);background-image: url(../images/header-animation/print-media-anim/magazine-page.png);}
+    59%{transform: rotateY(92deg);background-image: url(../images/header-animation/print-media-anim/magazine-page.png);} 
+    60%{transform: rotateY(90deg);background-image: url(../images/header-animation/print-media-anim/magazine-bg.png);}
+    70%{transform: rotateY(0deg);background-image: url(../images/header-animation/print-media-anim/magazine-bg.png);}
+    100%{transform: rotateY(0deg);background-image: url(../images/header-animation/print-media-anim/magazine-bg.png);}
+    
+
+}
+
+.magazine-page2-anim {
+    width: 123px;
+    height: 163px;
+    position: absolute;
+    z-index:-1;
+    top: 0;
+    right: 0;
+    background-color: white;
+    background-image: url(../images/header-animation/print-media-anim/magazine-page2.png);
+    transform-origin: 0%;
+    transform: rotateY(0deg);
+    animation-name:magazine-page2-anim;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes magazine-page2-anim{
+    0%{transform: rotateY(0deg);z-index:-1;} 
+    25%{transform: rotateY(0deg);z-index:-1;}
+    30%{transform: rotateY(90deg);z-index:2;}
+    35%{transform: rotateY(180deg);z-index:2;}
+    45%{transform: rotateY(0deg);z-index:2;}
+    46%{transform: rotateY(0deg);z-index:-1;}
+    100%{transform: rotateY(0deg);z-index:-1;}
+
+}
+
+/*end OF print media STYLE*/

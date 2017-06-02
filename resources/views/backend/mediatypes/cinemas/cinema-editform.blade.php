@@ -72,7 +72,7 @@
                     <select class="form-control" name="status" id="status" required="required">
                         <option value="">--Select--</option>
                         @foreach( $ad_status as $key => $value )
-                        <option value="{{$key}}" @PHP if($cinema->status == $key){
+                        <option value="{{$key}}" @PHP if($cinema->status == $value){
                             echo "Selected";
                         } @ENDPHP>{{$value}}</option>
                         @endforeach
@@ -85,23 +85,13 @@
             <div class="step-header">Cinemas Ad Options</div>
             <input type="hidden" name="modelname" id="modelname" value="Cinema">
                @PHP
-                    $cinema_options = array('video_ad' => 'Video Ad', 'trailor_ad' => 'Trailor Ad', 'mute_slide_ad' => 'Mute Slide Ad');
-                    $offScreen_AdOptions = array('danglers' => 'Danglers', 'tent_cards' => 'Tent Cards', ''=> 'glow_box', '' => 'Glow Box', 'product_sampling' => 'Product', '' => '', '' => '', '' => '');
-                    $cinema_category = array('gold' => 'Gold', 'platinum' => 'Platinum', 'silver' => 'Silver'); 
-                     $bsdisplayData = unserialize($cinema->display_options);
-                @ENDPHP
+                   $bsdisplayData = unserialize($cinema->display_options);
+                   $ad_displayData = unserialize($cinema->additional_adsoption);
+               @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Cinema Options</h3></div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            <label for="cinemadisplay">Cinemas Ad Display Options: </label>
-                            
-                        @foreach($cinema_options as $key => $value)
-                            <label class='checkbox-inline'><input data-label='Cinemas Ad Display Options' onclick="addDomToPriceOptionsCinema('{{$value}}', 'cinema_options')" name='cinemadisplay[]' type='checkbox'  @PHP if($bsdisplayData){ if( in_array($key, $bsdisplayData)){echo "checked"; } } @ENDPHP value="{{$key}}">{{$value}}</label>
-                        @endforeach
-                                        
-                        </div>
-                        <div class="form-group">
+                         <div class="form-group">
                             <label for="status">Cinema Category:</label>
                             <select class="form-control" name="cinemacategory" id="cinemacategory" required="required">
                                 <option value="">--Select--</option>
@@ -111,6 +101,22 @@
                             } @ENDPHP>{{$value}}</option>
                                 @endforeach                        
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cinemadisplay">Cinema Ads: </label>
+                            
+                        @foreach($cinema_options as $key => $value)
+                            <label class='checkbox-inline'><input data-label='Cinemas Ad Display Options' onclick="addDomToPriceOptionsCinema('{{$value}}', 'display_options')" name='cinemadisplay[]' type='checkbox'  @PHP if($bsdisplayData){ if( in_array($key, $bsdisplayData)){echo "checked"; } } @ENDPHP value="{{$key}}">{{$value}}</label>
+                        @endforeach
+                                        
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Other Ad Options In Cinema Halls:</label>
+                            @foreach( $additionlsAds as $key => $value )
+                            <label class='checkbox-inline'>
+                            <input data-label='additionalsAds' onclick="addDomToPriceOptionsCinema('{{$value}}', 'additional_adsoption')" name='additionalsAds[]' type='checkbox' @PHP if($ad_displayData){ if( in_array($key, $ad_displayData)){echo "checked"; } } @ENDPHP value={{$key}}>{{$value}}
+                            </label>
+                         @endforeach 
                         </div>
                         <div class="form-group">
                             <label for="audiseats">Numbers Of Seats in Audi? : </label>
@@ -140,16 +146,18 @@
                     <div id="pricing-options-step">
                         <input type="hidden" name="modelname" id="modelname" value="Cinema">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
+                        <input type="hidden" id="display_options" value="{{json_encode(unserialize($generalOptions))}}">
+                        <input type="hidden" id="additional_adsoption" value="{{json_encode(unserialize($additionalOptions))}}">
                         <input type="hidden" id="uncheckID" value="{{$cinema->id}}">
                         <input type="hidden" id="tablename" value="cinemas">
 
-                        @foreach($cinemapricemeta as $cinemaprice)
+                        @foreach($cinema->cinemasprice as $cinemaprice)
                             <div id="p{{$cinemaprice->price_key}}" class="form-group">
                                     <label for="{{$cinemaprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $cinemaprice->price_key), 6))}} Cinema Ad:</label>
                                     <input class="form-control" type="text" name="{{$cinemaprice->price_key}}" value="{{$cinemaprice->price_value}}" required>
                                 </div>
                                 <div id="p{{$cinemaprice->duration_key}}" class="form-group">
-                                    <label for="{{$cinemaprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $cinemaprice->duration_key), 9))}} Cinema Ad:</label>
+                                    <label for="{{$cinemaprice->duration_key}}">Ad duration/period for {{ucfirst(substr(str_replace("_", " ", $cinemaprice->duration_key), 9))}} Cinema Ad:</label>
                                     <input class="form-control" type="text" name="{{$cinemaprice->duration_key}}" value="{{$cinemaprice->duration_value}}" required>
                                 </div>
                             
@@ -165,6 +173,10 @@
                 <input type="file" id="image" name="image" class="form-control">
             </div>
             <div class="form-group">
+                <label for="reference_mail">Reference Mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{$cinema->reference_mail}}" class="form-control" required>
+            </div>
+            <div class="form-group">
                     <label for="reference">Other Reference:</label>
                     <textarea id="reference" name="reference" class="form-control">{{$cinema->references}}</textarea>
                 </div>
@@ -173,7 +185,7 @@
 		
 		<button type="button" class="action back btn btn-info">Back</button>
 		<button type="button" class="action next btn btn-info">Next</button>
-		<button type="submit" class="action submit btn btn-success">Edit Product</button>	
+		<button type="submit" class="action submit btn btn-success">Edit Cinema</button>	
   	</form>
    
    </div>

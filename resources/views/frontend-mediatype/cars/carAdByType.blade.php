@@ -17,11 +17,11 @@
         </div>
         @endif
 
-<section class="sec-banner">
-     <div class="jumbotron jumbo-1 text-center">
-         <h1><span>{{ucwords(str_replace('_', ' ', $cartype))}}</span> AD</h1>
-     </div>
-</section>       
+@include('banner.carBanner')
+<section class="sec-head-title">
+    <h1>Advertise on <span>{{ucwords(str_replace('_', ' ', $cartype))}}</span></h1>
+</section>  
+
 <section class="main-sec">
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
@@ -40,7 +40,7 @@
                             @PHP
                                 $image = $key.".jpg";
                             @ENDPHP
-                        <div class="col-md-3">
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                 <div class="owl-item active">
                                 <a href="{{route('frontend.getfrontCaradByOption', ['cartype' => $cartype,'carOption' => $key])}}">
                                     <div class="single-product">

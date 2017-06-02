@@ -27,12 +27,12 @@
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
                 <div class="col-md-2">
-                  @include('partials.sidebar')
+                  @include('partials.filter-sidebar.television')
                 </div>
 
                 <div class="col-md-8">
                     
-                  <div class="row"> <!-- row repeater starts here -->
+                  <div class="row" id="table-results"> <!-- row repeater starts here -->
                    
                     @foreach($televisions_ads as $television)
                         @PHP
@@ -54,7 +54,7 @@
                     if($status!='Available')  {
                     @ENDPHP
 
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="owl-item active">
                             <div class="single-product {{$st_class}}_cursor">
                                 <div class="product-img">

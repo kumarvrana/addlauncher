@@ -60,22 +60,8 @@
                     <img src="{{asset('images/cinemas/'.$cinemaad->image)}}" alt="{{$cinemaad->title}}" width="50px" height="50px" class="img-responsive">
                 
                 </td>
-                @PHP
-                    if($cinemaad->status){
-                        switch($cinemaad->status){
-                            case 1:
-                                $status = 'Available';
-                            break;
-                            case 2:
-                                $status = 'Sold Out';
-                            break;
-                            case 3:
-                                $status = 'Coming Soon';
-                            break;
-                        }
-                    }
-                @ENDPHP
-                <td>{{$status}}</td>
+                
+                <td>{{$cinemaad->status}}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="...">
                         <a type="button" href="{{route('dashboard.editcinemasad', ['ID' => $cinemaad->id])}}" class="btn btn-primary">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>

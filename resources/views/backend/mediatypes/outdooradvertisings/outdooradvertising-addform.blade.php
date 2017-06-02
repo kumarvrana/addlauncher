@@ -33,8 +33,8 @@
                     <input type="text" id="title" name="title" class="form-control" placeholder="Name of the product" value="{{old('title')}}" required>
                 </div>
                 <div class="form-group">
-                    <label for="price">Ad Price:</label>
-                    <input type="text" id="price" name="price" class="form-control" value="{{old('price')}}" placeholder="Put Base price here eg: 1213" required>
+                    <label for="price">Ad Size:</label>
+                    <input type="text" id="price" name="price" class="form-control" value="{{old('price')}}" placeholder="22 x 22" required>
                 </div>
                 <div class="form-group">
                     <label for="location">Location:</label>
@@ -127,6 +127,10 @@
             <div class="form-group">
                 <label for="image">Ad Image:</label>
                 <input type="file" id="image" name="image" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="reference_mail">Reference mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{old('reference_mail')}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>

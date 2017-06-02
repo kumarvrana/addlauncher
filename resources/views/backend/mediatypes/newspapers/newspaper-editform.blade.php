@@ -25,7 +25,7 @@
                     <p>{{Session::get('message')}}</p>
                 </div>
             @endif
-            <?php //dd($newspaper); ?>
+            <?php //dd(unserialize($newspaper->genre)); ?>
   <form class="form" action="{{route('dashboard.Postnewspapersad', ['ID' => $newspaper->id])}}" method="post" enctype="multipart/form-data">
 		<div class="step">
             <div class="step-header">General Options</div>
@@ -94,7 +94,9 @@
                         <select class="form-control" name="printmedia_type" id="printmedia_type" required="required">
                             <option value="">--Select--</option>
                             @foreach( $printMedia_type as $key => $value )
-                            <option value="{{$key}}">{{$value}}</option>
+                            <option value="{{$key}}" <?php if($newspaper->printmedia_type == $key){
+                            echo "Selected";
+                        } ?>>{{$value}}</option>
                             @endforeach
                         </select>    
                     </div> 
@@ -102,8 +104,8 @@
                         <label for="newspaperlist">News Paper List (Delhi):</label>
                         <select class="form-control" name="printmedia_name" id="newspaperlist" required="required">
                             <option value="">--Select--</option>
-                            @foreach( $newspapers_list as $newspaper )
-                            <option value="{{$newspaper->name}}">{{$newspaper->name}}</option>
+                            @foreach( $newspapers_list as $newspapers )
+                            <option value="{{$newspapers->name}}">{{$newspapers->name}}</option>
                             @endforeach
                         </select>            
                     </div>
@@ -112,14 +114,17 @@
                         <select class="form-control" name="printmedia_name" id="magazinelist" required="required">
                             <option value="">--Select--</option>
                             @foreach( $magazine_list as $magazine )
-                            <option value="{{$magazine->name}}">{{$magazine->name}}</option>
+                            <option value="{{$magazine->name}}"
+                            <?php if($newspaper->printmedia_name == $magazine->name){
+                                echo "Selected";
+                            } ?>>{{$magazine->name}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group magazine">
                         <label for="genre">Magazine Genres: </label>
                          @foreach($megazineGenre as $value)
-                        <label class='checkbox-inline'><input data-label='Magazine Ad Genre Options' name='genre[]' type='checkbox' value={{$value}}>{{$value}}</label>
+                        <label class='checkbox-inline'><input <?php if(unserialize($newspaper->genre)){if(in_array($value, unserialize($newspaper->genre))){echo "checked";}} ?> data-label='Magazine Ad Genre Options' name='genre[]' type='checkbox' value={{$value}}>{{$value}}</label>
                         @endforeach
                    </div> 
                     <div class="form-group">
@@ -131,14 +136,17 @@
                         <select class="form-control" name="language" id="language" required="">
                             <option value="">--Language--</option>
                             @foreach( $languages as $language )
-                                <option value="{{$language->name}}">{{$language->name}}</option>
+                                <option value="{{$language->name}}"
+                                <?php if($newspaper->language == $language->name){
+                                echo "Selected";
+                            } ?>>{{$language->name}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group magazine">
                         <label for="magazinedisplay">Magazine Display Options: </label>
                          @foreach($magezineOption as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Magazine Ad Display Options' onclick="addDomToPriceOptionsMegazine('{{$value}}',  'megazine')" name='magazinedisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                        <label class='checkbox-inline'><input <?php if(unserialize($newspaper->magazine_options)){if(in_array($key, unserialize($newspaper->magazine_options))){echo "checked";}} ?> data-label='Magazine Ad Display Options' onclick="addDomToPriceOptionsMegazine('{{$value}}',  'megazine')" name='magazinedisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                         @endforeach
                    </div> 
 
@@ -236,6 +244,10 @@
             <div class="form-group">
                 <label for="image">Ad Image:</label>
                 <input type="file" id="image" name="image" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="reference_mail">Reference Mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{$newspaper->reference_mail}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>

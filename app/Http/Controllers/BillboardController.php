@@ -38,8 +38,9 @@ class BillboardController extends Controller
         $location = 'Delhi NCR';
         $media_type = new Mainaddtype();
         $ad_cats = $media_type->mediatype('Outdoor Advertising');
+        $location_filter = Billboards::select('location')->distinct()->get();
 
-       return view('frontend-mediatype.outdooradvertisings.outdooradvertisingads-list', ['billboard_options' => $billboard_options, 'location' => $location, 'mediacat' => $ad_cats]);
+       return view('frontend-mediatype.outdooradvertisings.outdooradvertisingads-list', ['billboard_options' => $billboard_options, 'location' => $location, 'mediacat' => $ad_cats,'filter_location'=>$location_filter]);
     }
 
 
@@ -93,7 +94,7 @@ class BillboardController extends Controller
        //dd($request->all());
         $this->validate( $request, [
            'title' => 'required',
-           'price' => 'numeric',
+           'size' => 'numeric',
            'image' => 'required|image',
            'location' => 'required',
            'state' => 'required',
@@ -112,7 +113,7 @@ class BillboardController extends Controller
 
         $billboard = new Billboards([
                 'title' => $request->input('title'),
-                'price' => $request->input('price'),
+                'size' => $request->input('size'),
                 'image' => $filename,
                 'location' => $request->input('location'),
                 'state' =>  $request->input('state'),
@@ -125,7 +126,8 @@ class BillboardController extends Controller
                 'display_options' => serialize($request->input('billboarddisplay')),
                 'light_option' => $request->input('billboardlighting'),
                 'discount' => $request->input('billboarddiscount'),
-                'billboardnumber' => $request->input('billboardsnumber')
+                'billboardnumber' => $request->input('billboardsnumber'),
+                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $billboard->save();
@@ -235,7 +237,7 @@ class BillboardController extends Controller
     {
        $this->validate( $request, [
            'title' => 'required',
-           'price' => 'numeric',
+           'size' => 'required',
            //'image' => 'required|image',
            'location' => 'required',
            'state' => 'required',
@@ -248,11 +250,12 @@ class BillboardController extends Controller
         $editbillboard = Billboards::find($ID);
 
          $editbillboard->title = $request->input('title');
-         $editbillboard->price = $request->input('price');
+         $editbillboard->size = $request->input('size');
          $editbillboard->location = $request->input('location');
          $editbillboard->state = $request->input('state');
          $editbillboard->city = $request->input('city');
          $editbillboard->rank = $request->input('rank');
+         $editbillboard->landmark = $request->input('landmark');
          $editbillboard->description = $request->input('description');
          $editbillboard->status = $request->input('status');
          $editbillboard->references = $request->input('reference');
@@ -260,6 +263,7 @@ class BillboardController extends Controller
           $editbillboard->light_option = $request->input('billboardlighting');
           $editbillboard->billboardnumber = $request->input('billboardsnumber');
           $editbillboard->discount = $request->input('billboarddiscount');
+          $editbillboard->reference_mail = $request->input('reference_mail');
 
         if($request->hasFile('image')){
             $file = $request->file('image');

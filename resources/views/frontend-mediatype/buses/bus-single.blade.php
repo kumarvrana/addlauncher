@@ -31,45 +31,47 @@
                
                 <div class="col-md-8">
                 <div class="row">
-					@if($products)
-						@foreach($productOptions as $productOption)
-						<div class="col-md-3 col-sm-3 "> 
-							<div class="pro-item"> 
-								<div class=" cat-opt-img"><img src="{{asset('images/buses/'.$products[11])}}"> </div>
-								<p class="font-1">{{$products[3]}}</p>
-								<p class="font-2">{{$products[5]}} | {{$products[6]}} | {{$products[7]}}</p>
-								<hr>
-								<div class="row">
-									<div class="col-md-6">
-										<p class="font-3">{{$productOption['number_value']}} {{ucwords(str_replace('_', ' ', substr($productOption['price_key'], 6)))}} Ads<br> for  <br> {{$productOption['duration_value']}} months</p>
-									</div>
-								<div class="col-md-6">	
-									<p class="font-2"><del class="lighter">Rs {{$productOption['price_value']}} <br></del>Rs {{$productOption['price_value']}}</p>
+				
+				@foreach($buspricesad as $busprice)
+
+				
+					<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
+						<div class="pro-item"> 
+							<div class=" cat-opt-img"><img src="{{asset('images/buses/'.$busprice->bus->image)}}"> </div>
+							<p class="font-1">{{$busprice->bus->title}}</p>
+							<p class="font-2">{{$busprice->bus->location}} | {{$busprice->bus->city}} | {{$busprice->bus->state}}</p>
+							<hr>
+							<div class="row">
+								<div class="col-md-6">
+									<p class="font-3">{{$busprice->number_value}} {{ucwords(str_replace('_', ' ', substr($busprice->price_key, 6)))}} Ads<br> for  <br> {{$busprice->duration_value}} months</p>
 								</div>
-								</div>
-								@PHP
-								$options = $productOption['price_value'].'+'.$productOption['price_key'];
-								$session_key = 'buses'.'_'.$productOption['price_key'].'_'.$products[0];
-								$printsession = (array) Session::get('cart');
-												
-								@ENDPHP
-								<div class="clearfix"> 
-									<a class="glass" href="{{route('bus.addtocart', ['id' => $products[0], 'variation' => $options])}}">
-										@if(count($printsession) > 0)
-												@if(array_key_exists($session_key, $printsession['items'])) 
-													<span class="fa fa-minus-circle"></span> Remove From Cart 
-												@else
-													<span class="fa fa-star"></span> Add to Cart 
-												@endif
-												@else
-													<span class="fa fa-star"></span> Add to Cart
-												@endif
-									</a> 
-								</div>
+							<div class="col-md-6">	
+								<p class="font-2"><del class="lighter">Rs {{$busprice->price_value}} <br></del>Rs {{$busprice->price_value}}</p>
+							</div>
+							</div>
+							@PHP
+							$options = $busprice->price_value.'+'.$busprice->price_key;
+							$session_key = 'buses'.'_'.$busprice->price_key.'_'.$busprice->bus->id;
+							$printsession = (array) Session::get('cart');
+											
+							@ENDPHP
+							<div class="clearfix"> 
+								<a class="glass" href="{{route('bus.addtocart', ['id' => $busprice->bus->id, 'variation' => $options])}}">
+								@if(count($printsession) > 0)
+								@if(array_key_exists($session_key, $printsession['items'])) 
+									<span class="fa fa-minus-circle"></span> Remove From Cart 
+								@else
+									<span class="fa fa-star"></span> Add to Cart 
+								@endif
+								@else
+									<span class="fa fa-star"></span> Add to Cart
+								@endif
+								</a> 
 							</div>
 						</div>
-						@endforeach	
-						@endif
+					</div>
+					@endforeach	
+					
 		            </div><!-- row before style ends here -->
         		</div>
     		<div class="col-md-2">

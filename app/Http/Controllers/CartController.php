@@ -49,6 +49,8 @@ class CartController extends Controller
         $model = explode('_', $id);
         if($model[0] == 'televisions')
             $cart->removeTelevisionCartItem($id);
+        elseif($model[0] == 'airports')
+            $cart->removeAirportCartItem($id);
         else
             $cart->removeCartItem($id);
 
@@ -68,6 +70,8 @@ class CartController extends Controller
         $model = explode('_', $id);
         if($model == 'televisions')
             $cart->removeTelevisionCartItem($id);
+        elseif($model == 'airports')
+            $cart->removeAirportCartItem($id);
         else
             $cart->removeCartItem($id);
        
@@ -92,7 +96,9 @@ class CartController extends Controller
         $model = explode('_', $itemId);
         if($model[0] == 'televisions')
             $cart->UpdateTelevisionCartQty((array)$cart, $itemId, $count, $duration);
-        else
+        elseif ($model[0] == 'airports') {
+            $cart->UpdateAirportCartQty((array)$cart, $itemId, $count, $duration);
+        }else
             $cart->UpdateCartQty((array)$cart, $itemId, $count, $duration);
 
         Session::put('cart', $cart);

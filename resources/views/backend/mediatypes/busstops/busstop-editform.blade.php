@@ -72,7 +72,7 @@
                     <select class="form-control" name="status" id="status" required="required">
                         <option value="">--Select--</option>
                         @foreach( $ad_status as $key => $value )
-                        <option value="{{$key}}" @PHP if($busstop->status == $key){
+                        <option value="{{$key}}" @PHP if($busstop->status == $value){
                             echo "Selected";
                         } @ENDPHP>{{$value}}</option>
                         @endforeach
@@ -141,6 +141,10 @@
             <div class="form-group">
                 <label for="image">Ad Image:</label>
                 <input type="file" id="image" name="image" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="reference_mail">Reference Mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{$busstop->reference_mail}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>

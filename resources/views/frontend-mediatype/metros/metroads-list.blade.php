@@ -16,11 +16,33 @@
             </div>
         </div>
         @endif
-<section class="sec-banner">
-     <div class="jumbotron jumbo-1 text-center">
-         <h1><small>&emsp;ADVERTISE ON</small> <br><span>METROS</span></h1>
-     </div>
-</section>       
+<section class="sec-banner-metro">
+
+    <div class="metro-anim">
+
+        <div class="metro-train-anim">
+
+            <img class="metro-clip" src="../images/header-animation/delhi-metro/metro-train-clip.png">
+
+        </div>
+
+        <div class="metro-bridge-static">
+
+            
+        </div>
+
+        <div class="flying-plane3-anim">
+
+  <img class="autos-clip" src="../images/header-animation/cars-anim/flying-plane-clip.png">
+
+  </div>
+
+    </div>
+</section>  
+
+<section class="sec-head-title">
+    <h1>Advertise on <span>Metro</span></h1>
+</section>      
 <section class="main-sec">
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row"> <!-- row starts here -->
@@ -54,7 +76,7 @@
                              
                       if($status!='Available')  {
                       @ENDPHP
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="owl-item active">
                             <div class="single-product">
                                 <div class="product-img">
@@ -80,7 +102,7 @@
 
                     else { @ENDPHP
 
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="owl-item active">
                             <div class="single-product">
                                 <div class="product-img">

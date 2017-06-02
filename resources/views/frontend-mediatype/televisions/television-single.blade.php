@@ -16,77 +16,69 @@
             </div>
         </div>
         @endif
-
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-     <h1><small>&emsp;ADVERTISE ON</small> <br><span>{{$title}}</span></h1>
+         <h1> OPTIONS</h1>
      </div>
-</section>       
+</section>         
 <section class="main-sec">        
-        <div class="container-fluid"> <!-- container fluid 1 starts here -->
-            <div class="row">
-                <div class="col-md-2">
-				@include('partials.sidebar')
-                    
-                </div>
-      
-				<div class="col-md-8">
-				
-					<div class="row">
-				
-					@if($televisionad)
-						@foreach($televisionad as $television)
-						<div class="col-md-3 col-sm-3"> 
-							<div class="pro-item"> 
-								<div class=" cat-opt-img "> <img src="{{asset('images/televisions/'.$television->television->image)}}"> </div>
-								<p class="font-1">{{$television->television->title}} | {{ucwords(str_replace('_', ' ', substr($television->rate_key, 5)))}}</p>
-								<p class="font-2">{{$television->television->location}} | {{$television->television->city}} | {{$television->television->state}}</p>
-								<hr>
-								<div class="row">
-									<div class="col-md-6">
-										<p class="font-3">{{$television->exposure_value}} {{ucwords(str_replace('_', ' ', substr($television->rate_key, 5)))}}<br> for <br> {{$television->exposure_value}} months</p>
-									</div>
-									<div class="col-md-6">
-										<p class="font-4"><del class="lighter">Rs {{$television->rate_value}} <br></del>Rs {{$television->rate_value}} </p>
-									</div>
-								</div>
-								@PHP
-								$options = $television->rate_value.'+'.$television->rate_key;
-								$session_key = 'televisions'.'_'.$television->rate_key.'_'.$television->television->id;
-								$printsession = (array) Session::get('cart');
-								@ENDPHP
-								
-								<div class="clearfix"> 
-									<a class="glass" href="{{route('television.addtocart', ['id' => $television->television->id, 'variation' => $options])}}">
-									@if(count($printsession) > 0)
-										@if(array_key_exists($session_key, $printsession['items'])) 
-											<span class="fa fa-minus-circle"></span> Remove From Cart 
-										@else
-											<span class="fa fa-star"></span> Add to Cart 
-										@endif
-										@else
-											<span class="fa fa-star"></span> Add to Cart
-									@endif
-									</a> 
-								</div>
+	<div class="container-fluid"> <!-- container fluid 1 starts here -->
+		<div class="row">
+			<div class="col-md-2">
+			@include('partials.sidebar')
+			</div>
+		
+			<div class="col-md-8">
+			<div class="row">
+			@if($televisionads)
+				@foreach($televisionads as $televisionad)
+				<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
+					<div class="pro-item"> 
+						<div class=" cat-opt-img"><img src="{{asset('images/televisions/'.$televisionad->television->image)}}"> </div>
+						<p class="font-1">{{$televisionad->television->title}}</p>
+						<p class="font-2">{{$televisionad->television->location}} | {{$televisionad->television->city}} | {{$televisionad->television->state}}</p>
+						<hr>
+						<div class="row">
+							<div class="col-md-6">
+								<p class="font-3">{{$televisionad->time_band_value}} {{ucwords(str_replace('_', ' ', substr($televisionad->rate_key, 5)))}} Ads<br> for <br> {{$televisionad->exposure_value}} months</p>
 							</div>
+						<div class="col-md-6">	
+							<p class="font-2"><del class="lighter">Rs {{$televisionad->rate_value}} <br></del>Rs {{$televisionad->rate_value}}</p>
 						</div>
-						@endforeach
-					
-					@endif
-							
-					</div><!-- row before style ends here -->
-
-        		</div>
-
-        		<div class="col-md-2">
-            		@include('partials.sidebar-cart')
-        		</div>
-
-    		</div>
-    	</div><!-- container fluid 1 ends here -->
- </section>          
+						</div>
+						@PHP
+						$options = $televisionad->rate_value.'+'.$televisionad->rate_key;
+						$session_key = 'televisions'.'_'.$televisionad->rate_key.'_'.$televisionad->television->id;
+						$printsession = (array) Session::get('cart');
+									
+						@ENDPHP
+						<div class="clearfix"> 
+							<a class="glass" href="{{route('television.addtocart', ['id' => $televisionad->television->id, 'variation' => $options])}}">
+							@if(count($printsession) > 0)
+								@if(array_key_exists($session_key, $printsession['items'])) 
+									<span class="fa fa-minus-circle"></span> Remove From Cart 
+								@else
+									<span class="fa fa-star"></span> Add to Cart 
+								@endif
+								@else
+									<span class="fa fa-star"></span> Add to Cart
+							@endif
+							</a> 
+						</div>
+					</div>
+				</div>
+				{{$televisionad->televisionsprice}}
+				@endforeach	
+			@endif
+			</div><!-- row before style ends here -->
+			</div>
+			<div class="col-md-2">
+			@include('partials.sidebar-cart')
+			</div>
+		</div>
+	</div><!-- container fluid 1 ends here -->
+           
 	
-       
+ </section>      
 
 @endsection

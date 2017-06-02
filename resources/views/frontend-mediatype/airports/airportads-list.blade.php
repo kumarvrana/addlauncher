@@ -2,25 +2,23 @@
 
 @section('title')
 
-    Airport | Media | Ad Launcher
+Airport | Media | Ad Launcher
 
 @endsection     
 
 @section('content')
-        @if(Session::has('success'))
-        <div class="row">
-            <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
-                <div id="charge-message" class="alert alert-success">
-                    {{Session::get('success')}}
-                </div>
-            </div>
+@if(Session::has('success'))
+<div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-3">
+        <div id="charge-message" class="alert alert-success">
+            {{Session::get('success')}}
         </div>
-        @endif
-<section class="sec-banner">
-     <div class="jumbotron jumbo-1 text-center">
-         <h1><small>&emsp;ADVERTISE ON</small> <br><span>AIRPORTS</span></h1>
-     </div>
-</section>       
+    </div>
+</div>
+@endif
+
+@include('banner.airportBanner')   
+ 
 <section class="main-sec">
     <div class="container-fluid"> {{-- container fluid 1 starts here --}}
         <div class="row"> {{-- row starts here --}}
@@ -32,34 +30,34 @@
               <div class="ad-sec">  
                 <div class="loader" style="display:none"></div>
                 <div class="data-box" > <!-- row repeater starts here -->
-                <div class="row" id="table-results">
-                    
-                    @foreach($airport_options as $key => $value)
+                    <div class="row" id="table-results">
+
+                        @foreach($airport_options as $key => $value)
                         @PHP
-                            $image = $key.".jpg";
+                        $image = $key.".jpg";
                         @ENDPHP
-                    <div class="col-md-3">
-                        <div class="owl-item active">
-                            <a href="{{ route('frontend.getfrontAirportadByOption', ['airportOption' => $key]) }}">
-                            <div class="single-product">
-                                <div class="product-img">
-                                        <img class="second-img {{$key}}" src="{{asset('images/airports/'.$image)}}" alt="{{$key}}">
-                                </div>
-                                <div class="products-desc">
-                                    
-                                    <div class="product-price"><span>{{$value}}</span></div>
-                                    <hr>
-                                    <div class="btn thb-fill-style">
-                                        <span>{{$location}}</span>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="owl-item active">
+                                <a href="{{ route('frontend.getfrontAirportadByOption', ['airportOption' => $key]) }}">
+                                    <div class="single-product">
+                                        <div class="product-img">
+                                            <img class="second-img {{$key}}" src="{{asset('images/airports/'.$image)}}" alt="{{$key}}">
+                                        </div>
+                                        <div class="products-desc">
+
+                                            <div class="product-price"><span>{{$value}}</span></div>
+                                            <hr>
+                                            <div class="btn thb-fill-style">
+                                                <span>{{$location}}</span>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                </div>
-                                
+                                </a>
                             </div>
-                            </a>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
-                </div>
                 </div> <!-- row repeater ends here -->
 
                 <div class="row cat-data">
@@ -72,16 +70,16 @@
                     
                 </div>
 
-                </div>
             </div>
-            <div class="col-md-2">
+        </div>
+        <div class="col-md-2">
             @include('partials.sidebar-cart')
-                
-            </div>
-            <!--div id="table-results"></div-->
-        </div><!-- row ends here -->
-    </div><!-- container fluid 1 ends here -->
+
+        </div>
+        <!--div id="table-results"></div-->
+    </div><!-- row ends here -->
+</div><!-- container fluid 1 ends here -->
 </section>       
-    
+
 
 @endsection

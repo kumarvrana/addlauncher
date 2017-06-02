@@ -1,3 +1,370 @@
+/*//////////////////////////////////////////////////////////////////////*/
+@media only screen and (min-width : 320px) and (max-width : 688px) {
+/*--- Mobile portrait ---*/
+    nav#top {
+        background: red;
+    }
+
+    .mob-top-bar {
+    background: red;
+    }
+
+    .navbar-mob a.navbar-brand {
+    width: 80%;
+    }
+            div#logo {
+    width: 100%;
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (min-width : 375px) and (max-width : 688px) {
+/*--- Mobile landscape ---*/
+
+    nav#top {
+        background: navy;
+    }
+
+    .mob-top-bar {
+    background: navy;
+    }
+
+    .navbar-mob a.navbar-brand {
+    width: 65%;
+    }
+
+        div#logo {
+    width: 100%;
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (min-width : 425px) and (max-width : 688px) {
+
+    nav#top {
+        background: aqua;
+    }
+
+    .mob-top-bar {
+    background: aqua;
+    }
+
+    .navbar-mob a.navbar-brand {
+    width: 60%;
+    }
+
+    div#logo {
+    width: 100%;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (min-width : 690px) and (max-width : 800px) {
+/*--- Tablet portrait ---*/
+    nav#top {
+        background: green;
+    }
+
+    div#logo {
+    width: 100%;
+    }
+    .cd-dropdown-trigger {
+    display: block;
+    position: relative;
+    padding: 0 21px 0 12px;
+    line-height: 30px;
+    background-color: #232323;
+    color: #ffffff;
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (min-width : 800px) and (max-width : 1024px) {
+/*--- Tablet portrait ---*/
+    nav#top {
+        background: black;
+    }
+
+    div#logo {
+    width: 100%;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (min-width : 1024px) and (max-width : 1224px) {
+/*--- Tablet landscape --- */
+    nav#top {
+        background: orange;
+    }
+    .pt_custommenu div#pt_menu_home .parentMenu a {
+    padding: 15px 20px 15px 0;
+    }
+    header {
+    padding: 0px 0 0px 0;
+    min-height: 80px;
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (min-width : 1224px) {
+/* Desktops and laptops ----------- */
+
+    nav#top {
+        background: brown;
+    }
+
+
+    .pt_custommenu div#pt_menu_home .parentMenu a {
+    padding: 15px 0px 15px 0;
+    margin: 0px 6px;
+    }
+    .pt_custommenu div.pt_menu .parentMenu a{
+        font-size: 12px;
+    }
+}
+
+
+@media only screen and (min-width : 1824px) {
+/* Large screens ----------- */
+
+    nav#top {
+        background: #38b1e2;
+    }
+
+    .pt_custommenu div#pt_menu_home .parentMenu a {
+    padding: 15px 0px 15px 0;
+    margin: 0px 19px;
+    }
+
+    .cat-menu-img {
+    padding: 14px 24px;
+    }
+
+   
+}
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*LOGIN DROPDOWN STYLE*/
+
+/* Medium Layout: 1169px. */
+
+@media only screen and (min-width: 992px) and (max-width: 1169px) {
+
+.nav_right a {
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.dropdown-inner-log {
+  width: 357px;
+}
+.drop_inner_login {
+  padding: 24px;
+}
+
+
+}
+
+/* Tablet Layout: 768px. */
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+.nav_right {
+  padding: 0 1px;
+}
+
+
+.dropdown-inner-log {
+  width: 252px;
+}
+.drop_inner_login {
+  padding: 22px;
+  padding-bottom: 0;
+}
+.drop_inner_login > p {
+  font-size: 12px;
+
+}
+
+.sub_log > input[type="submit"] {
+  padding: 5px 28px;
+}
+.nav_right .forgot_pw a {
+  font-size: 12px;
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*-----start-responsive-design------*/
 
 @media (max-width:1440px) {
@@ -368,10 +735,59 @@
 }*/
 
 
-@media(max-width: 1024px) {
-    .pt_custommenu div.pt_menu .parentMenu a,
-    .pt_custommenu div.pt_menu .parentMenu span.block-title {
-        font-size: 13px;
-        padding: 15px 20px;
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

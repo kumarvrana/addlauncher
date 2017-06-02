@@ -1,47 +1,46 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Be right back.</title>
+ @extends('layouts.master')
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+ @section('title')
+    404 - Page Not Found
+ @endsection
 
-        <style>
-            html, body {
-                height: 100%;
-            }
+ @section('content')
 
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                color: #B0BEC5;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato', sans-serif;
-            }
+ <section class="error-page">
+     <div class="container">
+         <div class="row">
+             <div class="col-md-6">
+                <div class="e404">
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div>
+                                <strong>404</strong>
+                            </div>
+                            <h2>ERROR</h2> 
+                        </div>
+                        <div class="col-md-6">
+                            <i class="fa fa-file-text-o"></i>
+                        </div>
+                        
+                    </div>
+                </div>
+             </div>
+             <div class="col-md-6">
+                <div id="e404-side">
+                            <h3>Hey! Page not found.</h3>
+                            
+                            <p><br/><br/>Sorry, but the page you requested could not be found. This page may have been moved, deleted or maybe you have mistyped the URL.</p>
+                            
+                            <p>Please, try again and make sure you have typed the URL correctly.</p>
+                            
+                            <p class="center"><br/><a href="{{route('product.mainCats')}}" class="btn thb-fill-style">Go to Homepage</a></p>
+                </div>
+             </div>
+         </div>
+     </div>
+ </section>
 
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
 
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
 
-            .title {
-                font-size: 72px;
-                margin-bottom: 40px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">404 Page: Page Not Found.</div>
-            </div>
-        </div>
-    </body>
-</html>
+ @endsection

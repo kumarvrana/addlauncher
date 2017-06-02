@@ -49,6 +49,11 @@
 								if($imagefolder[1] == 'tricycle'){
 									$priceValue = $product['item']['price'];
 									$subTitle = ucfirst($imagefolder[1]);
+
+								}elseif($imagefolder[0] == 'airports'){
+									$priceValue = $product['item']['optionprice'];
+									$subTitle = ucfirst($imagefolder[1]);
+
 								}else{
 									$priceKey = ($imagefolder[0] == 'televisions') ? $product['item']['rate_key'] : $product['item']['price_key'];
 									$priceValue = ($imagefolder[0] == 'televisions') ? $product['item']['rate_value'] : $product['item']['price_value'];
@@ -56,7 +61,8 @@
 									$subTitle = ucwords(str_replace('_', ' ', substr($priceKey, $substrNumber)));
 									if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
 								}
-								
+
+							
 							@ENDPHP
 							<td data-th="Image" class="im">
 									<img src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{$subTitle}}" class="img-responsive"/>
@@ -162,221 +168,64 @@
 					</thead>
 					<tbody>
 					@PHP
-					
-
 						$j = 1;
-
-						
 					@ENDPHP
-                     @foreach( $products as $product)
-						<tr >
-                        @PHP
-                            $key = array_search($product, $products);
-                            $imagefolder = explode('_', $key);
-							
-                        @ENDPHP
-						@if($imagefolder[1] === 'tricycle')
-                        	<td data-th="Number" class="sr">{{$loop->iteration}}</td>
-                        	
-							<td data-th="Product" class="pn">
-								<div class="row">
-									
-									<div class="col-sm-12 c-title">
-										<h4 class="nomargin">{{ $product['item']['title'] }}</h4>
-									</div>
-									
-								</div>
-							</td>
-							@if($imagefolder[0] == 'cinemas')
-							<td data-th="length" class="qt">
-							<select id="length-{{$j}}" name="length" data-index="{{$j}}" data-itemkey="{{$key}}" class="form-control">
-                            	<option value="" disabled>Length</option>
-                            	<option value="1">10 sec</option>
-                            	<option value="2">20 sec</option>
-                            	<option value="3">30 sec</option>
-                            	<option value="4">40 sec</option>
-                            	<option value="5">50 sec</option>
-                            	<option value="6">60 sec</option>
-                            </select>								
-							</td>
-							@else
-									@if(($imagefolder[1] === 'tricycle'))
-									
-										<td data-th="Quantity" class="qt">
-											<input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['auto_number']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$product['item']['auto_number']}}</span>
-											<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$product['item']['auto_number']}}">
-										</td>
-									@else
-										<?php $numberKey = ( $imagefolder[0] == 'televisions') ? $product['item']['exposure_value'] : $product['item']['number_value']; ?>
-										<td data-th="Quantity" class="qt">
-											<input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$numberKey}}" value="{{$product['qty']}}">
-											<span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$numberKey}}</span>
-											<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$numberKey}}">
-										</td>
-									@endif
-							
-							
-							@endif
-							
-							
-							
-                             <td data-th="duration" class="pr">
-							 <select id="duration-{{$j}}" name="duration" data-itemkey="{{$key}}" data-index="{{$j}}" class="form-control change-cart">
-                             <option value="" disabled>No of Days</option>
-								@PHP	
-									for($i=1;$i<=31;$i++) {
-										if($i==1)
-											echo "<option value=$i>$i Day</option>";
-										else{
-											if($i==$product['duration']){
-												echo "<option  Selected value=$i>$i Days</option>";
-											}else{
-												echo "<option value=$i>$i Days</option>";
-											} 
-											
-										}
-									}
-
-								@ENDPHP
-                            </select></td>
-
-                            
-
-                           
-							<td data-th="Subtotal" class="text-center subtotal-{{$j}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}}</h4></td>
-							<td class="actions rm" data-th="">
-								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
-							</td>
-						</tr>
+                    @foreach($products as $product)
+					 	@PHP
+						$key = array_search($product, $products);
+						$imagefolder = explode('_', $key);
 						
-						@else
-							<td data-th="Number" class="sr">{{ $loop->iteration }}</td>
-                        	@if($imagefolder[0] == 'televisions')
-							<td data-th="Product" class="pn">
-								<div class="row">
-									
-									<div class="col-sm-12 c-title">
-										<h4 class="nomargin">{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['rate_key'], 5))) }}</h4>
-									</div>
-									
-								</div>
-							</td>
-							@else
-								<td data-th="Product" class="pn">
-								<div class="row">
-									
-									<div class="col-sm-12 c-title">
-										<h4 class="nomargin">{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6))) }}</h4>
-									</div>
-									
-								</div>
-								</td>
-							@endif
+						switch($imagefolder[0]){
+							case 'cinemas':
+							@ENDPHP
+								@include('shop.cart.cinemas')
+							@PHP
+							break;
+							case 'busstops':
+							@ENDPHP
+								@include('shop.cart.busstops')
+							@PHP
+							break;
+							case 'buses':
+							@ENDPHP
+								@include('shop.cart.busstops')
+							@PHP
+							break;
+							case 'cars':
+							@ENDPHP
+								@include('shop.cart.busstops')
+							@PHP
+							break;
+							case 'shoppingmalls':
+							@ENDPHP
+								@include('shop.cart.busstops')
+							@PHP
+							break;
+							case 'billboards':
+							@ENDPHP
+								@include('shop.cart.busstops')
+							@PHP
+							break;
+							case 'televisions':
+							@ENDPHP
+								@include('shop.cart.televisions')
+							@PHP
+							break;
+							case 'autos':
+							@ENDPHP
+								@include('shop.cart.autos')
+							@PHP
+							break;
+							case 'airports':
+							@ENDPHP
+								@include('shop.cart.airports')
+							@PHP
+							break;
 
-							@if($imagefolder[0] == 'cinemas')
-							<td data-th="length" class="qt">
-							<select id="length-{{$j}}" name="length" data-itemkey="{{$key}}" data-index="{{$j}}" class="form-control change-cart">
-                            	<option value="" disabled>Length</option>
-                            	<option value="1">10 sec</option>
-                            	<option value="2">20 sec</option>
-                            	<option value="3">30 sec</option>
-                            	<option value="4">40 sec</option>
-                            	<option value="5">50 sec</option>
-                            	<option value="5">60 sec</option>
-                            </select>							
-							</td>
-							@else
-							<?php $numberKey = ( $imagefolder[0] == 'televisions') ? $product['item']['exposure_value'] : $product['item']['number_value']; ?>
-							<td data-th="Quantity" class="qt">
-									<input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$numberKey}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$numberKey}}</span>
-									<input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$numberKey}}">
-								</td>
-					
-							@endif
-
-							@if($imagefolder[0] == 'newspapers' || $imagefolder[0] == 'televisions' || $imagefolder[0] == 'socialmedias' )
-							<td data-th="duration" class="duration-hidden-{{$j}}">
-									<select id="duration-{{$j}}" name="duration" data-itemkey="{{$key}}" data-index="{{$j}}" class="form-control change-cart">
-									 <option value="" disabled>No of Days</option>
-								@PHP	
-									for($i=1;$i<=31;$i++) {
-										if($i==1)
-											echo "<option value=$i>$i Day</option>";
-										else{
-											if($i==$product['duration']){
-												echo "<option  Selected value=$i>$i Days</option>";
-											}else{
-												echo "<option value=$i>$i Days</option>";
-											} 
-											
-										}
-									}
-
-								@ENDPHP
-
-                            	
-                            </select>
-								</td>
-							
-							@elseif($imagefolder[0] == 'cinemas')
-							<td data-th="duration" class="duration-hidden-">
-									<select id="duration-{{$j}}" data-itemkey="{{$key}}" data-index="{{$j}}" name="duration" class="form-control change-cart">
-                            	 <option value="" disabled>No of Weeks</option>
-								@PHP	
-									for($i=1;$i<=5;$i++) {
-										if($i==1)
-											echo "<option value=$i>$i Week</option>";
-										else{
-											if($i==$product['duration']){
-												echo "<option  Selected value=$i>$i Weeks</option>";
-											}else{
-												echo "<option value=$i>$i Weeks</option>";
-											} 
-											
-										}
-									}
-
-								@ENDPHP
-                            </select>
-                            
-								</td>
-							@else
-							<td data-th="duration" class="duration-hidden-">
-									<select id="duration-{{$j}}" name="duration" data-itemkey="{{$key}}" data-index="{{$j}}" class="form-control change-cart">
-                            	<option value="" disabled>No of Months</option>
-								@PHP	
-									for($i=1;$i<=12;$i++) {
-										if($i==1)
-											echo "<option value=$i>$i Month</option>";
-										else{
-											if($i==$product['duration']){
-												echo "<option  Selected value=$i>$i Months</option>";
-											}else{
-												echo "<option value=$i>$i Months</option>";
-											} 
-											
-										}
-										
-									}
-
-								@ENDPHP
-                            </select>
-
-								</td>
-					
-							@endif
-							
-                            
-							<td data-th="Subtotal" class="text-center subtotal-{{$j}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}}</h4></td>
-							<td class="actions rm" data-th="">
-								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
-							</td>
-						</tr>
-						@endif
-						@PHP
-							$j++;
+						}
+						$j++;
 						@ENDPHP
-                        @endforeach
+                    @endforeach
 					</tbody>
 					<tfoot>
 						<tr class="visible-xs">

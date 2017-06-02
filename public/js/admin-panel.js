@@ -247,7 +247,19 @@ if (fieldisi) {
     fieldData = fieldData.concat(editfieldData);
 
     var formTable = document.getElementById("tablename");
+    if( formTable.value === 'cinemas' ){
+        var generalOptions = document.getElementById("display_options");
+        var otherOptions = document.getElementById("additional_adsoption");
+        if (generalOptions) {
+            var generalOptionsData = generalOptions.value;
+            generalOptionsData = JSON.parse(generalOptionsData);
 
+        }
+        if (otherOptions) {
+            var otherOptionsData = otherOptions.value;
+            otherOptionsData = JSON.parse(otherOptionsData);
+        }
+    }
     if (formTable.value == 'newspapers') {
         var generalOptions = document.getElementById("general_options");
         var otherOptions = document.getElementById("other_options");
@@ -282,45 +294,7 @@ if (fieldisi) {
         }
     }
 
-    if (formTable.value == 'autos') {
-        var displayOptions = document.getElementById("display_options");
-        var frontPampletsOptions = document.getElementById("front_pamphlets_reactanguler_options");
-        var frontStickersOptions = document.getElementById("front_stickers_options");
-        var hoodOptions = document.getElementById("hood_options");
-        var interiorOptions = document.getElementById("interior_options");
-
-        if (displayOptions.value) {
-            var displayOptionsData = displayOptions.value;
-            displayOptionsData = JSON.parse(displayOptionsData);
-
-        }
-
-        if (frontPampletsOptions.value) {
-            var frontPampletsOptionsData = frontPampletsOptions.value;
-            frontPampletsOptionsData = JSON.parse(frontPampletsOptionsData);
-
-
-        }
-
-
-        if (frontStickersOptions.value) {
-            var frontStickersOptionsData = frontStickersOptions.value;
-            frontStickersOptionsData = JSON.parse(frontStickersOptionsData);
-
-        }
-
-        if (hoodOptions.value) {
-            var hoodOptionsData = hoodOptions.value;
-            hoodOptionsData = JSON.parse(hoodOptionsData);
-
-        }
-
-        if (interiorOptions.value) {
-            var interiorOptionsData = interiorOptions.value;
-            interiorOptionsData = JSON.parse(interiorOptionsData);
-
-        }
-    }
+    
 
     if (formTable.value == 'televisions') {
         var displayOptions = document.getElementById("display_options");
@@ -745,7 +719,7 @@ function addDomToPriceOptionsCinema(name, type) {
         var model = document.getElementById("modelname").value;
         var labeltext = "Price for " + model + "'s " + name + " :";
         var labelnumbertext = "Number of " + model + " for " + name + " :";
-        var labeldurationtext = "Ad Duration of " + model + " for " + name + "  (in Sec):";
+        var labeldurationtext = "Ad duration/period of " + model + " for " + name + "  (in Sec):";
         var iname = name.toLowerCase();
         var res = iname.split(' ').join('_');
         var inputname = "price_" + res;
@@ -774,7 +748,7 @@ function addDomToPriceOptionsCinema(name, type) {
         inputhtm.setAttribute('placeholder', 'put price value as number eg: 35345');
 
 
-        //Duration of buses
+        
         var labeldurationhtm = document.createElement('label');
         labeldurationhtm.setAttribute("for", duration);
         labeldurationhtm.innerText = labeldurationtext;
@@ -794,8 +768,8 @@ function addDomToPriceOptionsCinema(name, type) {
         divrow.appendChild(labelhtm);
         divrow.appendChild(inputhtm);
 
-        // divrowduration.appendChild(labeldurationhtm);
-        // divrowduration.appendChild(inputdurationhtm);
+        divrowduration.appendChild(labeldurationhtm);
+        divrowduration.appendChild(inputdurationhtm);
         priceElement.appendChild(divrow);
 
         priceElement.appendChild(divrowduration);
@@ -819,11 +793,27 @@ function removeItemCinema(name, option_type) {
     fieldData.splice(fieldData.indexOf(name), 1);
     if (fieldisi) {
         editfieldData.splice(editfieldData.indexOf(name), 1);
+        
 
         var id = document.getElementById("uncheckID").value;
         var tableName = document.getElementById("tablename").value;
         var update_options = '';
-
+        switch (option_type) {
+            case 'display_options':
+                if (generalOptionsData) {
+                    generalOptionsData.splice(generalOptionsData.indexOf(name), 1);
+                    generalOptions.value = JSON.stringify(generalOptionsData);
+                    update_options = generalOptionsData;
+                }
+                break;
+            case 'additional_adsoption':
+                if (otherOptionsData) {
+                    otherOptionsData.splice(otherOptionsData.indexOf(name), 1);
+                    otherOptions.value = JSON.stringify(otherOptionsData);
+                    update_options = otherOptionsData;
+                }
+                break;
+        }
         fieldisi.value = JSON.stringify(fieldData);
         $.ajax({
                 method: 'GET',
@@ -832,7 +822,8 @@ function removeItemCinema(name, option_type) {
                     id: id,
                     price_key: inputname,
                     duration_key: duration,
-                    displayoptions: JSON.stringify(fieldData)
+                    option: option_type,
+                    displayoptions: JSON.stringify(update_options)
                 }
             })
             .done(function(msg) {
@@ -1231,3 +1222,268 @@ function removeItemMegazine(name, genre) {
     var deletenumNode = document.getElementById(divnumId);
     deletenumNode.remove();    
 }
+
+function addDomToPriceOptionsNewspaper(name, printmedia_type){
+    //var genre = printmedia_type;
+    var chkExist = fieldData.indexOf(name);
+   
+    if (chkExist == -1) {
+        var labelbasepricetext = "Base Price for " + name + " Newspaper Ad:";
+        var labeladdonpricetext = "Add-on Price for " + name + " Newspaper Ad:";
+        var labelTotalPricetext = "Total Price for " + name + " Newspaper Ad:";
+        var labelclassifiedType = "Select Ad Genre: ";
+        var labelRateType = "Select printing Options: ";
+        var labelColorType = "Select Color Ad Or not:";
+        
+        var iname = name.toLowerCase();
+        var res = iname.split(' ').join('_');
+        var inputbasepricename = "base_price_" + res;
+        var inputaddonpricename = "add_on_price_" + res;
+        var inputTotalPricename = "total_price_" + res;
+        var newspaperGenreName = "genre_" + res;
+        var newspaperRateName = "rate_" + res;
+        var newspaperColorName = "color_" + res;
+       
+        var priceElement = document.getElementById('pricing-options-step');
+
+        var divrowbasePrice = document.createElement('div');
+        divrowbasePrice.className = 'form-group';
+        divrowbasePrice.id = 'p' + inputbasepricename;
+
+        var divrowAddonPrice = document.createElement('div');
+        divrowAddonPrice.className = 'form-group';
+        divrowAddonPrice.id = 'p' + inputaddonpricename;
+
+        var divrowTotalPrice = document.createElement('div');
+        divrowTotalPrice.className = 'form-group';
+        divrowTotalPrice.id = 'p' + inputTotalPricename;
+
+        var divrowGenre = document.createElement('div');
+        divrowGenre.className = 'form-group';
+        divrowGenre.id = 'p' + newspaperGenreName;
+
+        var divrowRate = document.createElement('div');
+        divrowRate.className = 'form-group';
+        divrowRate.id = 'p' + newspaperRateName;
+
+        var divrowColor = document.createElement('div');
+        divrowColor.className = 'form-group';
+        divrowColor.id = 'p' + newspaperColorName;
+
+        
+        //base price field
+        var labelbaseprice = document.createElement('label');
+        labelbaseprice.setAttribute("for", inputbasepricename);
+        labelbaseprice.innerText = labelbasepricetext;
+
+        var inputbaseprice = document.createElement("input"); //input element, text
+        inputbaseprice.setAttribute('type', "text");
+        inputbaseprice.setAttribute('name', inputbasepricename);
+        inputbaseprice.setAttribute('class', "form-control");
+        inputbaseprice.setAttribute('id', inputbasepricename);
+        inputbaseprice.setAttribute('required', 'required');
+        inputbaseprice.setAttribute('placeholder', 'base price eg: 35345');
+
+        //add on  price
+        var labeladdonprice = document.createElement('label');
+        labeladdonprice.setAttribute("for", inputaddonpricename);
+        labeladdonprice.innerText = labeladdonpricetext;
+
+        var inputaddonprice = document.createElement("input"); //input element, text
+        inputaddonprice.setAttribute('type', "text");
+        inputaddonprice.setAttribute('name', inputaddonpricename);
+        inputaddonprice.setAttribute('class', "form-control");
+        inputaddonprice.setAttribute('id', inputaddonpricename);
+        inputaddonprice.setAttribute('required', 'required');
+        inputaddonprice.setAttribute('placeholder', 'Add on eg: 35345');
+
+        //total price
+        var labelTotalPrice = document.createElement('label');
+        labelTotalPrice.setAttribute("for", inputTotalPricename);
+        labelTotalPrice.innerText = labelTotalPricetext;
+
+        var inputTotalPrice = document.createElement("input"); //input element, text
+        inputTotalPrice.setAttribute('type', "text");
+        inputTotalPrice.setAttribute('name', inputTotalPricename);
+        inputTotalPrice.setAttribute('class', "form-control");
+        inputTotalPrice.setAttribute('id', inputTotalPricename);
+        inputTotalPrice.setAttribute('required', 'required');
+        inputTotalPrice.setAttribute('placeholder', 'total price eg: 35345');
+
+        // classified type
+        var classfiedType = {'matrimonial':'Matrimonial', 'recruitment':'Recruitment','business':'Business','property' : 'Property','education':'Education','astrology':'Astrology','public_notices':'Public Notices','services':'Services','automobile':'Automobile','shopping':'Shopping', 'appointment':'Appointment', 'computers':'Computers', 'personal':'Personal', 'travel':'Travel', 'package':'Package'};
+
+        var labelGenre = document.createElement('label');
+        labelGenre.setAttribute("for", newspaperGenreName);
+        labelGenre.innerText = labelclassifiedType;
+
+        var selectGenre = document.createElement("select"); //input element, text
+        selectGenre.setAttribute('name', newspaperGenreName);
+        selectGenre.setAttribute('class', "form-control");
+        selectGenre.setAttribute('id', newspaperGenreName);
+        selectGenre.setAttribute('required', 'required');
+
+        for (var key in classfiedType) {
+            var option = document.createElement("option");
+            option.value = key;
+            option.text = classfiedType[key];
+            selectGenre.appendChild(option);
+	    }
+
+        // rate type
+        var insertType = {"sq cm":"sq cm", "column":"column", "insert":"insert", "day":"day"};
+        var labelRate = document.createElement('label');
+        labelRate.setAttribute("for", newspaperRateName);
+        labelRate.innerText = labelRateType;
+
+        var selectRate = document.createElement("select"); //input element, text
+        selectRate.setAttribute('name', newspaperRateName);
+        selectRate.setAttribute('class', "form-control");
+        selectRate.setAttribute('id', newspaperRateName);
+        selectRate.setAttribute('required', 'required');
+
+        for (var key in insertType) {
+            var option = document.createElement("option");
+            option.value = key;
+            option.text = insertType[key];
+            selectRate.appendChild(option);
+	    }
+
+        // Color type
+        var colorType = {"yes":"YES", "no":"NO"};
+        var labelColor = document.createElement('label');
+        labelColor.setAttribute("for", newspaperColorName);
+        labelColor.innerText = labelColorType;
+
+        var selectColor = document.createElement("select"); //input element, text
+        selectColor.setAttribute('name', newspaperColorName);
+        selectColor.setAttribute('class', "form-control");
+        selectColor.setAttribute('id', newspaperColorName);
+        selectColor.setAttribute('required', 'required');
+
+        for (var key in colorType) {
+            var option = document.createElement("option");
+            option.value = key;
+            option.text = colorType[key];
+            selectColor.appendChild(option);
+	    }
+        
+
+
+        fieldData.push(name);
+        if (fieldisi) {
+            fieldisi.value = JSON.stringify(fieldData);
+        }
+        divrowbasePrice.appendChild(labelbaseprice);
+        divrowbasePrice.appendChild(inputbaseprice);
+        divrowAddonPrice.appendChild(labeladdonprice);
+        divrowAddonPrice.appendChild(inputaddonprice);
+        divrowTotalPrice.appendChild(labelTotalPrice);
+        divrowTotalPrice.appendChild(inputTotalPrice);
+        divrowGenre.appendChild(labelGenre);
+        divrowGenre.appendChild(selectGenre);
+        divrowRate.appendChild(labelRate);
+        divrowRate.appendChild(selectRate);
+        divrowColor.appendChild(labelColor);
+        divrowColor.appendChild(selectColor);
+        
+        priceElement.appendChild(divrowbasePrice);
+        priceElement.appendChild(divrowAddonPrice);
+        priceElement.appendChild(divrowTotalPrice);
+        priceElement.appendChild(divrowGenre);
+        priceElement.appendChild(divrowRate);
+        priceElement.appendChild(divrowColor);
+        
+    } else {
+        removeItemNewspaper(name, printmedia_type);
+    }
+}
+
+function removeItemNewspaper(name, genre) {
+
+    var iname = name.toLowerCase();
+    var res = iname.split(' ').join('_');
+
+    var inputbasepricename = "base_price_" + res;
+    var inputaddonpricename = "add_on_price_" + res;
+    var inputTotalPricename = "total_price_" + res;
+    var newspaperGenreName = "genre_" + res;
+    var newspaperRateName = "rate_" + res;
+    var newspaperColorName = "color_" + res;
+
+    var divbaseprice = 'p' + inputbasepricename;
+    var divaddonprice = 'p' + inputaddonpricename;
+    var divTotalPrice = 'p' + inputTotalPricename;
+    var divGenre = 'p' + newspaperGenreName;
+    var divRate = 'p' + newspaperRateName;
+    var divColor = 'p' + newspaperColorName;
+
+    fieldData.splice(fieldData.indexOf(name), 1);
+    if (fieldisi) {
+        editfieldData.splice(editfieldData.indexOf(name), 1);
+        var id = document.getElementById("uncheckID").value;
+        var tableName = document.getElementById("tablename").value;
+        var update_options = '';
+        fieldisi.value = JSON.stringify(fieldData);
+        $.ajax({
+                method: 'GET',
+                url: uncheckDeleteURL,
+                data: {
+                    id: id,
+                    price_key: inputname,
+                    printmedia_type: genre,
+                    number_key: numberTimeMagezinePrints,
+                    //exposure_key: durationbuses,
+                    displayoptions: JSON.stringify(fieldData)
+                }
+            })
+            .done(function(msg) {
+                console.log(msg);
+            });
+    }
+
+    var deletebaseprice = document.getElementById(divbaseprice);
+    deletebaseprice.remove();
+    var deleteaddonprice = document.getElementById(divaddonprice);
+    deleteaddonprice.remove();
+    var deleteTotalPrice = document.getElementById(divTotalPrice);
+    deleteTotalPrice.remove();
+    var deleteGenre = document.getElementById(divGenre);
+    deleteGenre.remove();
+    var deleteRate = document.getElementById(divRate);
+    deleteRate.remove();
+    var deleteColor = document.getElementById(divColor);
+    deleteColor.remove();    
+}
+
+/* 
+    Airports settings
+
+*/
+function deleteairportOption(varid, index){
+    
+    var id = Number(varid);
+
+    $.ajax({
+      url: airportFieldRemoveURL,
+      type: 'GET',
+      data: {deleteID: id},
+      success: function(response){
+        $('#room_fileds'+index).remove();
+      },
+      error: function(error){
+        console.log(error);
+      }
+
+    });
+}
+
+
+
+var removeLinkMain = '<a class="btn btn-danger remove" href="#" onclick="$(this).parent().slideUp(function(){ $(this).remove() }); return false">Remove Main Field -</a><hr/>';
+
+var removeLinkSubField = '<a class="btn btn-danger remove" href="#" onclick="$(this).parent().slideUp(function(){ $(this).remove() }); return false">Remove Sub Field -</a><hr/>';
+
+$('.copy').relCopyMain({ append: removeLinkMain});
+
+//$('.sub-copy').relCopySubFields({ append: removeLinkSubField});

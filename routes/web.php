@@ -85,7 +85,7 @@ Route::post('/citrustransfer-settings',[
 Route::post('/citrustransfer-settings', [
 'uses' => 'PaymentSettingsController@UpdateCitrusPayment',
 'as' => 'dashboard.updatecitrustransfer'
-]); 
+]);
 
 
 
@@ -843,7 +843,7 @@ Route::get('/media/buses', [
 'uses' => 'BusController@getfrontendAllBusads',
 'as' => 'frontend.getallbuses'
 ]);
-Route::get('/media/bus/{id}', [
+Route::get('/media/bus/{slug}', [
 'uses' => 'BusController@getfrontBusad',
 'as' => 'frontend.busesingle'
 ]);
@@ -1052,6 +1052,11 @@ Route::get('/media/television/{id}', [
 Route::get('/media/television/add-to-cart/{id}/{variation}', [
 'uses' => 'TelevisionController@getAddToCart',
 'as' => 'television.addtocart'
+]);
+
+Route::get('/media/television/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'TelevisionController@getAddToCartBySearch',
+'as' => 'television.addtocartAfterSearch'
 ]);
 
 Route::get('/television/filter/',[

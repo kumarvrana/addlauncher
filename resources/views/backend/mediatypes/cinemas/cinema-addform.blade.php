@@ -86,22 +86,9 @@
             <div class="step-header">Cinema Ad Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Cinema">
                
-                @PHP
-                    $cinema_options = array('video_ad' => 'Video Ad', 'trailor_ad' => 'Trailor Ad', 'mute_slide_ad' => 'Mute Slide Ad');
-                    $offScreen_AdOptions = array('danglers' => 'Danglers', 'tent_cards' => 'Tent Cards', ''=> 'glow_box', '' => 'Glow Box', 'product_sampling' => 'Product', '' => '', '' => '', '' => '');
-                    $cinema_category = array('gold' => 'Gold', 'platinum' => 'Platinum', 'silver' => 'Silver'); 
-                @ENDPHP
                 <div class="panel panel-primary">
                     <div class="panel-heading "><h3 class="panel-title">Cinema Options</h3></div><div class="panel-body">
-                    <div class="form-group">
-                        <label for="bsdbusdisplayisplay">Do you want Full Ad Display On Cinema? </label>
-                             
-                    @foreach($cinema_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='cinema_options' onclick="addDomToPriceOptionsCinema('{{$value}}', 'cinema_options')" name='cinemadisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
-                    @endforeach
-                                       
-                    </div> 
-                    <div class="form-group">
+                     <div class="form-group">
                          <label for="status">Cinema Category:</label>
                         <select class="form-control" name="cinemacategory" id="cinemacategory" required="required">
                             <option value="">--Select--</option>
@@ -109,6 +96,24 @@
                             <option value="{{$key}}">{{$value}}</option>
                             @endforeach                        
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cinemadisplay">Cinema Ads</label>
+                             
+                    @foreach($cinema_options as $key => $value)
+                        <label class='checkbox-inline'><input data-label='cinema_options' onclick="addDomToPriceOptionsCinema('{{$value}}', 'cinema_options')" name='cinemadisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                    @endforeach
+                                       
+                    </div> 
+                   
+                    <div class="form-group">
+                         <label for="status">Other Ad Options In Cinema Halls:</label>
+                            @foreach( $additionlsAds as $key => $value )
+                             <label class='checkbox-inline'>
+                                <input data-label='additionalsAds' onclick="addDomToPriceOptionsCinema('{{$value}}', 'cinema_options')" name='additionalsAds[]' type='checkbox' value={{$key}}>{{$value}}
+                             </label>
+                            @endforeach                        
+                      
                     </div>
                     <div class="form-group">
                         <label for="audiseats">Numbers Of Seats in Audi? : </label>
@@ -147,6 +152,10 @@
                 <input type="file" id="image" name="image" class="form-control" required>
             </div>
             <div class="form-group">
+                <label for="reference_mail">Reference mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{old('reference_mail')}}" class="form-control" required>
+            </div>
+            <div class="form-group">
                     <label for="reference">Other Reference:</label>
                     <textarea id="reference" name="reference" class="form-control">{{old('reference')}}</textarea>
                 </div>
@@ -155,7 +164,7 @@
         
         <button type="button" class="action back btn btn-info">Back</button>
         <button type="button" class="action next btn btn-info">Next</button>
-        <button type="submit" class="action submit btn btn-success">Add Product</button>    
+        <button type="submit" class="action submit btn btn-success">Add Cinema</button>    
     </form>
    
    </div>
