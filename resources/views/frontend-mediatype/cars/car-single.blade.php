@@ -35,44 +35,7 @@
 					<div class="row">
 				
 					@if($cars)
-					@if($carOption == 'tricycle')
-						@foreach($cars as $car)
-						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 "> 
-							<div class="pro-item"> 
-								<div class=" cat-opt-img "> <img src="{{asset('images/cars/'.$car->image)}}"> </div>
-								<p class="font-1">{{$car->title}}</p>
-								<p class="font-2">{{$car->location}} | {{$car->city}} | {{$car->state}}</p>
-								<hr>
-								<div class="row">
-									<div class="col-md-6">
-										<p class="font-3">{{$car->car_number}} {{ucwords(str_replace('_', ' ', $carOption))}}<br> for <br> 1 month</p>
-									</div>
-									<div class="col-md-6">
-										<p class="font-4"><del class="lighter">Rs {{$car->price}} <br></del>Rs {{$car->price}} </p>
-									</div>
-								</div>
-								@PHP
-									$options = $car->price.'+tricycle';
-									$session_key = 'cars'.'_tricycle_'.$car->id;
-									$printsession = (array) Session::get('cart');
-								@ENDPHP
-								<div class="clearfix"> 
-									<a class="glass" href="{{route('car.addtocart', ['id' => $car->id, 'variation' => $options])}}">
-									@if(count($printsession) > 0)
-									@if(array_key_exists($session_key, $printsession['items'])) 
-										<span class="fa fa-minus-circle"></span> Remove From Cart 
-									@else
-										<span class="fa fa-star"></span> Add to Cart 
-									@endif
-									@else
-										<span class="fa fa-star"></span> Add to Cart
-									@endif
-									</a> 
-								</div>
-							</div>
-						</div>
-						@endforeach
-						@else
+					
 						@foreach($cars as $car)
 						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
 							<div class="pro-item"> 
@@ -110,7 +73,7 @@
 							</div>
 						</div>
 						@endforeach
-						@endif
+						
 					@endif
 							
 					</div><!-- row before style ends here -->

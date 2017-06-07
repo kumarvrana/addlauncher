@@ -2,7 +2,7 @@
 
 @section('title')
 
-    Newspaper | Add Launcher
+    Newspaper/Magazine | Print Media | Add Launcher
 
 @endsection
 
@@ -16,322 +16,102 @@
             </div>
         </div>
         @endif
+        <section class="sec-banner">
+<div class="jumbotron jumbo-1 text-center">
+         <h1><small>&emsp;ADVERTISE ON</small> <br><span>Print Media</span></h1>
+     </div>
+</section>  
+
+<section class="main-sec">
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
 				@include('partials.sidebar')
                     
                 </div>
-                @PHP
-                   $variations = unserialize($newspaperad->general_options);
-				   $variation = array();
-                   $price = array();
-				   $passVariation = array();
-					foreach($generaloptions as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
+                
+                <div class="col-md-8">
 					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
+					<div class="row">
+						
+						@if($priceData)
+							@foreach($priceData as $printMedia)
+								
+								<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
+									<div class="pro-item"> 
+										<div class=" cat-opt-img "> <img src="{{asset('images/newspapers/'.$printMedia->printmedia->image)}}"> </div>
+										<p class="font-1">{{$printMedia->printmedia->title}}</p>
+										<p class="font-2">{{$printMedia->printmedia->location}} | {{$printMedia->printmedia->state}}</p>
+										
+										<hr>
+										@if($printmediaType === 'newspaper')
+										<div class="row">
+											<div class="col-md-6">
+												<p class="font-3"> {{ucwords(str_replace('_', ' ', substr($printMedia->price_key, 6)))}} Ad <br>
+												Rs {{$printMedia->total_price }} per {{$printMedia->pricing_type}}</p>
+											</div>
+											<div class="col-md-6">
+												<p class="font-4"><del class="lighter">Rs {{$printMedia->total_price * 16}} <br>16 {{$printMedia->pricing_type}} <br></del>Rs {{$printMedia->total_price * 16}} <br>16 {{$printMedia->pricing_type}}</p>
+											</div>
+											
+										</div>
+										@else
+											<div class="row">
+												<div class="col-md-6">
+													<p class="font-3">  {{ucwords(str_replace('_', ' ', substr($printMedia->price_key, 6)))}} Ad</p>
+												</div>
+												<div class="col-md-6">
+													<p class="font-4"><del class="lighter">Rs {{$printMedia->price_value}} per edition <br></del>Rs {{$printMedia->price_value}} per edition</p>
+												</div>
+												
+											</div>
+										@endif
+										
+										@PHP
+											if($printmediaType === 'newspaper'){
+												$options = $printMedia->total_price.'+'.$printMedia->price_key;
+												$session_key = 'newspaper'.'_'.$printMedia->price_key.'_'.$printMedia->printmedia->id;
+												$printsession = (array) Session::get('cart');
+											}else{
+												$options = $printMedia->price_value.'+'.$printMedia->price_key;
+												$session_key = 'magazine'.'_'.$printMedia->price_key.'_'.$printMedia->printmedia->id;
+												$printsession = (array) Session::get('cart');
+											}
+											
+										@ENDPHP
+										<div class="clearfix"> 
+											<a class="glass" href="{{route('newspaper.addtocart', ['id' => $printMedia->printmedia->id, 'variation' => $options])}}">
 
-
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-                @ENDPHP
-                <div class="col-md-9">
-                	<div class="display-title">
-					  <h2>General Options</h2>
-				   	</div>
-				<div class="row">
-
-			     		@foreach($variations as $loop)
-			     			<style type="text/css">
-			     			.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-							background-image: url('../../images/display/newspaper/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} </style>
-			     			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Newspaper for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'newspapers'.'_'.$passVariationname[$i].'_'.$newspaperad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('newspaper.addtocart', ['id' => $newspaperad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-							@PHP $i++; @ENDPHP
-						@endforeach
+										 @if(count($printsession) > 0)
+											 @if(array_key_exists($session_key, $printsession['items'])) 
+												<span class="fa fa-minus-circle"></span> Remove From Cart 
+											 @else
+												<span class="fa fa-star"></span> Add to Cart 
+											 @endif
+										 @else
+											<span class="fa fa-star"></span> Add to Cart
+										 @endif
+											
+										</a> 
+										</div>
+									</div>
+								</div>
+							@endforeach
+						@endif
+							
 		            </div><!-- row before style ends here -->
-        		
-					<div class="display-title">
-					  <h2>Other Options</h2>
-				   	</div>
-					<div class="row">
-				@PHP
-					$variations1 = unserialize($newspaperad->other_options);
-					$variation = array();
-					$price = array();
-					$passVariation = array();
-					foreach($otheroptions as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
-					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-				@ENDPHP
-		     	@foreach($variations1 as $loop)
-			 	
-			 	<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/newspaper/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-				</style>
-			     			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Newspaper for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'newspapers'.'_'.$passVariationname[$i].'_'.$newspaperad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('newspaper.addtocart', ['id' => $newspaperad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-					
-					 @PHP
-					 	$i++;
-					 @ENDPHP
-					 @endforeach
-		            </div>
-        		
-					<div class="display-title">
-					  <h2>Classified Options</h2>
-				   	</div>
-					<div class="row">
-				@PHP
-					$variations2 = unserialize($newspaperad->classified_options);
-					$variation = array();
-					$price = array();
-					$passVariation = array();
-					foreach($classified as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
-					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-				@ENDPHP
-		     	@foreach($variations2 as $loop)
-			 		
-				<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/newspaper/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-				</style>
-			     			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Newspaper for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'newspapers'.'_'.$passVariationname[$i].'_'.$newspaperad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('newspaper.addtocart', ['id' => $newspaperad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-					
-					 @PHP
-					 	$i++;
-					 @ENDPHP
-					 @endforeach
-		            </div>
-        		
-					<div class="display-title">
-					  <h2>Pricing Options</h2>
-				   	</div>
-					<div class="row">
-				@PHP
-					$variations3 = unserialize($newspaperad->pricing_options);
-					$variation = array();
-					$price = array();
-					$passVariation = array();
-					foreach($pricingoption as $options){
-						$passVariation[] = $options->price_key;
-						$variation[] = ucwords(str_replace('_', ' ', substr($options->price_key, 6)));
-						$price[] = $options->price_value;
-					}
-					$name_key = array_chunk($passVariation, 3);
-					$price_values = array_chunk($price, 3);
-					
-					$name = array();
-					$j = 0; 
-					foreach($name_key as $options){
-							$passVariationname[$j] = $options[0];
-							$name[$j] = ucwords(str_replace('_', ' ', substr($options[0], 6)));
-						$j++;
-					}
-					
-					$new_price = array();
-					$number = array();
-					$duration = array();
-					foreach($price_values as $options){
-						$new_price[] = $options[0];
-						$number[] = $options[1];
-						$duration[] = $options[2];
-					}
-					
-					$i = 0;
-				@ENDPHP
-		     	@foreach($variations3 as $loop)
-			 		
-				<style type="text/css">
-			     				.{{strtolower(str_replace(' ','_', $name[$i]))}}{
-									background-image: url('../../images/display/newspaper/{{strtolower(str_replace(' ','_', $name[$i]))}}.png');
-								} 
-				</style>
-			     			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
-				     			<div class="pro-item"> 
-					     			<div class=" cat-opt-img {{strtolower(str_replace(' ','_', $name[$i]))}}"> </div>
-								    <p class="font-1">{{$name[$i]}}</p>
-								    <p class="font-3">{{$number[$i]}} Newspaper for {{$duration[$i]}} months</p>
-								    <p class="font-2"><del class="lighter">Rs {{$new_price[$i]}}</del>Rs {{$new_price[$i]}}</p>
-								      @PHP
-									$options = $new_price[$i].'+'.$passVariationname[$i];
-									$session_key = 'newspapers'.'_'.$passVariationname[$i].'_'.$newspaperad->id;
-									$printsession = (array) Session::get('cart');
-													
-									@ENDPHP
-								    <div class="clearfix"> 
-								    	<a class="glass" href="{{route('newspaper.addtocart', ['id' => $newspaperad->id, 'variation' => $options])}}"><span class="fa fa-star"></span>
-									      	@if(count($printsession) > 0)
-											@if(array_key_exists($session_key, $printsession['items'])) 
-												Remove From Cart 
-											@else
-												Add to Cart 
-											@endif
-											@else
-												Add to Cart
-											@endif
-								      </a> 
-								    </div>
-							    </div>
-						    </div>
-					 @PHP
-					 	$i++;
-					 @ENDPHP
-					 @endforeach
-		            </div>
+
+
+        		</div><!-- col-md-8 ends here -->
+        		<div class="col-md-2">
+            @include('partials.sidebar-cart')
+   					
+        			
         		</div>
     		</div>
     	</div><!-- container fluid 1 ends here -->
            
-	
+</section>	
        
 
 @endsection

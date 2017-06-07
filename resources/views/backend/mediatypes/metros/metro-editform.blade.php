@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Metro Edit Form</h1>
+          <h1 class="page-header">Products Form</h1>
    
         <div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
@@ -25,8 +25,8 @@
                     <p>{{Session::get('message')}}</p>
                 </div>
             @endif
-  <form class="form" action="{{route('dashboard.Postmetrosad', ['ID' => $metro->id])}}" method="post" enctype="multipart/form-data">
-		<div class="step">
+  <form class="form" action="{{route('dashboard.postMetroForm')}}" method="post" enctype="multipart/form-data">
+        <div class="step">
             <div class="step-header">General Options</div>
             <div class="form-group">
                     <label for="title">Ad Name:</label>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="form-group">
                     <label for="location">Location:</label>
-                    <input type="text" id="location" name="location" placeholder="example: saket metro/ IGI Airport" value="{{$metro->location}}" class="form-control" required>
+                    <input type="text" id="location" name="location" placeholder="example: saket metro/ IGI Metro" value="{{$metro->location}}" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="city">City:</label>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <textarea id="description" name="description" class="form-control">{{$metro->description}}</textarea>
+                    <textarea id="description" name="description" value="{{$metro->description}}" class="form-control"></textarea>
                 </div>
                 
                 
@@ -81,32 +81,52 @@
                 </div>
 
         </div>
-		<div class="step">
-            <div class="step-header">Metros Ad Options</div>
-               @PHP
-                    $metro_options = array('full' => 'Full', 'roof_front' => 'Roof Front', 'seat_backs' => 'Seat Backs', 'side_boards' => 'Side Boards');
-                     $metrodisplayData = unserialize($metro->display_options);
-
-                @ENDPHP
+        <div class="step">
+            <div class="step-header">Metro Ad Display Options</div>
+                <input type="hidden" name="modelname" id="modelname" value="Metro">
+                @PHP
+                   $bsdisplayData = unserialize($metro->display_options);
+               @ENDPHP
+                
                 <div class="panel panel-primary">
+
                     <div class="panel-heading "><h3 class="panel-title">Metro Options</h3></div><div class="panel-body">
                     <div class="form-group">
-                        <label for="metrodisplay">Metros Ad Display Options: </label>
-                          
+                         <label for="metro_line">Metro line:</label>
+                            <select class="form-control" name="metro_line" id="metro_line" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $metro_line as $key => $value )
+                               <option value="{{$key}}" @PHP if($metro->metro_line == $key){
+                            echo "Selected";
+                        } @ENDPHP>{{$value}}</option>
+                                @endforeach
+                            </select>    
+                    </div>
+                    <div class="form-group">
+                         <label for="media">Media:</label>
+                            <select class="form-control" name="media" id="media" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $media as $key => $value )
+                                <option value="{{$key}}" @PHP if($metro->media == $key){
+                            echo "Selected";
+                        } @ENDPHP>{{$value}}</option>
+                                @endforeach
+                            </select>    
+                    </div>
+                    <div class="form-group">
+                        <label for="metrodisplay">Metro Ad Types: </label>
+                             
                     @foreach($metro_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Metros Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='metrodisplay[]' type='checkbox'  @PHP if(in_array($key, $metrodisplayData)){echo "checked"; } @ENDPHP value="{{$key}}">{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Metro Ad Display Options' onclick="addDomToPriceOptionsMetro('{{$value}}')" name='metrodisplay[]' type='checkbox' @PHP if($bsdisplayData){ if( in_array($key, $bsdisplayData)){echo "checked"; } } @ENDPHP value="{{$key}}">{{$value}}</label>
                     @endforeach
                                        
-                    </div>
-                    <div class="form-group"><label for="bslighting">Do you want lighting options on Metro Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Metro Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="metrolighting" type="radio" @PHP if($metro->light_option == 0) echo "checked"; @ENDPHP value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Metro Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="metrolighting" type="radio" @PHP if($metro->light_option == 1) echo "checked"; @ENDPHP value="1">Yes</label></div>
+                    </div> 
+                    <div class="form-group"><label for="light_option">Do you want lighting options on Metro Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="light_option" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="light_option" type="radio" value="1">Yes</label></div>
                     
                     <div class="form-group">
                         <label for="metrodiscount">Discount (%): </label>
-                        <input class="form-control" type="text" value="{{$metro->discount}}" name="metrodiscount" placeholder="put an integer value for discount like 5 or 10">
+                        <input class="form-control" type="text" name="metrodiscount" placeholder="put an integer value for discount like 5 or 10">
                     </div>
-                    <div class="form-group">
-                        <label for="metrosnumber">Numbers Of Metros Display this Ad? : </label>
-                        <input class="form-control" type="text" name="metrosnumber" value="{{$metro->metronumber}}" required></div>
                     </div>
                 </div>
 
@@ -115,57 +135,36 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
-                        <input type="hidden" name="modelname" id="modelname" value="Metro">
-                        <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
-                        <input type="hidden" id="uncheckID" value="{{$metro->id}}">
-                        <input type="hidden" id="tablename" value="metros">
-
-                        @foreach($metropricemeta as $metroprice)
-                         <div id="p{{$metroprice->price_key}}" class="form-group">
-                                <label for="{{$metroprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
-                                <input class="form-control" type="text" name="{{$metroprice->price_key}}" value="{{$metroprice->price_value}}" required>
-                            </div>
-                            <div id="p{{$metroprice->number_key}}" class="form-group">
-                                <label for="{{$metroprice->number_key}}">Number of {{ucfirst(substr(str_replace("_", " ", $metroprice->number_key), 7))}} Metro Ad:</label>
-                                <input class="form-control" type="text" name="{{$metroprice->number_key}}" value="{{$metroprice->number_value}}" required>
-                            </div>
-                            <div id="p{{$metroprice->duration_key}}" class="form-group">
-                                <label for="{{$metroprice->duration_key}}">Duration for {{ucfirst(substr(str_replace("_", " ", $metroprice->duration_key), 9))}} Metro Ad:</label>
-                                <input class="form-control" type="text" name="{{$metroprice->duration_key}}" value="{{$metroprice->duration_value}}" required>
-                            </div>
-                        @endforeach
+                       
                     </div>
 
             </div>
-		
+        
         <div class="step">
             <div class="step-header">Image and References Options</div>
             <div class="form-group">
                 <label for="image">Ad Image:</label>
-                <input type="file" id="image" name="image" class="form-control">
+                <input type="file" id="image" name="image" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="reference_mail">Reference Mail:</label>
-                <input type="email" id="reference_mail" name="reference_mail" value="{{$metro->reference_mail}}" class="form-control" required>
+                <label for="reference_mail">Reference mail:</label>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{old('reference_mail')}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>
-                    <textarea id="reference" name="reference" class="form-control">{{$metro->references}}</textarea>
+                    <textarea id="reference" name="reference" class="form-control">{{old('reference')}}</textarea>
                 </div>
         </div>
         {{csrf_field()}}
-		
-		<button type="button" class="action back btn btn-info">Back</button>
-		<button type="button" class="action next btn btn-info">Next</button>
-		<button type="submit" class="action submit btn btn-success">Add Product</button>	
-  	</form>
+        
+        <button type="button" class="action back btn btn-info">Back</button>
+        <button type="button" class="action next btn btn-info">Next</button>
+        <button type="submit" class="action submit btn btn-success">Add Product</button>    
+    </form>
    
    </div>
 @endsection
 
 @section('scripts')
-<script>
-    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceMetro')}}";
-</script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

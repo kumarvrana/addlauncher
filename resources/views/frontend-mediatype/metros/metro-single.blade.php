@@ -2,7 +2,7 @@
 
 @section('title')
 
-    Metro | Add Launcher
+   Metro | Add Launcher
 
 @endsection
 
@@ -16,73 +16,76 @@
             </div>
         </div>
         @endif
+
 <section class="sec-banner">
      <div class="jumbotron jumbo-1 text-center">
-         <h1><span> OPTIONS</span></h1>
+    
      </div>
 </section>       
-<section class="main-sec">
+<section class="main-sec">        
         <div class="container-fluid"> <!-- container fluid 1 starts here -->
             <div class="row">
                 <div class="col-md-2">
 				@include('partials.sidebar')
                     
                 </div>
-               
-                <div class="col-md-8">
-					
+      
+				<div class="col-md-8">
+				
 					<div class="row">
-						
-						@foreach($productOptions as $productOption)
+	
+					@if($metros)
+						@foreach($metros as $metro)
 						<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12"> 
 							<div class="pro-item"> 
-								<div class=" cat-opt-img"><img src="{{asset('images/metros/'.$products[11])}}"></div>
-								<p class="font-1">{{$products[3]}}</p>
-								<p class="font-2">{{$products[5]}} |
-								{{$products[6]}} | {{$products[7]}}</p>
+								<div class=" cat-opt-img "> <img src="{{asset('images/metros/'.$metro->metro->image)}}"> </div>
+								<p class="font-1">{{$metro->metro->title}}</p>
+								<p class="font-2">{{$metro->metro->location}} | {{$metro->metro->city}} | {{$metro->metro->state}}</p>
 								<hr>
 								<div class="row">
 									<div class="col-md-6">
-								<p class="font-3">{{$productOption['number_value']}} {{ucwords(str_replace('_', ' ', substr($productOption['price_key'], 6)))}} Ads for {{$productOption['duration_value']}} months</p>
+										<p class="font-3"> {{ucwords(str_replace('_', ' ',$metro->metro->metro_line))}} Ads<br> for <br> 1 months</p>
 									</div>
-								<div class="col-md-6">	
-								<p class="font-2"><del class="lighter">Rs {{$productOption['price_value']}} <br></del>Rs {{$productOption['price_value']}}</p>
+									<div class="col-md-6">
+										<p class="font-4"><del class="lighter">Rs {{$metro->totalprice}} <br></del>Rs {{$metro->totalprice}} </p>
 									</div>
 								</div>
-
 								@PHP
-								$options = $productOption['price_value'].'+'.$productOption['price_key'];
-								$session_key = 'metros'.'_'.$productOption['price_key'].'_'.$products[0];
-								$printsession = (array) Session::get('cart');
-												
+								$session_key = 'metros'.'_'.$metro->id.'_'.$metro->metro->id;
+								$printsession = (array)
+								Session::get('cart');
 								@ENDPHP
+								
 								<div class="clearfix"> 
-									<a class="glass" href="{{route('metro.addtocart', ['id' => $products[0], 'variation' => $options])}}">
-										 @if(count($printsession) > 0)
-												@if(array_key_exists($session_key, $printsession['items'])) 
-													<span class="fa fa-minus-circle"></span> Remove From Cart 
-												@else
-													<span class="fa fa-star"></span> Add to Cart 
-												@endif
-												@else
-													<span class="fa fa-star"></span> Add to Cart
-												@endif
+									<a class="glass" href="{{route('metro.addtocart', ['id' => $metro->metro->id, 'variation' => $metro->id])}}">
+									@if(count($printsession) > 0)
+										@if(array_key_exists($session_key, $printsession['items'])) 
+											<span class="fa fa-minus-circle"></span> Remove From Cart 
+										@else
+											<span class="fa fa-star"></span> Add to Cart 
+										@endif
+										@else
+											<span class="fa fa-star"></span> Add to Cart
+									@endif
 									</a> 
 								</div>
 							</div>
 						</div>
-						@endforeach	
-						
-		            </div><!-- row before style ends here -->
+						@endforeach
+					@endif
+							
+					</div><!-- row before style ends here -->
+
         		</div>
+
         		<div class="col-md-2">
-            @include('partials.sidebar-cart')
-                
-            </div>
+            		@include('partials.sidebar-cart')
+        		</div>
+
     		</div>
     	</div><!-- container fluid 1 ends here -->
-           
+ </section>          
 	
        
-</section>
+
 @endsection

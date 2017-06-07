@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-Products
+    Newspaper/magazine | Print Media | Add Launcher
 @endsection
 @section('content')
 @if(Session::has('success'))
@@ -83,7 +83,7 @@ Products
                               </div>
                               <div class="product-mark {{$st_class}}">{{$status}}</div>
                               <div class="product-hover">
-                                 <div class="add-to-cart"><a href="{{ route('frontend.newspapersingle', ['id' => $product->id]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
+                                 <div class="add-to-cart"><a href="{{ route('frontend.newspapersingle', ['printmediaType' => $printmediaType,'slug' => $product->slug]) }}"><span class="fa fa-shopping-cart"></span> View Details</a></div>
                               </div>
                            </div>
                         </div>

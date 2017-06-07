@@ -5,11 +5,11 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="container">
 	<div class="row cart-body">
 		
 
-        <div class="col-md-8 col-md-offset-2 wrapper form-box">
+        <div class="col-md-12 wrapper form-box">
             <div class="section-title">
                 <h2>Shopping Cart</h2>
             </div>
@@ -46,6 +46,7 @@
 							@PHP
 								$key = array_search($product, $products);
 								$imagefolder = explode('_', $key);
+								
 								if($imagefolder[1] == 'tricycle'){
 									$priceValue = $product['item']['price'];
 									$subTitle = ucfirst($imagefolder[1]);
@@ -54,6 +55,15 @@
 									$priceValue = $product['item']['optionprice'];
 									$subTitle = ucfirst($imagefolder[1]);
 
+								}elseif($imagefolder[0] == 'metros'){
+									$priceValue = $product['item']['totalprice'];
+									$subTitle = ucfirst($imagefolder[1]);
+								}elseif($imagefolder[0] == 'newspaper'){
+									$priceValue = $product['item']['total_price'];
+									$subTitle = ucfirst(str_replace('_', ' ', substr($product['item']['price_key'], 6)));
+								}elseif($imagefolder[0] == 'magazine'){
+									$priceValue = $product['item']['price_value'];
+									$subTitle = ucfirst(str_replace('_', ' ', substr($product['item']['price_key'], 6)));
 								}else{
 									$priceKey = ($imagefolder[0] == 'televisions') ? $product['item']['rate_key'] : $product['item']['price_key'];
 									$priceValue = ($imagefolder[0] == 'televisions') ? $product['item']['rate_value'] : $product['item']['price_value'];
@@ -161,7 +171,7 @@
 							<th class="pn">Product Name</th>
 							
 							<th class="qt">Quantity</th>
-                            <th class="pr">Duration</th>
+                            <th class="pr">Duration/Area/Length</th>
 							<th class="tl">Total</th>
 							<th class="rm">Remove</th>
 						</tr>
@@ -219,6 +229,16 @@
 							case 'airports':
 							@ENDPHP
 								@include('shop.cart.airports')
+							@PHP
+							break;
+							case 'newspaper':
+							@ENDPHP
+								@include('shop.cart.newspapers')
+							@PHP
+							break;
+							case 'magazine':
+							@ENDPHP
+								@include('shop.cart.magazines')
 							@PHP
 							break;
 

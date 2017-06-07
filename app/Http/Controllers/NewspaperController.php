@@ -8,8 +8,8 @@ use App\Http\Requests;
 use Session;
 use App\Newspapers;
 use App\Newspapersprice;
+use App\Magazineprice;
 use Image;
-use App\Product;
 use Illuminate\Support\Facades\File;
 use App\cart;
 use App\Order;
@@ -22,6 +22,8 @@ class NewspaperController extends Controller
     protected $megazineGenre;
     protected $newspaper_options;
     protected $newspaperGenre;
+    protected $toi;
+    
     public function __construct()
     {
         $this->middleware('admin', ['only' => ['getDashboardNewspaperList', 'getDashboardNewspaperForm', 'postDashboardNewspaperForm', 'addNewspaperPrice', 'getDeleteNewspaperad', 'getUpdateeNewspaperad', 'getuncheckNewspaperadOptions']]);
@@ -32,41 +34,42 @@ class NewspaperController extends Controller
 
         $this->megazineGenre = array('Political', 'Culture', 'Young Interest', 'Women interest', 'Examinations', 'Entertainment', 'Car & Bike', 'Information ', 'News', 'Kids', 'Agriculture', 'Allied Industries', 'Stories', 'Electronics', 'Technology');
 
-        $this->newspaper_options = array('page1' => 'Page1', 'page3' => 'Page3', 'last_page' => 'Last Page', 'any_page' => 'Any Page', 'full_page' => 'Full Page', 'half_page' => 'Half Page', 'quarter_page' => 'Quarter Page', 'mini_a4' => 'Mini A4', 'full_page_centre_spread' => 'Full Page Centre Spread', 'mini_a4_centre_spread' => 'Mini A4 Centre Spread', 'horizontal_strip' => 'Horizontal Strip', 'vertical_strip' => 'Vertical Strip', 'page_3_horizontal_solus' => 'Page 3 Horizontal Solus', 'inside_front_cover' => 'Inside Front Cover', 'inside_back_cover' => 'Inside_Back_Cover', 'back_page' => 'Back Page', 'front_false_cover' => 'Front False Cover', 'front_and_back_false_cover' => 'Front And Back False Cover', 'front_gate_fold' => 'Front Gate Fold', 'reverse_gate_fold' => 'Reverse Gate Fold', 'front_and_back_tab' => 'Front And Back Tab', 'front_tab' => 'Front Tab', 'jacket_front_page' => 'Jacket Front Page', 'jacket_front_insider' => 'Jacket Front Inside','pointer_ad' => 'Pointer Ad','sky_bus' => 'Sky Bus','ear_panel' => 'Ear Panel', 'pamphlets' => 'Pamphlets', 'flyers' => 'Flyers');
+        $this->newspaper_options = array('page1' => 'Page1', 'page3' => 'Page3', 'last_page' => 'Last Page', 'any_page' => 'Any Page', 'full_page' => 'Full Page', 'half_page' => 'Half Page', 'quarter_page' => 'Quarter Page', 'mini_a4' => 'Mini A4', 'full_page_centre_spread' => 'Full Page Centre Spread', 'mini_a4_centre_spread' => 'Mini A4 Centre Spread', 'horizontal_strip' => 'Horizontal Strip', 'vertical_strip' => 'Vertical Strip', 'page_3_horizontal_solus' => 'Page 3 Horizontal Solus', 'inside_front_cover' => 'Inside Front Cover', 'inside_back_cover' => 'Inside_Back_Cover', 'back_page' => 'Back Page', 'front_false_cover' => 'Front False Cover', 'front_and_back_false_cover' => 'Front And Back False Cover', 'front_gate_fold' => 'Front Gate Fold', 'reverse_gate_fold' => 'Reverse Gate Fold', 'front_and_back_tab' => 'Front And Back Tab', 'front_tab' => 'Front Tab', 'jacket_front_page' => 'Jacket Front Page', 'jacket_front_insider' => 'Jacket Front Inside','pointer_ad' => 'Pointer Ad');
       
          $this->newspaperGenre = array('matrimonial' => 'Matrimonial', 'recruitment' => 'Recruitment','business' => 'Business','property' => 'Property','education' => 'Education','astrology' => 'Astrology','public_notices' => 'Public Notices','services' => 'Services','automobile' => 'Automobile','shopping' => 'Shopping', 'appointment' =>'Appointment', 'computers' => 'Computers', 'personal' => 'Personal', 'travel' => 'Travel', 'package'=>'Package');
+
+         $this->toi = array('matrimonial' => 'Matrimonial','business' => 'Business','property' => 'Property','education' => 'Education','public_notices' => 'Public Notices','services' => 'Services','automobile' => 'Automobile','shopping' => 'Shopping', 'appointment' =>'Appointment', 'computers' => 'Computers', 'personal' => 'Personal', 'travel' => 'Travel', 'package'=>'Package');
            
     }
         
      //frontend function starts
-    
+    public function getfrontendAllPrintMedia()
+    {
+        return view('frontend-mediatype.newspapers.printmedia');
+    }
+
     public function getfrontendAllNewspaperads()
     {
-       $newspaper_ads = Newspapers::all();
-       return view('frontend-mediatype.newspapers.newspaperads-list', ['products' => $newspaper_ads]);
+       $newspaper_ads = Newspapers::Where('printmedia_type', '=', 'newspaper')->get();
+       return view('frontend-mediatype.newspapers.newspaperads-list', ['products' => $newspaper_ads, 'printmediaType' => 'newspaper']);
     }
-    
-    public function getfrontNewspaperad($id)
+
+    public function getfrontendAllMagazineads()
     {
-        $newspaperad = Newspapers::find($id);
-        //$newspaperprice = Newspapersprice::where('newspapers_id', $id)->get();
-       $newspapergeneralprice = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['option_type', '=', 'general'],
-                                ])->get();
-        $newspaperotherprice = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['option_type', '=', 'other'],
-                                ])->get();
-        $newspaperclassifiedprice = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['option_type', '=', 'classified'],
-                                ])->get();
-        $newspaperpricingprice = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['option_type', '=', 'pricing'],
-                                ])->get();
-        return view('frontend-mediatype.newspapers.newspaper-single', ['newspaperad' => $newspaperad, 'generaloptions' => $newspapergeneralprice, 'otheroptions' => $newspaperotherprice, 'classified' => $newspaperclassifiedprice, 'pricingoption' => $newspaperpricingprice]);
+       $magazine_ads = Newspapers::Where('printmedia_type', '=', 'magazine')->get();
+       return view('frontend-mediatype.newspapers.newspaperads-list', ['products' => $magazine_ads, 'printmediaType' => 'magazine']);
+    }
+    public function getfrontPrintMediaAd($printmedia, $slug)
+    {
+        $getprintmedia = new Newspapers();
+        $id = $getprintmedia->getIDFromSlug($slug);
+        if($printmedia === 'newspaper'){
+            $priceData = Newspapersprice::where('newspaper_id', $id)->get();
+        }else{
+            $priceData = Magazineprice::where('magazine_id', $id)->get();
+        }
+       
+       return view('frontend-mediatype.newspapers.newspaper-single', ['priceData' => $priceData, 'printmediaType' => $printmedia]);
     }
     
     
@@ -91,7 +94,8 @@ class NewspaperController extends Controller
                                                                 'magezineOption' => $this->magezineOption,
                                                                 'megazineGenre' => $this->megazineGenre,
                                                                 'newspaper_options' => $this->newspaper_options,
-                                                                'classified_options' => $this->newspaperGenre]);
+                                                                'classified_options' => $this->newspaperGenre,
+                                                                'toiOptions' => $this->toi]);
     }
 
 
@@ -99,7 +103,7 @@ class NewspaperController extends Controller
 
     public function postDashboardNewspaperForm(Request $request)
     {
-       dd($request->all());
+      
         $this->validate( $request, [
            'title' => 'required',
            'price' => 'numeric',
@@ -137,15 +141,11 @@ class NewspaperController extends Controller
                 'language' => $request->input('language'),
                 'magazine_options' => serialize($request->input('magazinedisplay')),
                 'general_options' => serialize($request->input('newspaperdisplay')),
-                'other_options' => serialize($request->input('otherdisplay')),
-                'classified_options' => serialize($request->input('classifieddisplay')),
-                'pricing_options' => serialize($request->input('pricingdisplay')),
-                //'numberofnewspapers' => $request->input('number'),
                 'circulations' => $request->input('circulation'),
                 'discount' => $request->input('discount'),
                  'reference_mail' => $request->input('reference_mail')
         ]);
-
+        $newspaper->slug = $newspaper->getUniqueSlug($request->input('title'));
         $newspaper->save();
 
         $lastinsert_ID = $newspaper->id;
@@ -154,294 +154,219 @@ class NewspaperController extends Controller
         //newspaper display prices insertion
         if($newspaper->printmedia_type === 'magazine'){
             if($request->has('price_full_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_full_page', $request->input('price_full_page'), 'number_full_page', $request->input('price_full_page'), 'megazine');
+                $this->addMagazinePrice($lastinsert_ID, 'price_full_page', $request->input('price_full_page'), $request->input('number_half_page'), 'megazine');
             }
             if($request->has('price_half_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_half_page', $request->input('price_half_page'), 'number_half_page', $request->input('number_half_page'), 'megazine');
+                $this->addMagazinePrice($lastinsert_ID, 'price_half_page', $request->input('price_half_page'), $request->input('number_half_page'), 'megazine');
             }
-            if($request->has('price_strip')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_strip', $request->input('price_strip'), 'number_strip', $request->input('number_strip'), 'megazine');
+            if($request->has('price_strip_vertical')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_strip_vertical', $request->input('price_strip_vertical'), $request->input('number_strip_vertical'), 'megazine');
+            }
+            if($request->has('price_strip_horizontal')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_strip_horizontal', $request->input('price_strip_horizontal'), $request->input('number_strip_horizontal'), 'megazine');
             }
             if($request->has('price_double_spread')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_double_spread', $request->input('price_double_spread'), 'number_double_spread', $request->input('number_double_spread'), 'megazine');
+                $this->addMagazinePrice($lastinsert_ID, 'price_double_spread', $request->input('price_double_spread'),$request->input('number_double_spread'), 'megazine');
             }
             if($request->has('price_half_double_spread')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_half_double_spread', $request->input('price_half_double_spread'), 'number_half_double_spread', $request->input('number_half_double_spread'), 'megazine');
+                $this->addMagazinePrice($lastinsert_ID, 'price_half_double_spread', $request->input('price_half_double_spread'), $request->input('number_half_double_spread'), 'megazine');
             }
             if($request->has('price_inside_cover')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_inside_cover', $request->input('price_inside_cover'), 'number_inside_cover', $request->input('number_inside_cover'), 'megazine');
+                $this->addMagazinePrice($lastinsert_ID, 'price_inside_cover', $request->input('price_inside_cover'), $request->input('number_inside_cover'), 'megazine');
             }
-             if($request->has('price_back_cover')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_back_cover', $request->input('price_back_cover'), 'number_back_cover', $request->input('number_back_cover'), 'megazine');
+            if($request->has('price_back_cover')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_back_cover', $request->input('price_back_cover'),$request->input('number_back_cover'), 'megazine');
+            }
+           
+            if($request->has('price_centre_spread')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_centre_spread', $request->input('price_centre_spread'),$request->input('number_centre_spread'), 'megazine');
+            }
+            if($request->has('price_one_column')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_one_column', $request->input('price_one_column'),$request->input('number_one_column'), 'megazine');
+            }
+            if($request->has('price_two_columns')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_two_columns', $request->input('price_two_columns'),$request->input('number_two_columns'), 'megazine');
+            }
+            if($request->has('price_quarter_page')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_quarter_page', $request->input('price_quarter_page'),$request->input('number_quarter_page'), 'megazine');
+            }
+            if($request->has('price_last_page')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_last_page', $request->input('price_last_page'),$request->input('number_last_page'), 'megazine');
+            }
+            if($request->has('price_centre_spread')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_centre_spread', $request->input('price_centre_spread'),$request->input('number_centre_spread'), 'megazine');
+            }
+            if($request->has('price_electronics_mart')){
+                $this->addMagazinePrice($lastinsert_ID, 'price_electronics_mart', $request->input('price_electronics_mart'),$request->input('number_electronics_mart'), 'megazine');
             }
         }else{
-            if($request->has('price_page1')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_page1', $request->input('price_page1'), 'general');
-            }
-        
-            if($request->has('number_page1')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_page1', $request->input('number_page1'), 'general');
-            }
 
-            if($request->has('duration_page1')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_page1', $request->input('duration_page1'), 'general');
-            }
-
-
-            if($request->has('price_page3')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_page3', $request->input('price_page3'), 'general');
-            }
-            if($request->has('number_page3')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_page3', $request->input('number_page3'), 'general');
-            }
-            if($request->has('duration_page3')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_page3', $request->input('duration_page3'), 'general');
-            }
-
-            if($request->has('price_last_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_last_page', $request->input('price_last_page'), 'general');
-            }
-            if($request->has('number_last_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_last_page', $request->input('number_last_page'), 'general');
-            }
-            if($request->has('duration_last_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_last_page', $request->input('duration_last_page'), 'general');
-            }
-
-            if($request->has('price_any_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_any_page', $request->input('price_any_page'), 'general');
-            }
-            if($request->has('number_any_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_any_page', $request->input('number_any_page'), 'general');
-            }
-            if($request->has('duration_any_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_any_page', $request->input('duration_any_page'), 'general');
-            }
-            //other options
-
-            if($request->has('price_jacket_front_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_jacket_front_page', $request->input('price_any_page'), 'other');
-            }
-            if($request->has('number_jacket_front_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_jacket_front_page', $request->input('number_jacket_front_page'), 'other');
-            }
-            if($request->has('duration_jacket_front_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_jacket_front_page', $request->input('duration_jacket_front_page'), 'other');
-            }
-
-            if($request->has('price_jacket_front_inside')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_jacket_front_inside', $request->input('price_jacket_front_inside'), 'other');
-            }
-            if($request->has('number_jacket_front_inside')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_jacket_front_inside', $request->input('number_jacket_front_inside'), 'other');
-            }
-            if($request->has('duration_jacket_front_inside')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_jacket_front_inside', $request->input('duration_jacket_front_inside'), 'other');
+            if($request->has('base_price_page1')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_page1', $request->input('base_price_page1'),$request->input('add_on_price_page1'),$request->input('total_price_page1'),$request->input('genre_page1'),$request->input('rate_page1'),$request->input('color_page1'), 'newspaper');
             }
             
-            if($request->has('price_pointer_ad')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_pointer_ad', $request->input('price_pointer_ad'), 'other');
-            }
-            if($request->has('number_pointer_ad')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_pointer_ad', $request->input('number_pointer_ad'), 'other');
-            }
-            if($request->has('duration_pointer_ad')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_pointer_ad', $request->input('duration_pointer_ad'), 'other');
-            }
-            
-            if($request->has('price_sky_bus')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_sky_bus', $request->input('price_sky_bus'), 'other');
-            }
-            if($request->has('number_sky_bus')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_sky_bus', $request->input('number_sky_bus'), 'other');
-            }
-            if($request->has('duration_sky_bus')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_sky_bus', $request->input('duration_sky_bus'), 'other');
+            if($request->has('base_price_page3')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_page3', $request->input('base_price_page3'),$request->input('add_on_price_page3'),$request->input('total_price_page3'),$request->input('genre_page3'),$request->input('rate_page3'),$request->input('color_page3'), 'newspaper');
             }
 
-            if($request->has('price_ear_panel')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_ear_panel', $request->input('price_ear_panel'), 'other');
+
+            if($request->has('base_price_last_page')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_last_page', $request->input('base_price_last_page'),$request->input('add_on_price_last_page'),$request->input('total_price_last_page'),$request->input('genre_last_page'),$request->input('rate_last_page'),$request->input('color_last_page'), 'newspaper');
             }
-            if($request->has('number_ear_panel')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_ear_panel', $request->input('number_ear_panel'), 'other');
+            
+
+            if($request->has('base_price_any_page')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_any_page', $request->input('base_price_any_page'),$request->input('add_on_price_any_page'),$request->input('total_price_any_page'),$request->input('genre_any_page'),$request->input('rate_any_page'),$request->input('color_any_page'), 'newspaper');
             }
-            if($request->has('duration_ear_panel')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_ear_panel', $request->input('duration_ear_panel'), 'other');
+            
+            if($request->has('base_price_full_page')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_full_page', $request->input('base_price_full_page'),$request->input('add_on_price_full_page'),$request->input('total_price_full_page'),$request->input('genre_full_page'),$request->input('rate_full_page'),$request->input('color_full_page'), 'newspaper');
             }
+
+            if($request->has('base_price_half_page')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_half_page', $request->input('base_price_half_page'),$request->input('add_on_price_half_page'),$request->input('total_price_half_page'),$request->input('genre_half_page'),$request->input('rate_half_page'),$request->input('color_half_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_quarter_page')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_quarter_page', $request->input('base_price_quarter_page'),$request->input('add_on_price_quarter_page'),$request->input('total_price_quarter_page'),$request->input('genre_quarter_page'),$request->input('rate_quarter_page'),$request->input('color_quarter_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_mini_a4')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_mini_a4', $request->input('base_price_mini_a4'),$request->input('add_on_price_mini_a4'),$request->input('total_price_mini_a4'),$request->input('genre_mini_a4'),$request->input('rate_mini_a4'),$request->input('color_mini_a4'), 'newspaper');
+            }
+
+            if($request->has('base_price_full_page_centre_spread')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_full_page_centre_spread', $request->input('base_price_full_page_centre_spread'),$request->input('add_on_price_full_page_centre_spread'),$request->input('total_price_full_page_centre_spread'),$request->input('genre_full_page_centre_spread'),$request->input('rate_full_page_centre_spread'),$request->input('color_full_page_centre_spread'), 'newspaper');
+            }
+
+            if($request->has('base_price_mini_a4_centre_spread')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_mini_a4_centre_spread', $request->input('base_price_mini_a4_centre_spread'),$request->input('add_on_price_mini_a4_centre_spread'),$request->input('total_price_mini_a4_centre_spread'),$request->input('genre_mini_a4_centre_spread'),$request->input('rate_mini_a4_centre_spread'),$request->input('color_mini_a4_centre_spread'), 'newspaper');
+            }
+
+            if($request->has('base_price_horizontal_strip')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_horizontal_strip', $request->input('base_price_horizontal_strip'),$request->input('add_on_price_horizontal_strip'),$request->input('total_price_horizontal_strip'),$request->input('genre_horizontal_strip'),$request->input('rate_horizontal_strip'),$request->input('color_horizontal_strip'), 'newspaper');
+            }
+
+            if($request->has('base_price_vertical_strip')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_vertical_strip', $request->input('base_price_vertical_strip'),$request->input('add_on_price_vertical_strip'),$request->input('total_price_vertical_strip'),$request->input('genre_vertical_strip'),$request->input('rate_vertical_strip'),$request->input('color_vertical_strip'), 'newspaper');
+            }
+
+            if($request->has('base_price_page_3_horizontal_solus')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_page_3_horizontal_solus', $request->input('base_price_page_3_horizontal_solus'),$request->input('add_on_price_page_3_horizontal_solus'),$request->input('total_price_page_3_horizontal_solus'),$request->input('genre_page_3_horizontal_solus'),$request->input('rate_page_3_horizontal_solus'),$request->input('color_page_3_horizontal_solus'), 'newspaper');
+            }
+
+            if($request->has('base_price_inside_front_cover')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_inside_front_cover', $request->input('base_price_inside_front_cover'),$request->input('add_on_price_inside_front_cover'),$request->input('total_price_inside_front_cover'),$request->input('genre_inside_front_cover'),$request->input('rate_inside_front_cover'),$request->input('color_inside_front_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_inside_back_cover')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_inside_back_cover', $request->input('base_price_inside_back_cover'),$request->input('add_on_price_inside_back_cover'),$request->input('total_price_inside_back_cover'),$request->input('genre_inside_back_cover'),$request->input('rate_inside_back_cover'),$request->input('color_inside_back_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_back_page')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_back_page', $request->input('base_price_back_page'),$request->input('add_on_price_back_page'),$request->input('total_price_back_page'),$request->input('genre_back_page'),$request->input('rate_back_page'),$request->input('color_back_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_false_cover')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_front_false_cover', $request->input('base_price_front_false_cover'),$request->input('add_on_price_front_false_cover'),$request->input('total_price_front_false_cover'),$request->input('genre_front_false_cover'),$request->input('rate_front_false_cover'),$request->input('color_front_false_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_and_back_false_cover')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_front_and_back_false_cover', $request->input('base_price_front_and_back_false_cover'),$request->input('add_on_price_front_and_back_false_cover'),$request->input('total_price_front_and_back_false_cover'),$request->input('genre_front_and_back_false_cover'),$request->input('rate_front_and_back_false_cover'),$request->input('color_front_and_back_false_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_gate_fold')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_front_gate_fold', $request->input('base_price_front_gate_fold'),$request->input('add_on_price_front_gate_fold'),$request->input('total_price_front_gate_fold'),$request->input('genre_front_gate_fold'),$request->input('rate_front_gate_fold'),$request->input('color_front_gate_fold'), 'newspaper');
+            }
+
+            if($request->has('base_price_reverse_gate_fold')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_reverse_gate_fold', $request->input('base_price_reverse_gate_fold'),$request->input('add_on_price_reverse_gate_fold'),$request->input('total_price_reverse_gate_fold'),$request->input('genre_reverse_gate_fold'),$request->input('rate_reverse_gate_fold'),$request->input('color_reverse_gate_fold'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_and_back_tab')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_front_and_back_tab', $request->input('base_price_front_and_back_tab'),$request->input('add_on_price_front_and_back_tab'),$request->input('total_price_front_and_back_tab'),$request->input('genre_front_and_back_tab'),$request->input('rate_front_and_back_tab'),$request->input('color_front_and_back_tab'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_tab')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_front_tab', $request->input('base_price_front_tab'),$request->input('add_on_price_front_tab'),$request->input('total_price_front_tab'),$request->input('genre_front_tab'),$request->input('rate_front_tab'),$request->input('color_front_tab'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_tab')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_front_tab', $request->input('base_price_front_tab'),$request->input('add_on_price_front_tab'),$request->input('total_price_front_tab'),$request->input('genre_front_tab'),$request->input('rate_front_tab'),$request->input('color_front_tab'), 'newspaper');
+            }
+
+            if($request->has('base_price_jacket_front_page')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_jacket_front_page', $request->input('base_price_jacket_front_page'),$request->input('add_on_price_jacket_front_page'),$request->input('total_price_jacket_front_page'),$request->input('genre_jacket_front_page'),$request->input('rate_jacket_front_page'),$request->input('color_jacket_front_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_jacket_front_inside')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_jacket_front_inside', $request->input('base_price_jacket_front_inside'),$request->input('add_on_price_jacket_front_inside'),$request->input('total_price_jacket_front_inside'),$request->input('genre_jacket_front_inside'),$request->input('rate_jacket_front_inside'),$request->input('color_jacket_front_inside'), 'newspaper');
+            }
+
+            if($request->has('base_price_pointer_ad')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_pointer_ad', $request->input('base_price_pointer_ad'),$request->input('add_on_price_pointer_ad'),$request->input('total_price_pointer_ad'),$request->input('genre_pointer_ad'),$request->input('rate_pointer_ad'),$request->input('color_pointer_ad'), 'newspaper');
+            }
+            //TOI AND NAV Bharat options
+
+            if($request->has('base_price_matrimonial')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_matrimonial', $request->input('base_price_matrimonial'),$request->input('add_on_price_matrimonial'),$request->input('total_price_matrimonial'),$request->input('genre_matrimonial'),$request->input('rate_matrimonial'),$request->input('color_matrimonial'), 'newspaper');
+            }
+           
+            
+            if($request->has('base_price_business')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_business', $request->input('base_price_business'),$request->input('add_on_price_business'),$request->input('total_price_business'),$request->input('genre_business'),$request->input('rate_business'),$request->input('color_business'), 'newspaper');
+            }
+           
+
+            if($request->has('base_price_property')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_property', $request->input('base_price_property'),$request->input('add_on_price_property'),$request->input('total_price_property'),$request->input('genre_property'),$request->input('rate_property'),$request->input('color_property'), 'newspaper');
+            }
+            
     
-            if($request->has('price_half_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_half_page', $request->input('price_half_page'), 'other');
+            if($request->has('base_price_education')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_education', $request->input('base_price_education'),$request->input('add_on_price_education'),$request->input('total_price_education'),$request->input('genre_education'),$request->input('rate_education'),$request->input('color_education'), 'newspaper');
             }
-            if($request->has('number_half_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_half_page', $request->input('number_half_page'), 'other');
-            }
-            if($request->has('duration_half_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_half_page', $request->input('duration_half_page'), 'other');
-            }
+           
             
-            if($request->has('price_quarter_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_quarter_page', $request->input('price_quarter_page'), 'other');
+            if($request->has('base_price_public_notices')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_public_notices', $request->input('base_price_public_notices'),$request->input('add_on_price_public_notices'),$request->input('total_price_public_notices'),$request->input('genre_public_notices'),$request->input('rate_public_notices'),$request->input('color_public_notices'), 'newspaper');
             }
-            if($request->has('number_quarter_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_quarter_page', $request->input('number_quarter_page'), 'other');
-            }
-            if($request->has('duration_quarter_page')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_quarter_page', $request->input('duration_quarter_page'), 'other');
-            }
+           
             
-            if($request->has('price_pamphlets')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_pamphlets', $request->input('price_pamphlets'), 'other');
+            if($request->has('base_price_services')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_services', $request->input('base_price_services'),$request->input('add_on_price_services'),$request->input('total_price_services'),$request->input('genre_services'),$request->input('rate_services'),$request->input('color_services'), 'newspaper');
             }
-            if($request->has('number_pamphlets')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_pamphlets', $request->input('number_pamphlets'), 'other');
-            }
-            if($request->has('duration_pamphlets')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_pamphlets', $request->input('duration_pamphlets'), 'other');
-            }
+           
     
-            if($request->has('price_flyers')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_flyers', $request->input('price_flyers'), 'other');
-            }
-            if($request->has('number_flyers')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_flyers', $request->input('number_flyers'), 'other');
-            }
-            if($request->has('duration_flyers')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_flyers', $request->input('duration_flyers'), 'other');
-            }
-            //classified options
-
-            if($request->has('price_matrimonial')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_matrimonial', $request->input('price_matrimonial'), 'classified');
-            }
-            if($request->has('number_matrimonial')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_matrimonial', $request->input('number_matrimonial'), 'classified');
-            }
-            if($request->has('duration_matrimonial')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_matrimonial', $request->input('duration_matrimonial'), 'classified');
-            }
-            
-            if($request->has('price_recruitment')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_recruitment', $request->input('price_recruitment'), 'classified');
-            }
-            if($request->has('number_recruitment')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_recruitment', $request->input('number_recruitment'), 'classified');
-            }
-            if($request->has('duration_recruitment')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_recruitment', $request->input('duration_recruitment'), 'classified');
-            }
-            
-            if($request->has('price_business')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_business', $request->input('price_business'), 'classified');
-            }
-            if($request->has('number_business')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_business', $request->input('number_business'), 'classified');
-            }
-            if($request->has('duration_business')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_business', $request->input('duration_business'), 'classified');
-            }
-            
-            if($request->has('price_property')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_property', $request->input('price_property'), 'classified');
-            }
-            if($request->has('number_property')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_property', $request->input('number_property'), 'classified');
-            }
-            if($request->has('duration_property')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_property', $request->input('duration_property'), 'classified');
-            }
-            
-            if($request->has('price_education')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_education', $request->input('price_education'), 'classified');
-            }
-            if($request->has('number_education')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_education', $request->input('number_education'), 'classified');
-            }
-            if($request->has('duration_education')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_education', $request->input('duration_education'), 'classified');
-            }
-            
-            if($request->has('price_astrology')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_astrology', $request->input('price_astrology'), 'classified');
-            }
-            if($request->has('number_astrology')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_astrology', $request->input('number_astrology'), 'classified');
-            }
-            if($request->has('duration_astrology')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_astrology', $request->input('duration_astrology'), 'classified');
-            }
-            
-            if($request->has('price_public_notices')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_public_notices', $request->input('price_public_notices'), 'classified');
-            }
-            if($request->has('number_public_notices')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_public_notices', $request->input('number_public_notices'), 'classified');
-            }
-            if($request->has('duration_public_notices')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_public_notices', $request->input('duration_public_notices'), 'classified');
-            }
-            
-            if($request->has('price_services')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_services', $request->input('price_services'), 'classified');
-            }
-            if($request->has('number_services')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_services', $request->input('number_services'), 'classified');
-            }
-            if($request->has('duration_services')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_services', $request->input('duration_services'), 'classified');
-            }
-            
-            if($request->has('price_automobile')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_automobile', $request->input('price_automobile'), 'classified');
-            }
-            if($request->has('number_automobile')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_automobile', $request->input('number_automobile'), 'classified');
-            }
-            if($request->has('duration_automobile')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_automobile', $request->input('duration_automobile'), 'classified');
+            if($request->has('base_price_automobile')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_automobile', $request->input('base_price_automobile'),$request->input('add_on_price_automobile'),$request->input('total_price_automobile'),$request->input('genre_automobile'),$request->input('rate_automobile'),$request->input('color_automobile'), 'newspaper');
             }
 
-            if($request->has('price_shopping')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_shopping', $request->input('price_shopping'), 'classified');
-            }
-            if($request->has('number_shopping')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_shopping', $request->input('number_shopping'), 'classified');
-            }
-            if($request->has('duration_shopping')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_shopping', $request->input('duration_shopping'), 'classified');
+            if($request->has('base_price_shopping')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_shopping', $request->input('base_price_shopping'),$request->input('add_on_price_shopping'),$request->input('total_price_shopping'),$request->input('genre_shopping'),$request->input('rate_shopping'),$request->input('color_shopping'), 'newspaper');
             }
 
-            //pricing options
-            
-            if($request->has('price_per_sq_cm')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_per_sq_cm', $request->input('price_per_sq_cm'), 'pricing');
+            if($request->has('base_price_appointment')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_appointment', $request->input('base_price_appointment'),$request->input('add_on_price_appointment'),$request->input('total_price_appointment'),$request->input('genre_appointment'),$request->input('rate_appointment'),$request->input('color_appointment'), 'newspaper');
             }
-            if($request->has('number_per_sq_cm')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_per_sq_cm', $request->input('number_per_sq_cm'), 'pricing');
-            }
-            if($request->has('duration_per_sq_cm')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_per_sq_cm', $request->input('duration_per_sq_cm'), 'pricing');
+
+            if($request->has('base_price_computers')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_computers', $request->input('base_price_computers'),$request->input('add_on_price_computers'),$request->input('total_price_computers'),$request->input('genre_computers'),$request->input('rate_computers'),$request->input('color_computers'), 'newspaper');
             }
             
-            if($request->has('price_per_day')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_per_day', $request->input('price_per_day'), 'pricing');
+            if($request->has('base_price_personal')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_personal', $request->input('base_price_personal'),$request->input('add_on_price_personal'),$request->input('total_price_personal'),$request->input('genre_personal'),$request->input('rate_personal'),$request->input('color_personal'), 'newspaper');
             }
-            if($request->has('number_per_day')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_per_day', $request->input('number_per_day'), 'pricing');
+
+            if($request->has('base_price_travel')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_travel', $request->input('base_price_travel'),$request->input('add_on_price_travel'),$request->input('total_price_travel'),$request->input('genre_travel'),$request->input('rate_travel'),$request->input('color_travel'), 'newspaper');
             }
-            if($request->has('duration_per_day')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_per_day', $request->input('duration_per_day'), 'pricing');
+
+            if($request->has('base_price_package')){
+                $this->addNewspaperPrice($lastinsert_ID, 'price_package', $request->input('base_price_package'),$request->input('add_on_price_package'),$request->input('total_price_package'),$request->input('genre_package'),$request->input('rate_package'),$request->input('color_package'), 'newspaper');
             }
-    
-            if($request->has('price_per_inserts')){
-                $this->addNewspaperPrice($lastinsert_ID, 'price_per_inserts', $request->input('price_per_inserts'), 'pricing');
-            }
-            if($request->has('number_per_inserts')){
-                $this->addNewspaperPrice($lastinsert_ID, 'number_per_inserts', $request->input('number_per_inserts'), 'pricing');
-            }
-            if($request->has('duration_per_inserts')){
-                $this->addNewspaperPrice($lastinsert_ID, 'duration_per_inserts', $request->input('duration_per_inserts'), 'pricing');
-            }
- 
+            
+           
         }
    	   
      
@@ -450,16 +375,36 @@ class NewspaperController extends Controller
     }
 
     //insert price data to newspaper price table
-    public function addNewspaperPrice($id, $key, $value, $numKey, $numValue, $type)
+    public function addNewspaperPrice($id, $key, $basePrice, $addonPrice, $totalPrice, $genre, $pricingOption, $color, $type)
     {
         $insert = new Newspapersprice();
         
-        $insert->newspapers_id = $id;
+        $insert->newspaper_id = $id;
         $insert->price_key = $key;
-        $insert->price_value = $value;
-        $insert->number_key = $numKey;
-        $insert->number_value = $numValue;
+        $insert->base_price = $basePrice;
+        $insert->addon_price = $addonPrice;
+        $insert->total_price = $totalPrice;
+        $insert->genre = $genre;
+        $insert->pricing_type = $pricingOption;
+        $insert->color = $color;
         $insert->option_type = $type;
+        //$insert->ad_code = $adCode;
+        $insert->save();
+
+    }
+
+    //insert price data to magazine price table
+    public function addMagazinePrice($id, $key, $basePrice, $number, $type)
+    {
+        $insert = new Magazineprice();
+        
+        $insert->magazine_id = $id;
+        $insert->price_key = $key;
+        $insert->price_value = $basePrice;
+        $insert->number_value = $number;
+        //$insert->duration_value = $duration;
+        $insert->option_type = $type;
+        //$insert->ad_code = $adCode;
         $insert->save();
 
     }
@@ -477,61 +422,63 @@ class NewspaperController extends Controller
     }
 
     // update newspaper product
-    public function getUpdateeNewspaperad($ID)
+    public function getUpdateeNewspaperad($print_type, $ID)
     { 
+        $newspaperData = Newspapers::where('id', $ID)->first();
         
-        $newspaperData = Newspapers::find($ID);
-        $newspaperpriceData = Newspapersprice::where('newspapers_id', $ID)->get();
+        if($print_type === 'newspaper'){
+            $priceData = Newspapersprice::where('newspaper_id', $ID)->get();
+        }else{
+            $priceData = Magazineprice::where('magazine_id', $ID)->get();
+        }
+       
         $fieldData = array();
                 
-        foreach($newspaperpriceData as $pricenewspaper){
+        foreach($priceData as $pricenewspaper){
             if($pricenewspaper->price_key){
                 $fieldData[] = ucwords(str_replace('_', ' ', substr($pricenewspaper->price_key, 6)));
             }
         }
         $fieldDatas = serialize($fieldData);
+        
         return view('backend.mediatypes.newspapers.newspaper-editform', [
-                                            'newspaper' => $newspaperData,
+                                            'printmediaAd' => $newspaperData,
                                             'printMedia_type' => $this->printMedia_type,
-                                            'newspaperpricemeta' => $newspaperpriceData,
+                                            'pricemeta' => $priceData,
+                                            'printType' => $print_type,
                                             'fieldData' => $fieldDatas,
                                             'magezineOption' => $this->magezineOption,
                                             'megazineGenre' =>  $this->megazineGenre,
                                             'newspaper_options' => $this->newspaper_options,
-                                            'classified_options' => $this->newspaperGenre
+                                            'classified_options' => $this->newspaperGenre,
+                                            'toiOptions' => $this->toi
                                         ]);
     }
     //check and uncheck options remove
     public function getuncheckNewspaperadOptions(Request $request, $table)
     {
         $displayoptions =json_decode($request['displayoptions']);
-        
-        $count = Newspapersprice::where([
-                                    ['newspapers_id', '=', $request['id']],
-                                    ['price_key', '=', $request['price_key']],
-                                ])->count();
-        if($count > 0){
-            Newspapers::where('id', $request['id'])->update([$request['option_type'] => serialize($displayoptions)]);
+       
+        if($request['printmedia_type'] === 'newspaper'){
+            Newspapers::where('id', $request['id'])->update(['general_options' => serialize($displayoptions)]);
             $newspapersprice = Newspapersprice::where([
-                                    ['newspapers_id', '=', $request['id']],
-                                    ['price_key', '=', $request['price_key']]
-                                ])->first();
+                                ['newspaper_id', '=', $request['id']],
+                                ['price_key', '=', $request['price_key']]
+                            ])->first();
             $newspapersprice->delete();
-            $newspapersnumber = Newspapersprice::where([
-                                    ['newspapers_id', '=', $request['id']],
-                                    ['price_key', '=', $request['number_key']]
-                                ])->first();
-            $newspapersnumber->delete();
-            $newspapersduration = Newspapersprice::where([
-                                    ['newspapers_id', '=', $request['id']],
-                                    ['price_key', '=', $request['duration_key']]
-                                ])->first();
-            $newspapersduration->delete();
-
             return response(['msg' => 'price deleted'], 200);
         }
-              
-            return response(['msg' => 'Value not present in db!'], 200);
+        if($request['printmedia_type'] === 'megazine'){
+            Newspapers::where('id', $request['id'])->update(['magazine_options' => serialize($displayoptions)]);
+            $magazinesprice = Magazineprice::where([
+                                ['magazine_id', '=', $request['id']],
+                                ['price_key', '=', $request['price_key']]
+                            ])->first();
+            $magazinesprice->delete();
+            return response(['msg' => 'price deleted'], 200); 
+        }
+
+        return response(['msg' => 'Value not present in db!'], 500);
         
     }
 
@@ -567,13 +514,9 @@ class NewspaperController extends Controller
          $editnewspaper->language = $request->input('language');
          $editnewspaper->magazine_options = serialize($request->input('magazinedisplay'));
          $editnewspaper->general_options = serialize($request->input('newspaperdisplay'));
-         $editnewspaper->other_options = serialize($request->input('otherdisplay'));
-         $editnewspaper->classified_options = serialize($request->input('classifieddisplay'));
-         $editnewspaper->pricing_options = serialize($request->input('pricingdisplay'));
-         // $editnewspaper->numberofnewspapers = $request->input('number');
-          $editnewspaper->discount = $request->input('discount');
-          $editnewspaper->circulations = $request->input('circulation');
-          $editnewspaper->reference_mail = $request->input('reference_mail');
+         $editnewspaper->discount = $request->input('discount');
+         $editnewspaper->circulations = $request->input('circulation');
+         $editnewspaper->reference_mail = $request->input('reference_mail');
 
         if($request->hasFile('image')){
             $file = $request->file('image');
@@ -586,391 +529,287 @@ class NewspaperController extends Controller
 
        $editnewspaper->update();
 
+        
         //newspaper display prices insertion
-         //newspaper display prices insertion
         if($editnewspaper->printmedia_type === 'magazine'){
             if($request->has('price_full_page')){
-                $this->updateNewspaperPrice($ID, 'price_full_page', $request->input('price_full_page'), 'number_full_page', $request->input('price_full_page'), 'megazine');
+                $this->updateMagazinePrice($ID, 'price_full_page', $request->input('price_full_page'), $request->input('number_half_page'), 'megazine');
             }
             if($request->has('price_half_page')){
-                $this->updateNewspaperPrice($ID, 'price_half_page', $request->input('price_half_page'), 'number_half_page', $request->input('number_half_page'), 'megazine');
+                $this->updateMagazinePrice($ID, 'price_half_page', $request->input('price_half_page'), $request->input('number_half_page'), 'megazine');
             }
-            if($request->has('price_strip')){
-                $this->updateNewspaperPrice($ID, 'price_strip', $request->input('price_strip'), 'number_strip', $request->input('number_strip'), 'megazine');
+            if($request->has('price_strip_vertical')){
+                $this->updateMagazinePrice($ID, 'price_strip_vertical', $request->input('price_strip_vertical'), $request->input('number_strip_vertical'), 'megazine');
+            }
+            if($request->has('price_strip_horizontal')){
+                $this->updateMagazinePrice($ID, 'price_strip_horizontal', $request->input('price_strip_horizontal'), $request->input('number_strip_horizontal'), 'megazine');
             }
             if($request->has('price_double_spread')){
-                $this->updateNewspaperPrice($ID, 'price_double_spread', $request->input('price_double_spread'), 'number_double_spread', $request->input('number_double_spread'), 'megazine');
+                $this->updateMagazinePrice($ID, 'price_double_spread', $request->input('price_double_spread'),$request->input('number_double_spread'), 'megazine');
             }
             if($request->has('price_half_double_spread')){
-                $this->updateNewspaperPrice($ID, 'price_half_double_spread', $request->input('price_half_double_spread'), 'number_half_double_spread', $request->input('number_half_double_spread'), 'megazine');
+                $this->updateMagazinePrice($ID, 'price_half_double_spread', $request->input('price_half_double_spread'), $request->input('number_half_double_spread'), 'megazine');
             }
             if($request->has('price_inside_cover')){
-                $this->updateNewspaperPrice($ID, 'price_inside_cover', $request->input('price_inside_cover'), 'number_inside_cover', $request->input('number_inside_cover'), 'megazine');
+                $this->updateMagazinePrice($ID, 'price_inside_cover', $request->input('price_inside_cover'), $request->input('number_inside_cover'), 'megazine');
             }
-             if($request->has('price_back_cover')){
-                $this->updateNewspaperPrice($ID, 'price_back_cover', $request->input('price_back_cover'), 'number_back_cover', $request->input('number_back_cover'), 'megazine');
+            if($request->has('price_back_cover')){
+                $this->updateMagazinePrice($ID, 'price_back_cover', $request->input('price_back_cover'),$request->input('number_back_cover'), 'megazine');
+            }
+           
+            if($request->has('price_centre_spread')){
+                $this->updateMagazinePrice($ID, 'price_centre_spread', $request->input('price_centre_spread'),$request->input('number_centre_spread'), 'megazine');
+            }
+            if($request->has('price_one_column')){
+                $this->updateMagazinePrice($ID, 'price_one_column', $request->input('price_one_column'),$request->input('number_one_column'), 'megazine');
+            }
+            if($request->has('price_two_columns')){
+                $this->updateMagazinePrice($ID, 'price_two_columns', $request->input('price_two_columns'),$request->input('number_two_columns'), 'megazine');
+            }
+            if($request->has('price_quarter_page')){
+                $this->updateMagazinePrice($ID, 'price_quarter_page', $request->input('price_quarter_page'),$request->input('number_quarter_page'), 'megazine');
+            }
+            if($request->has('price_last_page')){
+                $this->updateMagazinePrice($ID, 'price_last_page', $request->input('price_last_page'),$request->input('number_last_page'), 'megazine');
+            }
+            if($request->has('price_centre_spread')){
+                $this->updateMagazinePrice($ID, 'price_centre_spread', $request->input('price_centre_spread'),$request->input('number_centre_spread'), 'megazine');
+            }
+            if($request->has('price_electronics_mart')){
+                $this->updateMagazinePrice($ID, 'price_electronics_mart', $request->input('price_electronics_mart'),$request->input('number_electronics_mart'), 'megazine');
             }
         }else{
-            if($request->has('price_page1')){
-                $this->updateNewspaperPrice($ID, 'price_page1', $request->input('price_page1'));
-            }
-        
-        if($request->has('number_page1')){
-                $this->updateNewspaperPrice($ID, 'number_page1', $request->input('number_page1'));
-            }
 
-        if($request->has('duration_page1')){
-                $this->updateNewspaperPrice($ID, 'duration_page1', $request->input('duration_page1'));
-            }
-
-
-            if($request->has('price_page3')){
-                $this->updateNewspaperPrice($ID, 'price_page3', $request->input('price_page3'));
-            }
-            if($request->has('number_page3')){
-                $this->updateNewspaperPrice($ID, 'number_page3', $request->input('number_page3'));
-            }
-            if($request->has('duration_page3')){
-                $this->updateNewspaperPrice($ID, 'duration_page3', $request->input('duration_page3'));
-            }
-
-                if($request->has('price_last_page')){
-                $this->updateNewspaperPrice($ID, 'price_last_page', $request->input('price_last_page'));
-            }
-            if($request->has('number_last_page')){
-                $this->updateNewspaperPrice($ID, 'number_last_page', $request->input('number_last_page'));
-            }
-            if($request->has('duration_last_page')){
-                $this->updateNewspaperPrice($ID, 'duration_last_page', $request->input('duration_last_page'));
-            }
-
-                if($request->has('price_any_page')){
-                $this->updateNewspaperPrice($ID, 'price_any_page', $request->input('price_any_page'));
-            }
-            if($request->has('number_any_page')){
-                $this->updateNewspaperPrice($ID, 'number_any_page', $request->input('number_any_page'));
-            }
-            if($request->has('duration_any_page')){
-                $this->updateNewspaperPrice($ID, 'duration_any_page', $request->input('duration_any_page'));
-            }
-
-            //other options
-
-            if($request->has('price_jacket_front_page')){
-                $this->updateNewspaperPrice($ID, 'price_jacket_front_page', $request->input('price_any_page'));
-            }
-            if($request->has('number_jacket_front_page')){
-                $this->updateNewspaperPrice($ID, 'number_jacket_front_page', $request->input('number_jacket_front_page'));
-            }
-            if($request->has('duration_jacket_front_page')){
-                $this->updateNewspaperPrice($ID, 'duration_jacket_front_page', $request->input('duration_jacket_front_page'));
-            }
-
-            if($request->has('price_jacket_front_inside')){
-                $this->updateNewspaperPrice($ID, 'price_jacket_front_inside', $request->input('price_jacket_front_inside'));
-            }
-            if($request->has('number_jacket_front_inside')){
-                $this->updateNewspaperPrice($ID, 'number_jacket_front_inside', $request->input('number_jacket_front_inside'));
-            }
-            if($request->has('duration_jacket_front_inside')){
-                $this->updateNewspaperPrice($ID, 'duration_jacket_front_inside', $request->input('duration_jacket_front_inside'));
+            if($request->has('base_price_page1')){
+                $this->updateNewspaperPrice($ID, 'price_page1', $request->input('base_price_page1'),$request->input('add_on_price_page1'),$request->input('total_price_page1'),$request->input('genre_page1'),$request->input('rate_page1'),$request->input('color_page1'), 'newspaper');
             }
             
-            if($request->has('price_pointer_ad')){
-                $this->updateNewspaperPrice($ID, 'price_pointer_ad', $request->input('price_pointer_ad'));
-            }
-            if($request->has('number_pointer_ad')){
-                $this->updateNewspaperPrice($ID, 'number_pointer_ad', $request->input('number_pointer_ad'));
-            }
-            if($request->has('duration_pointer_ad')){
-                $this->updateNewspaperPrice($ID, 'duration_pointer_ad', $request->input('duration_pointer_ad'));
-            }
-            
-            if($request->has('price_sky_bus')){
-                $this->updateNewspaperPrice($ID, 'price_sky_bus', $request->input('price_sky_bus'));
-            }
-            if($request->has('number_sky_bus')){
-                $this->updateNewspaperPrice($ID, 'number_sky_bus', $request->input('number_sky_bus'));
-            }
-            if($request->has('duration_sky_bus')){
-                $this->updateNewspaperPrice($ID, 'duration_sky_bus', $request->input('duration_sky_bus'));
+            if($request->has('base_price_page3')){
+                $this->updateNewspaperPrice($ID, 'price_page3', $request->input('base_price_page3'),$request->input('add_on_price_page3'),$request->input('total_price_page3'),$request->input('genre_page3'),$request->input('rate_page3'),$request->input('color_page3'), 'newspaper');
             }
 
-            if($request->has('price_ear_panel')){
-                $this->updateNewspaperPrice($ID, 'price_ear_panel', $request->input('price_ear_panel'));
+
+            if($request->has('base_price_last_page')){
+                $this->updateNewspaperPrice($ID, 'price_last_page', $request->input('base_price_last_page'),$request->input('add_on_price_last_page'),$request->input('total_price_last_page'),$request->input('genre_last_page'),$request->input('rate_last_page'),$request->input('color_last_page'), 'newspaper');
             }
-            if($request->has('number_ear_panel')){
-                $this->updateNewspaperPrice($ID, 'number_ear_panel', $request->input('number_ear_panel'));
+            
+
+            if($request->has('base_price_any_page')){
+                $this->updateNewspaperPrice($ID, 'price_any_page', $request->input('base_price_any_page'),$request->input('add_on_price_any_page'),$request->input('total_price_any_page'),$request->input('genre_any_page'),$request->input('rate_any_page'),$request->input('color_any_page'), 'newspaper');
             }
-            if($request->has('duration_ear_panel')){
-                $this->updateNewspaperPrice($ID, 'duration_ear_panel', $request->input('duration_ear_panel'));
+            
+            if($request->has('base_price_full_page')){
+                $this->updateNewspaperPrice($ID, 'price_full_page', $request->input('base_price_full_page'),$request->input('add_on_price_full_page'),$request->input('total_price_full_page'),$request->input('genre_full_page'),$request->input('rate_full_page'),$request->input('color_full_page'), 'newspaper');
             }
+
+            if($request->has('base_price_half_page')){
+                $this->updateNewspaperPrice($ID, 'price_half_page', $request->input('base_price_half_page'),$request->input('add_on_price_half_page'),$request->input('total_price_half_page'),$request->input('genre_half_page'),$request->input('rate_half_page'),$request->input('color_half_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_quarter_page')){
+                $this->updateNewspaperPrice($ID, 'price_quarter_page', $request->input('base_price_quarter_page'),$request->input('add_on_price_quarter_page'),$request->input('total_price_quarter_page'),$request->input('genre_quarter_page'),$request->input('rate_quarter_page'),$request->input('color_quarter_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_mini_a4')){
+                $this->updateNewspaperPrice($ID, 'price_mini_a4', $request->input('base_price_mini_a4'),$request->input('add_on_price_mini_a4'),$request->input('total_price_mini_a4'),$request->input('genre_mini_a4'),$request->input('rate_mini_a4'),$request->input('color_mini_a4'), 'newspaper');
+            }
+
+            if($request->has('base_price_full_page_centre_spread')){
+                $this->updateNewspaperPrice($ID, 'price_full_page_centre_spread', $request->input('base_price_full_page_centre_spread'),$request->input('add_on_price_full_page_centre_spread'),$request->input('total_price_full_page_centre_spread'),$request->input('genre_full_page_centre_spread'),$request->input('rate_full_page_centre_spread'),$request->input('color_full_page_centre_spread'), 'newspaper');
+            }
+
+            if($request->has('base_price_mini_a4_centre_spread')){
+                $this->updateNewspaperPrice($ID, 'price_mini_a4_centre_spread', $request->input('base_price_mini_a4_centre_spread'),$request->input('add_on_price_mini_a4_centre_spread'),$request->input('total_price_mini_a4_centre_spread'),$request->input('genre_mini_a4_centre_spread'),$request->input('rate_mini_a4_centre_spread'),$request->input('color_mini_a4_centre_spread'), 'newspaper');
+            }
+
+            if($request->has('base_price_horizontal_strip')){
+                $this->updateNewspaperPrice($ID, 'price_horizontal_strip', $request->input('base_price_horizontal_strip'),$request->input('add_on_price_horizontal_strip'),$request->input('total_price_horizontal_strip'),$request->input('genre_horizontal_strip'),$request->input('rate_horizontal_strip'),$request->input('color_horizontal_strip'), 'newspaper');
+            }
+
+            if($request->has('base_price_vertical_strip')){
+                $this->updateNewspaperPrice($ID, 'price_vertical_strip', $request->input('base_price_vertical_strip'),$request->input('add_on_price_vertical_strip'),$request->input('total_price_vertical_strip'),$request->input('genre_vertical_strip'),$request->input('rate_vertical_strip'),$request->input('color_vertical_strip'), 'newspaper');
+            }
+
+            if($request->has('base_price_page_3_horizontal_solus')){
+                $this->updateNewspaperPrice($ID, 'price_page_3_horizontal_solus', $request->input('base_price_page_3_horizontal_solus'),$request->input('add_on_price_page_3_horizontal_solus'),$request->input('total_price_page_3_horizontal_solus'),$request->input('genre_page_3_horizontal_solus'),$request->input('rate_page_3_horizontal_solus'),$request->input('color_page_3_horizontal_solus'), 'newspaper');
+            }
+
+            if($request->has('base_price_inside_front_cover')){
+                $this->updateNewspaperPrice($ID, 'price_inside_front_cover', $request->input('base_price_inside_front_cover'),$request->input('add_on_price_inside_front_cover'),$request->input('total_price_inside_front_cover'),$request->input('genre_inside_front_cover'),$request->input('rate_inside_front_cover'),$request->input('color_inside_front_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_inside_back_cover')){
+                $this->updateNewspaperPrice($ID, 'price_inside_back_cover', $request->input('base_price_inside_back_cover'),$request->input('add_on_price_inside_back_cover'),$request->input('total_price_inside_back_cover'),$request->input('genre_inside_back_cover'),$request->input('rate_inside_back_cover'),$request->input('color_inside_back_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_back_page')){
+                $this->updateNewspaperPrice($ID, 'price_back_page', $request->input('base_price_back_page'),$request->input('add_on_price_back_page'),$request->input('total_price_back_page'),$request->input('genre_back_page'),$request->input('rate_back_page'),$request->input('color_back_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_false_cover')){
+                $this->updateNewspaperPrice($ID, 'price_front_false_cover', $request->input('base_price_front_false_cover'),$request->input('add_on_price_front_false_cover'),$request->input('total_price_front_false_cover'),$request->input('genre_front_false_cover'),$request->input('rate_front_false_cover'),$request->input('color_front_false_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_and_back_false_cover')){
+                $this->updateNewspaperPrice($ID, 'price_front_and_back_false_cover', $request->input('base_price_front_and_back_false_cover'),$request->input('add_on_price_front_and_back_false_cover'),$request->input('total_price_front_and_back_false_cover'),$request->input('genre_front_and_back_false_cover'),$request->input('rate_front_and_back_false_cover'),$request->input('color_front_and_back_false_cover'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_gate_fold')){
+                $this->updateNewspaperPrice($ID, 'price_front_gate_fold', $request->input('base_price_front_gate_fold'),$request->input('add_on_price_front_gate_fold'),$request->input('total_price_front_gate_fold'),$request->input('genre_front_gate_fold'),$request->input('rate_front_gate_fold'),$request->input('color_front_gate_fold'), 'newspaper');
+            }
+
+            if($request->has('base_price_reverse_gate_fold')){
+                $this->updateNewspaperPrice($ID, 'price_reverse_gate_fold', $request->input('base_price_reverse_gate_fold'),$request->input('add_on_price_reverse_gate_fold'),$request->input('total_price_reverse_gate_fold'),$request->input('genre_reverse_gate_fold'),$request->input('rate_reverse_gate_fold'),$request->input('color_reverse_gate_fold'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_and_back_tab')){
+                $this->updateNewspaperPrice($ID, 'price_front_and_back_tab', $request->input('base_price_front_and_back_tab'),$request->input('add_on_price_front_and_back_tab'),$request->input('total_price_front_and_back_tab'),$request->input('genre_front_and_back_tab'),$request->input('rate_front_and_back_tab'),$request->input('color_front_and_back_tab'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_tab')){
+                $this->updateNewspaperPrice($ID, 'price_front_tab', $request->input('base_price_front_tab'),$request->input('add_on_price_front_tab'),$request->input('total_price_front_tab'),$request->input('genre_front_tab'),$request->input('rate_front_tab'),$request->input('color_front_tab'), 'newspaper');
+            }
+
+            if($request->has('base_price_front_tab')){
+                $this->updateNewspaperPrice($ID, 'price_front_tab', $request->input('base_price_front_tab'),$request->input('add_on_price_front_tab'),$request->input('total_price_front_tab'),$request->input('genre_front_tab'),$request->input('rate_front_tab'),$request->input('color_front_tab'), 'newspaper');
+            }
+
+            if($request->has('base_price_jacket_front_page')){
+                $this->updateNewspaperPrice($ID, 'price_jacket_front_page', $request->input('base_price_jacket_front_page'),$request->input('add_on_price_jacket_front_page'),$request->input('total_price_jacket_front_page'),$request->input('genre_jacket_front_page'),$request->input('rate_jacket_front_page'),$request->input('color_jacket_front_page'), 'newspaper');
+            }
+
+            if($request->has('base_price_jacket_front_inside')){
+                $this->updateNewspaperPrice($ID, 'price_jacket_front_inside', $request->input('base_price_jacket_front_inside'),$request->input('add_on_price_jacket_front_inside'),$request->input('total_price_jacket_front_inside'),$request->input('genre_jacket_front_inside'),$request->input('rate_jacket_front_inside'),$request->input('color_jacket_front_inside'), 'newspaper');
+            }
+
+            if($request->has('base_price_pointer_ad')){
+                $this->updateNewspaperPrice($ID, 'price_pointer_ad', $request->input('base_price_pointer_ad'),$request->input('add_on_price_pointer_ad'),$request->input('total_price_pointer_ad'),$request->input('genre_pointer_ad'),$request->input('rate_pointer_ad'),$request->input('color_pointer_ad'), 'newspaper');
+            }
+            //TOI AND NAV Bharat options
+
+            if($request->has('base_price_matrimonial')){
+                $this->updateNewspaperPrice($ID, 'price_matrimonial', $request->input('base_price_matrimonial'),$request->input('add_on_price_matrimonial'),$request->input('total_price_matrimonial'),$request->input('genre_matrimonial'),$request->input('rate_matrimonial'),$request->input('color_matrimonial'), 'newspaper');
+            }
+           
+            
+            if($request->has('base_price_business')){
+                $this->updateNewspaperPrice($ID, 'price_business', $request->input('base_price_business'),$request->input('add_on_price_business'),$request->input('total_price_business'),$request->input('genre_business'),$request->input('rate_business'),$request->input('color_business'), 'newspaper');
+            }
+           
+
+            if($request->has('base_price_property')){
+                $this->updateNewspaperPrice($ID, 'price_property', $request->input('base_price_property'),$request->input('add_on_price_property'),$request->input('total_price_property'),$request->input('genre_property'),$request->input('rate_property'),$request->input('color_property'), 'newspaper');
+            }
+            
     
-            if($request->has('price_half_page')){
-                $this->updateNewspaperPrice($ID, 'price_half_page', $request->input('price_half_page'));
+            if($request->has('base_price_education')){
+                $this->updateNewspaperPrice($ID, 'price_education', $request->input('base_price_education'),$request->input('add_on_price_education'),$request->input('total_price_education'),$request->input('genre_education'),$request->input('rate_education'),$request->input('color_education'), 'newspaper');
             }
-            if($request->has('number_half_page')){
-                $this->updateNewspaperPrice($ID, 'number_half_page', $request->input('number_half_page'));
-            }
-            if($request->has('duration_half_page')){
-                $this->updateNewspaperPrice($ID, 'duration_half_page', $request->input('duration_half_page'));
-            }
+           
             
-            if($request->has('price_quarter_page')){
-                $this->updateNewspaperPrice($ID, 'price_quarter_page', $request->input('price_quarter_page'));
+            if($request->has('base_price_public_notices')){
+                $this->updateNewspaperPrice($ID, 'price_public_notices', $request->input('base_price_public_notices'),$request->input('add_on_price_public_notices'),$request->input('total_price_public_notices'),$request->input('genre_public_notices'),$request->input('rate_public_notices'),$request->input('color_public_notices'), 'newspaper');
             }
-            if($request->has('number_quarter_page')){
-                $this->updateNewspaperPrice($ID, 'number_quarter_page', $request->input('number_quarter_page'));
-            }
-            if($request->has('duration_quarter_page')){
-                $this->updateNewspaperPrice($ID, 'duration_quarter_page', $request->input('duration_quarter_page'));
-            }
+           
             
-            if($request->has('price_pamphlets')){
-                $this->updateNewspaperPrice($ID, 'price_pamphlets', $request->input('price_pamphlets'));
+            if($request->has('base_price_services')){
+                $this->updateNewspaperPrice($ID, 'price_services', $request->input('base_price_services'),$request->input('add_on_price_services'),$request->input('total_price_services'),$request->input('genre_services'),$request->input('rate_services'),$request->input('color_services'), 'newspaper');
             }
-            if($request->has('number_pamphlets')){
-                $this->updateNewspaperPrice($ID, 'number_pamphlets', $request->input('number_pamphlets'));
-            }
-            if($request->has('duration_pamphlets')){
-                $this->updateNewspaperPrice($ID, 'duration_pamphlets', $request->input('duration_pamphlets'));
-            }
+           
     
-            if($request->has('price_flyers')){
-                $this->updateNewspaperPrice($ID, 'price_flyers', $request->input('price_flyers'));
-            }
-            if($request->has('number_flyers')){
-                $this->updateNewspaperPrice($ID, 'number_flyers', $request->input('number_flyers'));
-            }
-            if($request->has('duration_flyers')){
-                $this->updateNewspaperPrice($ID, 'duration_flyers', $request->input('duration_flyers'));
-            }
-            //classified options
-
-            if($request->has('price_matrimonial')){
-                $this->updateNewspaperPrice($ID, 'price_matrimonial', $request->input('price_matrimonial'));
-            }
-            if($request->has('number_matrimonial')){
-                $this->updateNewspaperPrice($ID, 'number_matrimonial', $request->input('number_matrimonial'));
-            }
-            if($request->has('duration_matrimonial')){
-                $this->updateNewspaperPrice($ID, 'duration_matrimonial', $request->input('duration_matrimonial'));
-            }
-            
-            if($request->has('price_recruitment')){
-                $this->updateNewspaperPrice($ID, 'price_recruitment', $request->input('price_recruitment'));
-            }
-            if($request->has('number_recruitment')){
-                $this->updateNewspaperPrice($ID, 'number_recruitment', $request->input('number_recruitment'));
-            }
-            if($request->has('duration_recruitment')){
-                $this->updateNewspaperPrice($ID, 'duration_recruitment', $request->input('duration_recruitment'));
-            }
-            
-            if($request->has('price_business')){
-                $this->updateNewspaperPrice($ID, 'price_business', $request->input('price_business'));
-            }
-            if($request->has('number_business')){
-                $this->updateNewspaperPrice($ID, 'number_business', $request->input('number_business'));
-            }
-            if($request->has('duration_business')){
-                $this->updateNewspaperPrice($ID, 'duration_business', $request->input('duration_business'));
-            }
-            
-            if($request->has('price_property')){
-                $this->updateNewspaperPrice($ID, 'price_property', $request->input('price_property'));
-            }
-            if($request->has('number_property')){
-                $this->updateNewspaperPrice($ID, 'number_property', $request->input('number_property'));
-            }
-            if($request->has('duration_property')){
-                $this->updateNewspaperPrice($ID, 'duration_property', $request->input('duration_property'));
-            }
-            
-            if($request->has('price_education')){
-                $this->updateNewspaperPrice($ID, 'price_education', $request->input('price_education'));
-            }
-            if($request->has('number_education')){
-                $this->updateNewspaperPrice($ID, 'number_education', $request->input('number_education'));
-            }
-            if($request->has('duration_education')){
-                $this->updateNewspaperPrice($ID, 'duration_education', $request->input('duration_education'));
-            }
-            
-            if($request->has('price_astrology')){
-                $this->updateNewspaperPrice($ID, 'price_astrology', $request->input('price_astrology'));
-            }
-            if($request->has('number_astrology')){
-                $this->updateNewspaperPrice($ID, 'number_astrology', $request->input('number_astrology'));
-            }
-            if($request->has('duration_astrology')){
-                $this->updateNewspaperPrice($ID, 'duration_astrology', $request->input('duration_astrology'));
-            }
-            
-            if($request->has('price_public_notices')){
-                $this->updateNewspaperPrice($ID, 'price_public_notices', $request->input('price_public_notices'));
-            }
-            if($request->has('number_public_notices')){
-                $this->updateNewspaperPrice($ID, 'number_public_notices', $request->input('number_public_notices'));
-            }
-            if($request->has('duration_public_notices')){
-                $this->updateNewspaperPrice($ID, 'duration_public_notices', $request->input('duration_public_notices'));
-            }
-            
-            if($request->has('price_services')){
-                $this->updateNewspaperPrice($ID, 'price_services', $request->input('price_services'));
-            }
-            if($request->has('number_services')){
-                $this->updateNewspaperPrice($ID, 'number_services', $request->input('number_services'));
-            }
-            if($request->has('duration_services')){
-                $this->updateNewspaperPrice($ID, 'duration_services', $request->input('duration_services'));
-            }
-            
-            if($request->has('price_automobile')){
-                $this->updateNewspaperPrice($ID, 'price_automobile', $request->input('price_automobile'));
-            }
-            if($request->has('number_automobile')){
-                $this->updateNewspaperPrice($ID, 'number_automobile', $request->input('number_automobile'));
-            }
-            if($request->has('duration_automobile')){
-                $this->updateNewspaperPrice($ID, 'duration_automobile', $request->input('duration_automobile'));
+            if($request->has('base_price_automobile')){
+                $this->updateNewspaperPrice($ID, 'price_automobile', $request->input('base_price_automobile'),$request->input('add_on_price_automobile'),$request->input('total_price_automobile'),$request->input('genre_automobile'),$request->input('rate_automobile'),$request->input('color_automobile'), 'newspaper');
             }
 
-            if($request->has('price_shopping')){
-                $this->updateNewspaperPrice($ID, 'price_shopping', $request->input('price_shopping'));
-            }
-            if($request->has('number_shopping')){
-                $this->updateNewspaperPrice($ID, 'number_shopping', $request->input('number_shopping'));
-            }
-            if($request->has('duration_shopping')){
-                $this->updateNewspaperPrice($ID, 'duration_shopping', $request->input('duration_shopping'));
+            if($request->has('base_price_shopping')){
+                $this->updateNewspaperPrice($ID, 'price_shopping', $request->input('base_price_shopping'),$request->input('add_on_price_shopping'),$request->input('total_price_shopping'),$request->input('genre_shopping'),$request->input('rate_shopping'),$request->input('color_shopping'), 'newspaper');
             }
 
-            //pricing options
-            
-            if($request->has('price_per_sq_cm')){
-                $this->updateNewspaperPrice($ID, 'price_per_sq_cm', $request->input('price_per_sq_cm'));
+            if($request->has('base_price_appointment')){
+                $this->updateNewspaperPrice($ID, 'price_appointment', $request->input('base_price_appointment'),$request->input('add_on_price_appointment'),$request->input('total_price_appointment'),$request->input('genre_appointment'),$request->input('rate_appointment'),$request->input('color_appointment'), 'newspaper');
             }
-            if($request->has('number_per_sq_cm')){
-                $this->updateNewspaperPrice($ID, 'number_per_sq_cm', $request->input('number_per_sq_cm'));
-            }
-            if($request->has('duration_per_sq_cm')){
-                $this->updateNewspaperPrice($ID, 'duration_per_sq_cm', $request->input('duration_per_sq_cm'));
+
+            if($request->has('base_price_computers')){
+                $this->updateNewspaperPrice($ID, 'price_computers', $request->input('base_price_computers'),$request->input('add_on_price_computers'),$request->input('total_price_computers'),$request->input('genre_computers'),$request->input('rate_computers'),$request->input('color_computers'), 'newspaper');
             }
             
-            if($request->has('price_per_day')){
-                $this->updateNewspaperPrice($ID, 'price_per_day', $request->input('price_per_day'));
+            if($request->has('base_price_personal')){
+                $this->updateNewspaperPrice($ID, 'price_personal', $request->input('base_price_personal'),$request->input('add_on_price_personal'),$request->input('total_price_personal'),$request->input('genre_personal'),$request->input('rate_personal'),$request->input('color_personal'), 'newspaper');
             }
-            if($request->has('number_per_day')){
-                $this->updateNewspaperPrice($ID, 'number_per_day', $request->input('number_per_day'));
+
+            if($request->has('base_price_travel')){
+                $this->updateNewspaperPrice($ID, 'price_travel', $request->input('base_price_travel'),$request->input('add_on_price_travel'),$request->input('total_price_travel'),$request->input('genre_travel'),$request->input('rate_travel'),$request->input('color_travel'), 'newspaper');
             }
-            if($request->has('duration_per_day')){
-                $this->updateNewspaperPrice($ID, 'duration_per_day', $request->input('duration_per_day'));
+
+            if($request->has('base_price_package')){
+                $this->updateNewspaperPrice($ID, 'price_package', $request->input('base_price_package'),$request->input('add_on_price_package'),$request->input('total_price_package'),$request->input('genre_package'),$request->input('rate_package'),$request->input('color_package'), 'newspaper');
             }
-    
-            if($request->has('price_per_inserts')){
-                $this->updateNewspaperPrice($ID, 'price_per_inserts', $request->input('price_per_inserts'));
-            }
-            if($request->has('number_per_inserts')){
-                $this->updateNewspaperPrice($ID, 'number_per_inserts', $request->input('number_per_inserts'));
-            }
-            if($request->has('duration_per_inserts')){
-                $this->updateNewspaperPrice($ID, 'duration_per_inserts', $request->input('duration_per_inserts'));
-            }
- 
+            
+           
         }
 
         //return to newspaper product list
        return redirect()->route('dashboard.getNewspaperList')->with('message', 'Successfully Edited!');
     }
-
-    public function updateNewspaperPrice( $id, $meta_key, $meta_value, $type){
+    
+    //update price data for newspaper
+    public function updateNewspaperPrice($id, $key, $basePrice, $addonPrice, $totalPrice, $genre, $pricingOption, $color, $type){
         $count = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['price_key', '=', $meta_key],
+                                    ['newspaper_id', '=', $id],
+                                    ['price_key', '=', $key],
                                 ])->count();
         if($count < 1){
-            $this->addNewspaperPrice($id, $meta_key, $meta_value, $type);
+            $this->addNewspaperPrice($id, $key, $basePrice, $addonPrice, $totalPrice, $genre, $pricingOption, $color, $type);
         }else{
             $update = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['price_key', '=', $meta_key],
-                                ])->update(['price_value' => $meta_value]);
+                                    ['newspaper_id', '=', $id],
+                                    ['price_key', '=', $key],
+                                ])->update(['base_price' => $basePrice, 'addon_price' => $addonPrice, 'total_price' => $totalPrice, 'genre' => $genre, 'pricing_type' => $pricingOption, 'color' => $color, 'option_type' => $type]);
         }
         
    }
-
+   //update magazine price data
+    public function updateMagazinePrice($id, $key, $basePrice, $number, $type){
+        $count = Magazineprice::where([
+                                    ['magazine_id', '=', $id],
+                                    ['price_key', '=', $key],
+                                ])->count();
+        if($count < 1){
+            $this->addMagazinePrice($id, $key, $basePrice, $number, $type);
+        }else{
+            $update = Magazineprice::where([
+                                    ['magazine_id', '=', $id],
+                                    ['price_key', '=', $key],
+                                ])->update(['price_value' => $basePrice, 'number_value' => $number]);
+        }
+        
+   }
     //cart functions
    // add or remove item to cart
    public function getAddToCart(Request $request, $id, $variation)
    {
         $newspaper_ad = Newspapers::where('id', $id)->first()->toArray();
-        
-        $selectDisplayOpt = explode("+", $variation);
 
-        $main_key = substr($selectDisplayOpt[1], 6);
-        
-        $number_key = "number_".$main_key;
-        $duration_key = "duration_".$main_key;
+        $printmedia = $newspaper_ad['printmedia_type'];
 
-        $newspaper_price = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['price_key', '=', $selectDisplayOpt[1]],
-                                ])->first()->toArray();
-
-        $newspaper_number = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['price_key', '=', $number_key],
-                                ])->first()->toArray();
-        $newspaper_duration = Newspapersprice::where([
-                                    ['newspapers_id', '=', $id],
-                                    ['price_key', '=', $duration_key],
-                                ])->first()->toArray();
-        $newspaper_change_price = array();
-        foreach($newspaper_price as $key => $value){
-            if($key == 'price_key'){
-                $newspaper_change_price[$key] = $value;
-            }
-            if($key == 'price_value'){
-               $newspaper_change_price[$key] = $value;
-            }
+        if($printmedia === 'magazine'){
+            $Magazineprice = new Magazineprice();
+            $priceData = $Magazineprice->getMagazinePriceCart($id, $variation);
+        }else{
+            $Newspapersprice = new Newspapersprice();
+            $priceData = $Newspapersprice->getNewspaperPriceCart($id, $variation);
         }
-        $newspaper_change_num = array();
-        foreach($newspaper_number as $key => $value){
-            if($key == 'price_key'){
-                $key = 'number_key';
-                $newspaper_change_num[$key] = $value;
-            }
-            if($key == 'price_value'){
-                $key = 'number_value';
-                $newspaper_change_num[$key] = $value;
-            }
-        }
-        $newspaper_change_duration = array();
-        foreach($newspaper_duration as $key => $value){
-            if($key == 'price_key'){
-                $key = 'duration_key';
-                $newspaper_change_duration[$key] = $value;
-            }
-            if($key == 'price_value'){
-                $key = 'duration_value';
-                $newspaper_change_duration[$key] = $value;
-            }
-        }
-        $newspaper_merge = array_merge($newspaper_change_num, $newspaper_change_duration);
+              
+        $newspaper_Ad = array_merge($newspaper_ad, $priceData);
         
-        $newspaper_price = array_merge($newspaper_change_price, $newspaper_merge);
-        
-        $newspaper_Ad = array_merge($newspaper_ad, $newspaper_price);
-       
         $oldNewspaper = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldNewspaper);
 
-        $cart->addorRemove($newspaper_Ad, $newspaper_ad['id'], 'newspapers', $flag=true); //pass full newspaper details, id and model name like "newspapers"
-        
+        $cart->addorRemovePrintmedia($newspaper_Ad, $newspaper_ad['id'], $printmedia, $flag=true); //pass full newspaper details, id and model name like "newspapers"
+       
         $request->session()->put('cart', $cart);
+        
         //Session::forget('cart');
 
         return redirect()->back()->with(['status' => 'added']);

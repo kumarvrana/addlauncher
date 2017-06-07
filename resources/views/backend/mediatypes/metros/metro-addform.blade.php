@@ -1,7 +1,7 @@
 @extends('backend.layouts.backend-master')
 
 @section('title')
-   Add Bus | Ad Launcher
+   Add Metro | Ad Launcher
 @endsection
 
 @section('content')
@@ -83,27 +83,39 @@
 
                
                 
-            <div class="step-header">Bus Shelter Ad Display Options</div>
+            <div class="step-header">Metro Shelter Ad Display Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Metro">
-                @PHP
-                    $metro_options = array('full' => 'Full', 'roof_front' => 'Roof Front', 'seat_backs' => 'Seat Backs', 'side_boards' => 'Side Boards');
-                @ENDPHP
+                
                 <div class="panel panel-primary">
+
                     <div class="panel-heading "><h3 class="panel-title">Metro Options</h3></div><div class="panel-body">
                     <div class="form-group">
-                        <label for="metrodisplay">Metro Stop Ad Display Options: </label>
+                         <label for="metro_line">Metro line:</label>
+                            <select class="form-control" name="metro_line" id="metro_line" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $metro_line as $key => $value )
+                                <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
+                            </select>    
+                    </div>
+                    <div class="form-group">
+                         <label for="media">Media:</label>
+                            <select class="form-control" name="media" id="media" required="required">
+                                <option value="">--Select--</option>
+                                @foreach( $media as $key => $value )
+                                <option value="{{$key}}">{{$value}}</option>
+                                @endforeach
+                            </select>    
+                    </div>
+                    <div class="form-group">
+                        <label for="metrodisplay">Metro Ad Types: </label>
                              
                     @foreach($metro_options as $key => $value)
-                        <label class='checkbox-inline'><input data-label='Metro Ad Display Options' onclick="addDomToPriceOptions('{{$value}}')" name='metrodisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                        <label class='checkbox-inline'><input data-label='Metro Ad Display Options' onclick="addDomToPriceOptionsMetro('{{$value}}')" name='metrodisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                     @endforeach
                                        
                     </div> 
-                    <div class="form-group"><label for="bslighting">Do you want lighting options on Metro Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="bslighting" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="metrolighting" type="radio" value="1">Yes</label></div>
-
-                    <div class="form-group">
-                        <label for="metrosnumber">Numbers Of Metro Stops Display this Ad? : </label>
-                        <input class="form-control" type="text" name="metrosnumber" required>
-                    </div>
+                    <div class="form-group"><label for="light_option">Do you want lighting options on Metro Panels?: </label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('No')" name="light_option" type="radio" value="0">No</label><label class="checkbox-inline"><input class="checkEvent" data-label="Bus Shelter lighting options" onclick="addDomToPriceOptionsWithLight('Yes')" name="light_option" type="radio" value="1">Yes</label></div>
                     
                     <div class="form-group">
                         <label for="metrodiscount">Discount (%): </label>
@@ -117,7 +129,7 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
-                        
+                       
                     </div>
 
             </div>

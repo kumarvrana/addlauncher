@@ -495,7 +495,7 @@ Route::get('/cat/delete-newspaper/{newspaperadID}', [
 'uses' => 'NewspaperController@getDeleteNewspaperad',
 'as' => 'dashboard.deleteNewspaperad'
 ]);
-Route::get('/cat/edit-newspaper/{ID}', [
+Route::get('/cat/edit-newspaper/{print_type}/{ID}', [
 'uses' => 'NewspaperController@getUpdateeNewspaperad',
 'as' => 'dashboard.editnewspapersad'
 ]);
@@ -506,7 +506,7 @@ Route::get('/cat/edit-removeuncheckoptions/{table}', [
 
 Route::post('/cat/edit-newspaper/{ID}', [
 'uses' => 'NewspaperController@postUpdateeNewspaperad',
-'as' => 'dashboard.Postnewspapersad'
+'as' => 'dashboard.Updatenewspapersad'
 ]);
 
 //End Newspaper media type routing
@@ -969,10 +969,16 @@ Route::get('/media/metros', [
 'uses' => 'MetroController@getfrontendAllMetroads',
 'as' => 'frontend.getallmetros'
 ]);
-Route::get('/media/metro/{id}', [
-'uses' => 'MetroController@getfrontMetroad',
+Route::get('/media/metro/{metroline}', [
+'uses' => 'MetroController@getfrontByLine',
 'as' => 'frontend.metrosingle'
 ]);
+
+Route::get('/media/outdoor-advertisings/{billboardOption}', [
+'uses' => 'BillboardController@getfrontBillboardadByOption',
+'as' => 'frontend.getfrontBillboardadByOption'
+]);
+
 
 Route::get('/media/metro/add-to-cart/{id}/{variation}', [
 'uses' => 'MetroController@getAddToCart',
@@ -988,12 +994,20 @@ Route::get('/media/metro/remove-from-cart/{id}/{variation}', [
 // **********************************
 
 // newspaper frontend starts
-Route::get('/media/newspapers', [
+Route::get('/media/print-media', [
+'uses' => 'NewspaperController@getfrontendAllPrintMedia',
+'as' => 'frontend.PrintMedia'
+]);
+Route::get('/media/print-media/newspaper', [
 'uses' => 'NewspaperController@getfrontendAllNewspaperads',
 'as' => 'frontend.getallnewspapers'
 ]);
-Route::get('/media/newspaper/{id}', [
-'uses' => 'NewspaperController@getfrontNewspaperad',
+Route::get('/media/print-media/magazine', [
+'uses' => 'NewspaperController@getfrontendAllMagazineads',
+'as' => 'frontend.getallmagazine'
+]);
+Route::get('/media/print-media/{printmediaType}/{slug}', [
+'uses' => 'NewspaperController@getfrontPrintMediaAd',
 'as' => 'frontend.newspapersingle'
 ]);
 

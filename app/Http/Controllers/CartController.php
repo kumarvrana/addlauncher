@@ -51,6 +51,8 @@ class CartController extends Controller
             $cart->removeTelevisionCartItem($id);
         elseif($model[0] == 'airports')
             $cart->removeAirportCartItem($id);
+         elseif ($model[0] == 'magazine' ||  $model[0] == 'newspaper')
+            $cart->removePrintmediaCartItem($id, $model[0]);
         else
             $cart->removeCartItem($id);
 
@@ -68,10 +70,12 @@ class CartController extends Controller
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $model = explode('_', $id);
-        if($model == 'televisions')
+        if($model[0] == 'televisions')
             $cart->removeTelevisionCartItem($id);
-        elseif($model == 'airports')
+        elseif($model[0] == 'airports')
             $cart->removeAirportCartItem($id);
+        elseif ($model[0] == 'magazine' ||  $model[0] == 'newspaper')
+            $cart->removePrintmediaCartItem($id, $model[0]);
         else
             $cart->removeCartItem($id);
        
@@ -96,9 +100,11 @@ class CartController extends Controller
         $model = explode('_', $itemId);
         if($model[0] == 'televisions')
             $cart->UpdateTelevisionCartQty((array)$cart, $itemId, $count, $duration);
-        elseif ($model[0] == 'airports') {
+        elseif ($model[0] == 'airports')
             $cart->UpdateAirportCartQty((array)$cart, $itemId, $count, $duration);
-        }else
+        elseif ($model[0] == 'magazine' ||  $model[0] == 'newspaper')
+            $cart->UpdatePrintmediaCartQty((array)$cart, $itemId, $count, $duration, $model[0]);
+        else
             $cart->UpdateCartQty((array)$cart, $itemId, $count, $duration);
 
         Session::put('cart', $cart);

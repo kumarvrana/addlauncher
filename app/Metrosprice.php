@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Metrosprice extends Model
 {
     protected $fillable = [
-        'metros_id', 'price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value','ad_code'
+        'metros_id', 'unit', 'number_face', 'dimension', 'base_price', 'printing_charge', 'totalvalue','metroline','ad_code'
     ];
 
 
@@ -16,13 +16,12 @@ class Metrosprice extends Model
         return $this->belongsTo('App\Metros', 'metros_id', 'id');
     }
 
-   public static function getAirportByFilter($metroads)
+   public static function getMetroByFilter($metroline)
     {
+         $metroline1 = '%'.$metroline.'%';
         
-         $metroads1 = '%'.$metroads.'%';
-        
-        $metropriceOptions = static::where('price_key', 'LIKE', $metroads1)
-                                ->get(array('metros_id', 'price_key', 'price_value', 'number_key', 'number_value', 'duration_key', 'duration_value'));
+        $metropriceOptions = static::where('metroline', 'LIKE', $metroline1)
+                                ->get(array('metros_id', 'unit', 'number_face', 'dimension', 'base_price', 'printing_charge','totalprice'));
         
        
         return $metropriceOptions;

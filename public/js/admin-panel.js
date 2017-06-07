@@ -124,7 +124,8 @@ $(function() {
     });
 
     //Start Auto options code
-
+    $('.Times-of-India').hide();
+    $('.newspaperOptions').hide();
     var fieldisieditpage = document.getElementById("priceData");
     $('.e_rickshawOtions, .autorikshawOtions, .magazine, .newspaper').hide();
     if (fieldisieditpage) {
@@ -140,8 +141,16 @@ $(function() {
 
         var selectedPrintMediatypeEdit = $('#printmedia_type').find(':selected').attr('value');
         if (selectedPrintMediatypeEdit == 'newspaper') {
+            var selectedPrintMediaNameEdit = $('#newspaperlist').find(':selected').attr('value');
             $('.newspaper').addClass('selected');
             $('.newspaper').show();
+            if(selectedPrintMediaNameEdit === 'Times of India' || selectedPrintMediaNameEdit === 'Nav Bharat Times'){
+                $('.newspaperOptions').hide();
+                $('.Times-of-India').show();
+            }else{
+                $('.Times-of-India').hide();
+                $('.newspaperOptions').show();
+            }
         }
         if (selectedPrintMediatypeEdit == 'magazine') {
             $('.magazine').addClass('selected');
@@ -168,8 +177,9 @@ $(function() {
             }
         }
     });
+//End Auto options code
 //print media
-
+    
     $('#printmedia_type').on('change', function() {
         $('.selected').hide();
         $('.selected').removeClass('selected');
@@ -179,12 +189,64 @@ $(function() {
             msg = "Select Print Media Type";
             return msg;
         } else {
-             $('.'+selectedprintmediatype).addClass('selected');
-             $('.'+selectedprintmediatype).show();
+             if(selectedprintmediatype === 'magazine'){
+                $('.Times-of-India').hide();
+                $('.newspaperOptions').hide();
+                $('.'+selectedprintmediatype).addClass('selected');
+                $('.'+selectedprintmediatype).show();
+             }else{
+                $('.'+selectedprintmediatype).addClass('selected');
+                $('.'+selectedprintmediatype).show();
+                var selectedNewsPaper= $('#newspaperlist').find(':selected').attr('value');
+                if (typeof selectedNewsPaper === "undefined") {
+                    $('#newspaperlist').on('change', function() {
+                        selectedNewsPaper= $(this).find(':selected').attr('value');
+            
+                        if (typeof selectedNewsPaper === "undefined") {
+                            msg = "Select NewsPaper";
+                            return msg;
+                        } else {
+                            if(selectedNewsPaper === 'Times of India' || selectedNewsPaper === 'Nav Bharat Times'){
+                                $('.newspaperOptions').hide();
+                                $('.Times-of-India').show();
+                            }else{
+                                $('.Times-of-India').hide();
+                                $('.newspaperOptions').show();
+                            }
+                        }
+                    });
+                } else {
+                    if(selectedNewsPaper === 'Times of India' || selectedNewsPaper === 'Nav Bharat Times'){
+                        $('.newspaperOptions').hide();
+                        $('.Times-of-India').show();
+                    }else{
+                        $('.Times-of-India').hide();
+                        $('.newspaperOptions').show();
+                    }
+                }
+               
+             }
+             
+        }
+    });
+    $('#newspaperlist').on('change', function() {
+        
+        var selectedNewsPaper= $(this).find(':selected').attr('value');
+        
+        if (typeof selectedNewsPaper === "undefined") {
+            msg = "Select NewsPaper";
+            return msg;
+        } else {
+            if(selectedNewsPaper === 'Times of India' || selectedNewsPaper === 'Nav Bharat Times'){
+                $('.newspaperOptions').hide();
+                $('.Times-of-India').show();
+            }else{
+                $('.Times-of-India').hide();
+                $('.newspaperOptions').show();
+            }
         }
     });
     
-    //End Auto options code
     //Start Television options code
     var fieldisieditpage = document.getElementById("priceData");
     $('.newsoptions').hide();
@@ -1207,8 +1269,6 @@ function removeItemMegazine(name, genre) {
                     id: id,
                     price_key: inputname,
                     printmedia_type: genre,
-                    number_key: numberTimeMagezinePrints,
-                    //exposure_key: durationbuses,
                     displayoptions: JSON.stringify(fieldData)
                 }
             })
@@ -1216,11 +1276,11 @@ function removeItemMegazine(name, genre) {
                 console.log(msg);
             });
     }
-
     var deleteNode = document.getElementById(divId);
     deleteNode.remove();
     var deletenumNode = document.getElementById(divnumId);
-    deletenumNode.remove();    
+    deletenumNode.remove();
+     
 }
 
 function addDomToPriceOptionsNewspaper(name, printmedia_type){
@@ -1350,7 +1410,7 @@ function addDomToPriceOptionsNewspaper(name, printmedia_type){
 	    }
 
         // Color type
-        var colorType = {"yes":"YES", "no":"NO"};
+        var colorType = {"1":"YES", "0":"NO"};
         var labelColor = document.createElement('label');
         labelColor.setAttribute("for", newspaperColorName);
         labelColor.innerText = labelColorType;
@@ -1417,7 +1477,7 @@ function removeItemNewspaper(name, genre) {
     var divGenre = 'p' + newspaperGenreName;
     var divRate = 'p' + newspaperRateName;
     var divColor = 'p' + newspaperColorName;
-
+    var inputname = 'price_'+res;
     fieldData.splice(fieldData.indexOf(name), 1);
     if (fieldisi) {
         editfieldData.splice(editfieldData.indexOf(name), 1);
@@ -1432,8 +1492,6 @@ function removeItemNewspaper(name, genre) {
                     id: id,
                     price_key: inputname,
                     printmedia_type: genre,
-                    number_key: numberTimeMagezinePrints,
-                    //exposure_key: durationbuses,
                     displayoptions: JSON.stringify(fieldData)
                 }
             })
@@ -1454,6 +1512,226 @@ function removeItemNewspaper(name, genre) {
     deleteRate.remove();
     var deleteColor = document.getElementById(divColor);
     deleteColor.remove();    
+}
+
+function addDomToPriceOptionsMetro(name, metro_options){
+   
+    var chkExist = fieldData.indexOf(name);
+   
+    if (chkExist == -1) {
+        var labelUnittext = " Units : ";
+        var labelnumberoffacetext = " Number of " + name + " Face : ";
+        var labelDimensiontext = " Dimension : ";
+        var labelpricetext = " Price Per Month For "+ name +" Ad : ";
+        var labelPrintingPricetext = "Printing Charge For " + name + " Ad : ";
+        var labelTotalPricetext = "Total Price For " + name + " Ad : ";
+        
+        var iname = name.toLowerCase();
+        var res = iname.split(' ').join('_');
+        var inputunitname = "unit_" + res;
+        var inputnumberoffacename = "number_of_face_" + res;
+        var inputDimensionname = "dimension_" + res;
+        var inputPricename = "price_" + res;
+        var inputPrintingPriceName = "printing_price_" + res;
+        var inputTotalPriceName = "total_price_" + res;
+       
+        var priceElement = document.getElementById('pricing-options-step');
+
+        var divrowunit = document.createElement('div');
+        divrowunit.className = 'form-group';
+        divrowunit.id = 'p' + inputunitname;
+
+        var divrownumberofface = document.createElement('div');
+        divrownumberofface.className = 'form-group';
+        divrownumberofface.id = 'p' + inputnumberoffacename;
+
+        var divrowDimension = document.createElement('div');
+        divrowDimension.className = 'form-group';
+        divrowDimension.id = 'p' + inputDimensionname;
+
+        var divrowPrice = document.createElement('div');
+        divrowPrice.className = 'form-group';
+        divrowPrice.id = 'p' + inputPricename;
+
+        var divrowPrintingPrice = document.createElement('div');
+        divrowPrintingPrice.className = 'form-group';
+        divrowPrintingPrice.id = 'p' + inputPrintingPriceName;
+
+        var divrowTotalPrice = document.createElement('div');
+        divrowTotalPrice.className = 'form-group';
+        divrowTotalPrice.id = 'p' + inputTotalPriceName;
+
+        
+        //unit field
+        var labelUnit = document.createElement('label');
+        labelUnit.setAttribute("for", inputunitname);
+        labelUnit.innerText = labelUnittext;
+
+        var inputUnit = document.createElement("input"); //input element, text
+        inputUnit.setAttribute('type', "text");
+        inputUnit.setAttribute('name', inputunitname);
+        inputUnit.setAttribute('class', "form-control");
+        inputUnit.setAttribute('id', inputunitname);
+        inputUnit.setAttribute('required', 'required');
+        inputUnit.setAttribute('placeholder', 'unit eg: 3');
+
+        //face field
+        var labelnumberofface = document.createElement('label');
+        labelnumberofface.setAttribute("for", inputnumberoffacename);
+        labelnumberofface.innerText = labelnumberoffacetext;
+
+        var inputnumberofface = document.createElement("input"); //input element, text
+        inputnumberofface.setAttribute('type', "text");
+        inputnumberofface.setAttribute('name', inputnumberoffacename);
+        inputnumberofface.setAttribute('class', "form-control");
+        inputnumberofface.setAttribute('id', inputnumberoffacename);
+        inputnumberofface.setAttribute('required', 'required');
+        inputnumberofface.setAttribute('placeholder', 'No. of face eg: 2');
+
+        //dimension
+        var labelDimension = document.createElement('label');
+        labelDimension.setAttribute("for", inputDimensionname);
+        labelDimension.innerText = labelDimensiontext;
+
+        var inputDimension = document.createElement("input"); //input element, text
+        inputDimension.setAttribute('type', "text");
+        inputDimension.setAttribute('name', inputDimensionname);
+        inputDimension.setAttribute('class', "form-control");
+        inputDimension.setAttribute('id', inputDimensionname);
+        inputDimension.setAttribute('required', 'required');
+        inputDimension.setAttribute('placeholder', 'dimension eg: 20`X20`');
+
+        // price
+        var labelPrice = document.createElement('label');
+        labelPrice.setAttribute("for", inputPricename);
+        labelPrice.innerText = labelpricetext;
+
+        var inputPrice = document.createElement("input"); //input element, text
+        inputPrice.setAttribute('type', "text");
+        inputPrice.setAttribute('name', inputPricename);
+        inputPrice.setAttribute('class', "form-control");
+        inputPrice.setAttribute('id', inputPricename);
+        inputPrice.setAttribute('required', 'required');
+        inputPrice.setAttribute('placeholder', ' Price eg: 35000');
+
+
+        // printing charge
+        
+        var labelPrintingPrice = document.createElement('label');
+        labelPrintingPrice.setAttribute("for", inputPrintingPriceName);
+        labelPrintingPrice.innerText = labelPrintingPricetext;
+
+        var inputPrintingPrice = document.createElement("input"); //input element, text
+        inputPrintingPrice.setAttribute('type', "text");
+        inputPrintingPrice.setAttribute('name', inputPrintingPriceName);
+        inputPrintingPrice.setAttribute('class', "form-control");
+        inputPrintingPrice.setAttribute('id', inputPrintingPriceName);
+        inputPrintingPrice.setAttribute('required', 'required');
+        inputPrintingPrice.setAttribute('placeholder', 'printing price eg: 2000');
+
+        
+
+        // TotalPrice type
+      
+         var labelTotalPrice = document.createElement('label');
+        labelTotalPrice.setAttribute("for", inputTotalPriceName);
+        labelTotalPrice.innerText = labelTotalPricetext;
+
+        var inputTotalPrice = document.createElement("input"); //input element, text
+        inputTotalPrice.setAttribute('type', "text");
+        inputTotalPrice.setAttribute('name', inputTotalPriceName);
+        inputTotalPrice.setAttribute('class', "form-control");
+        inputTotalPrice.setAttribute('id', inputTotalPriceName);
+        inputTotalPrice.setAttribute('required', 'required');
+        inputTotalPrice.setAttribute('placeholder', 'dimension eg: 23000');
+
+        
+        
+
+
+        fieldData.push(name);
+        if (fieldisi) {
+            fieldisi.value = JSON.stringify(fieldData);
+        }
+        divrowunit.appendChild(labelUnit);
+        divrowunit.appendChild(inputUnit);
+        divrownumberofface.appendChild(labelnumberofface);
+        divrownumberofface.appendChild(inputnumberofface);
+        divrowDimension.appendChild(labelDimension);
+        divrowDimension.appendChild(inputDimension);
+        divrowPrice.appendChild(labelPrice);
+        divrowPrice.appendChild(inputPrice);
+        divrowPrintingPrice.appendChild(labelPrintingPrice);
+        divrowPrintingPrice.appendChild(inputPrintingPrice);
+        divrowTotalPrice.appendChild(labelTotalPrice);
+        divrowTotalPrice.appendChild(inputTotalPrice);
+        
+        priceElement.appendChild(divrowunit);
+        priceElement.appendChild(divrownumberofface);
+        priceElement.appendChild(divrowDimension);
+        priceElement.appendChild(divrowPrice);
+        priceElement.appendChild(divrowPrintingPrice);
+        priceElement.appendChild(divrowTotalPrice);
+        
+    } else {
+        removeItemMetro(name, metro_options);
+    }
+}
+
+function removeItemMetro(name, genre) {
+
+    var iname = name.toLowerCase();
+    var res = iname.split(' ').join('_');
+
+    var inputunitname = "unit_" + res;
+    var inputnumberoffacename = "number_of_face_" + res;
+    var inputDimensionname = "dimension_" + res;
+    var inputPricename = "price_" + res;
+    var inputPrintingPriceName = "printing_price_" + res;
+    var inputTotalPriceName = "total_price_" + res;
+
+    var divunit = 'p' + inputunitname;
+    var divnumberofface = 'p' + inputnumberoffacename;
+    var divDimension = 'p' + inputDimensionname;
+    var divPrice = 'p' + inputPricename;
+    var divPrintingPrice = 'p' + inputPrintingPriceName;
+    var divTotalPrice = 'p' + inputTotalPriceName;
+
+    fieldData.splice(fieldData.indexOf(name), 1);
+    if (fieldisi) {
+        editfieldData.splice(editfieldData.indexOf(name), 1);
+        var id = document.getElementById("uncheckID").value;
+        var tableName = document.getElementById("tablename").value;
+        var update_options = '';
+        fieldisi.value = JSON.stringify(fieldData);
+        $.ajax({
+                method: 'GET',
+                url: uncheckDeleteURL,
+                data: {
+                    id: id,
+                    price_key: inputname,
+                    printmedia_type: genre,
+                    number_key: numberTimeMagezinePrints,
+                    displayoptions: JSON.stringify(fieldData)
+                }
+            })
+            .done(function(msg) {
+                console.log(msg);
+            });
+    }
+
+    var deleteunit = document.getElementById(divunit);
+    deleteunit.remove();
+    var deletenumberofface = document.getElementById(divnumberofface);
+    deletenumberofface.remove();
+    var deleteDimension = document.getElementById(divDimension);
+    deleteDimension.remove();
+    var deletePrice = document.getElementById(divPrice);
+    deletePrice.remove();
+    var deletePrintingPrice = document.getElementById(divPrintingPrice);
+    deletePrintingPrice.remove();
+    var deleteTotalPrice = document.getElementById(divTotalPrice);
+    deleteTotalPrice.remove();    
 }
 
 /* 

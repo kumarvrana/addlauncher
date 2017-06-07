@@ -282,4 +282,71 @@ class Cart
             
        }
 
+    public function addorRemovePrintmedia($item, $id, $printmedia, $flag)
+    { 
+
+        $adPlusId = $printmedia.'_'.$item['price_key'].'_'.$id;
+        if($printmedia === 'magazine'){
+            $mainprice = $item['price_value'];
+        }else{
+            $mainprice = $item['total_price'] * 16;
+        }
+        $storedItem = ['qty' => 0, 'price' => $mainprice, 'width' => 4, 'height' => 4,'item' => $item];
+        if($this->items){
+            if(array_key_exists($adPlusId, $this->items)){
+                    if($printmedia === 'magazine'){
+                        $itemprice = $this->items[$adPlusId]['item']['price_value'];
+                    }else{
+                        $itemprice = $this->items[$adPlusId]['item']['total_price'] * $this->items[$adPlusId]['item']['width'] * $this->items[$adPlusId]['item']['height'];
+                    }
+                    $this->items[$adPlusId]['qty']--;
+                    $this->items[$adPlusId]['price'] -= $itemprice;
+                    $this->totalQty--;
+                    $this->totalPrice -= $itemprice;
+                    unset($this->items[$adPlusId]);
+                return 'removed';
+            }
+        }
+        $storedItem['qty']++;
+        $storedItem['price'] = $mainprice * $storedItem['qty'];
+        $this->items[$adPlusId] = $storedItem;
+        $this->totalQty++;
+        $this->totalPrice += $mainprice;
+        
+        return 'added';  
+    }
+
+    public function removePrintmediaCartItem($id, $printMedia)
+    {
+        if($this->items){
+            if(array_key_exists($id, $this->items)){
+                $mediaprice = ($printMedia === 'magazine') ? $this->items[$id]['item']['price_value'] : $mediaprice = $this->items[$id]['item']['total_price'];
+                $this->totalQty--;
+                $this->totalPrice -= $mediaprice * $this->items[$id]['qty'];
+                $this->items[$id]['qty']--;
+                $this->items[$id]['price'] -= $mediaprice;
+                unset($this->items[$id]);
+            
+            }
+        }
+    }
+
+        public function UpdatePrintmediaCartQty($item, $itemskey, $count, $duration, $printMedia)
+        {
+            if($printMedia === 'magazine'){
+                $mediaprice = $this->items[$itemskey]['item']['price_value'];
+            }else{
+                $mediaprice = $this->items[$itemskey]['item']['total_price'];
+            }
+            $price = 0;
+            $this->items[$itemskey]['qty'] = $count;
+            $this->items[$itemskey]['duration'] = $duration;
+            $this->items[$itemskey]['price'] = $mediaprice * $count;
+
+            foreach($this->items as $itm){
+                $price += $itm['price'];
+            }
+            $this->totalPrice = $price;
+            
+       }
 }

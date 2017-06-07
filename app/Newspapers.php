@@ -7,19 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Newspapers extends Model
 {
      protected $fillable = [
-        'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'printmedia_type', 'printmedia_name', 'genre', 'circulations', 'language', 'magazine_options', 'general_options', 'other_options', 'classified_options', 'pricing_options','discount','reference_mail'
+        'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'printmedia_type', 'printmedia_name', 'genre', 'circulations', 'language', 'magazine_options', 'general_options', 'discount','reference_mail'
     ];
 
-    public function cinemasprice()
+    public function newpaperprice()
     {
-        return $this->hasMany('App\Newspapersprice', 'newspapers_id');
+        return $this->hasMany('App\Newspapersprice', 'newspaper_id');
     }
 
+    public function magazineprice()
+    {
+        return $this->hasMany('App\Magazineprice', 'magazine_id');
+    }
 
     public function getUniqueSlug($title)
     {
         $slug = str_slug($title);
-        $slugCount = count(Cinemas::whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$'")->get());
+        $slugCount = count(Newspapers::whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$'")->get());
         return ($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug;
     }
 

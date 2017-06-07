@@ -89,6 +89,77 @@ $(function() {
         
     });
 
+    $("#adl-cart-table").on("change", ".change-cart-newspaper", function() {
+        $(".loader").show();
+        $(".error").hide();
+
+        var index = $(this).attr("data-index");
+        var itemTD = $(this).attr("data-itemkey");
+        var id = $(this).attr("id");
+        var self = $("#adl-cart-table");
+        var maxValue = Number($(this).val());
+        switch(id){
+            case 'quantity-'+index:
+                var cCost = maxValue;
+                var cWidth = Number($('#width-'+index+' option:selected').val());
+                var cHeight = Number($('#height-'+index+' option:selected').val());
+                var dbValue = $("#quantity-hidden-" + index).val();
+                if (maxValue > dbValue) {
+                    $(".quantity-error-" + index).show();
+                    $(".loader").hide();
+                    return;
+                }
+            break;
+            case 'width-'+index:
+                var cWidth = maxValue;
+                var cCost = Number($('#quantity-'+index+' option:selected').val());
+                var cHeight = Number($('#height-'+index+' option:selected').val());
+               
+            break;
+            case 'height-'+index:
+                var cHeight = maxValue;
+                var cCost = Number($('#width-'+index+' option:selected').val());
+                var cWidth = Number($('#height-'+index+' option:selected').val());
+            break;
+
+
+
+        }
+        
+        if(isNaN(cWidth) ||  isNaN(cHeight) || isNaN(cCost)){
+            cHeight = 4;
+            cWidth = 4;
+            cCost = 1;
+        }
+      
+       let working = false;
+        if (working) {
+            xhr.abort();
+        }
+        working = true;
+
+        xhr= $.ajax({
+        method: 'GET',
+        url: updateCartUrl,
+        data: {
+            item: itemTD,
+            count: cCost,
+            duration: cDuration,
+        }
+        })
+            .done(function(response) {
+                var subtotalOutput = "<h4>Rs. " + response.subtotal + "</h4>";
+                var grandTotal = "Rs. " + response.total;
+                $('.subtotal-' + index).html(subtotalOutput);
+                $('.cart-total').text(grandTotal);
+                $(".loader").hide();
+                working = false;
+
+            });
+
+        
+    });
+
     $("#addClass").click(function() {
         $('#qnimate').addClass('popup-box-on');
     });

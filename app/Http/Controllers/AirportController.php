@@ -334,7 +334,7 @@ class AirportController extends Controller
        <div class="col-md-3 col-sm-3 "> 
         <div class="pro-item"> 
             <div class=" cat-opt-img "> <img src="<?= asset('images/airports/'.$searchAirport->airport->image) ?>"> </div>
-            <p class="font-1"><?= <?= ucwords(str_replace('_', ' ', $searchAirport->area)) ?> | <?= $searchAirport->airport->state ?></p>
+            <p class="font-1"><?= ucwords(str_replace('_', ' ', $searchAirport->area)) ?> | <?= $searchAirport->airport->state ?></p>
             <div class="row">
                 <div class="col-md-6">
                     <p class="font-3"> <?= ucwords(str_replace('_', ' ', $searchAirport->displayoption))?> Ad <br>for <br> 1 month</p>

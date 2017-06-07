@@ -1,7 +1,7 @@
 @extends('backend.layouts.backend-master')
 
 @section('title')
-   Add Newspaper | Ad Launcher
+   Add Print Media | Ad Launcher
 @endsection
 
 @section('content')
@@ -147,12 +147,19 @@
                         @endforeach
                    </div> 
                     
-                    <div class="form-group newspaper">
+                    <div class="form-group newspaperOptions">
                         <label for="newspaperdisplay">Newspaper Display Options: </label>
                         @foreach($newspaper_options as $key => $value)
                         <label class='checkbox-inline'><input data-label='Newspaper Ad Display Options' onclick="addDomToPriceOptionsNewspaper('{{$value}}', 'newspaper')" name='newspaperdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
                         @endforeach
-                    </div> 
+                    </div>
+
+                    <div class="form-group Times-of-India">
+                        <label for="newspaperdisplay">Newspaper Display Options: </label>
+                        @foreach($toiOptions as $key => $value)
+                        <label class='checkbox-inline'><input data-label='Newspaper Ad Display Options' onclick="addDomToPriceOptionsNewspaper('{{$value}}', 'newspaper')" name='newspaperdisplay[]' type='checkbox' value={{$key}}>{{$value}}</label>
+                        @endforeach
+                    </div>  
                    
                     
                     <div class="form-group">
@@ -162,15 +169,15 @@
                     </div>
                 </div>
 
-                <div class="step-header">Pricing Options</div>
-                    <div id="light-content" class="alert alert-info">
-                                You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
-                        </div>
-                    <div id="pricing-options-step">
-                        
+        <div class="step-header">Pricing Options</div>
+                <div id="light-content" class="alert alert-info">
+                            You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                     </div>
+                <div id="pricing-options-step">
+                    
+                </div>
 
-            </div>
+        </div>
         
         <div class="step">
             <div class="step-header">Image and References Options</div>

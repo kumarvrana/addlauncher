@@ -9,7 +9,8 @@
           <h1 class="page-header">Newspaper ads</h1>
     <div class="row">
         <div class="col-md-3">
-            <a href="{{route('dashboard.getNewspaperForm')}}" type="button" class="btn btn-success">Add New Newspaper Ad <i class="fa fa-plus" aria-hidden="true"></i>
+            <a href="{{route('dashboard.getNewspaperForm')}}" type="button" class="btn btn-success">Add Print Media
+            <i class="fa fa-plus" aria-hidden="true"></i>
 </a>
         </div>
     </div>
@@ -35,7 +36,7 @@
             <tr>
                 <th>S.NO</th>
                 <th>Name</th>
-                <th>Description</th>
+                <th>Print Media</th>
                 <th>Location</th>
                 <th>City</th>
                 <th>State</th>
@@ -51,7 +52,7 @@
             
                 <td>{{$loop->iteration}}</td>
                 <td>{{$newspaperad->title}}</td>
-                <td>{{substr(strip_tags($newspaperad->description), 0, 100)}}
+                <td>{{ucwords($newspaperad->printmedia_type)}}
                 <td>{{$newspaperad->location}}</td>
                 <td>{{$newspaperad->city}}</td>
                 <td>{{$newspaperad->state}}</td>
@@ -78,9 +79,9 @@
                 <td>{{$status}}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="...">
-                        <a type="button" href="{{route('dashboard.editnewspapersad', ['ID' => $newspaperad->id])}}" class="btn btn-primary">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        <a type="button" href="{{route('dashboard.editnewspapersad', ['ID' => $newspaperad->id, 'print_type' => $newspaperad->printmedia_type])}}" class="btn btn-primary">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
-                        <a type="button" type="button" href="{{route('dashboard.deleteNewspaperad', ['newspaperadID' => $newspaperad->id])}}" class="btn btn-danger">Delete <i class="fa fa-trash" aria-hidden="true"></i>
+                        <a type="button" type="button" href="{{route('dashboard.deleteNewspaperad', ['newspaperadID' => $newspaperad->id ])}}" class="btn btn-danger">Delete <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                      </div>
                 </td>

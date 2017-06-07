@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Metros extends Model
 {
      protected $fillable = [
-        'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'display_options', 'light_option', 'metronumber','discount','reference_mail'
+        'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'display_options', 'light_option', 'media','metro_line','discount','slug','reference_mail'
     ];
 
     public function metrosprice()
