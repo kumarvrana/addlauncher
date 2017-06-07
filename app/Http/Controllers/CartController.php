@@ -92,20 +92,22 @@ class CartController extends Controller
         if(!Sentinel::check()){
            return redirect()->route('user.signin');
         }
+        
         $itemId = $_REQUEST['item'];
         $count = $_REQUEST['count'];
         $duration = $_REQUEST['duration'];
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $model = explode('_', $itemId);
-        if($model[0] == 'televisions')
+        if($model[0] == 'televisions'){
             $cart->UpdateTelevisionCartQty((array)$cart, $itemId, $count, $duration);
-        elseif ($model[0] == 'airports')
+        }elseif ($model[0] == 'airports'){
             $cart->UpdateAirportCartQty((array)$cart, $itemId, $count, $duration);
-        elseif ($model[0] == 'magazine' ||  $model[0] == 'newspaper')
-            $cart->UpdatePrintmediaCartQty((array)$cart, $itemId, $count, $duration, $model[0]);
-        else
+        }elseif ($model[0] == 'magazine' ||  $model[0] == 'newspaper'){
+            $cart->UpdatePrintmediaCartQty((array)$cart, $itemId, $_REQUEST, $model[0]);
+        }else{
             $cart->UpdateCartQty((array)$cart, $itemId, $count, $duration);
+        }
 
         Session::put('cart', $cart);
         $cart = (array)$cart;

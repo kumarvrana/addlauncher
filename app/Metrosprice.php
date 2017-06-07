@@ -18,6 +18,7 @@ class Metrosprice extends Model
 
    public static function getMetroByFilter($metroline)
     {
+        dd($metroline);
          $metroline1 = '%'.$metroline.'%';
         
         $metropriceOptions = static::where('metroline', 'LIKE', $metroline1)

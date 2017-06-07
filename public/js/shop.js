@@ -7,86 +7,76 @@ $(function() {
         $("#register-model").modal();
 
     });*/
-
     $("#adl-cart-table").on("change", ".change-cart", function() {
-        $(".loader").show();
 
-        $(".error").hide();
+            $(".loader").show();
+            $(".error").hide();
 
-        var index = $(this).attr("data-index");
-        var itemTD = $(this).attr("data-itemkey");
-        var id = $(this).attr("id");
-        var self = $("#adl-cart-table");
-        var maxValue = Number($(this).val());
-        switch(id){
-            case 'quantity-'+index:
-                var length = 'quantity';
-                var cCost = maxValue;
-                var cDuration = Number($('#duration-'+index+' option:selected').val());
-                var dbValue = $("#quantity-hidden-" + index).val();
-                if (maxValue > dbValue) {
-                    $(".quantity-error-" + index).show();
-                    $(".loader").hide();
-                    return;
-                    
+            var index = $(this).attr("data-index");
+            var itemTD = $(this).attr("data-itemkey");
+            var id = $(this).attr("id");
+            var self = $("#adl-cart-table");
+            var maxValue = Number($(this).val());
 
-                }
-            break;
-            case 'length-'+index:
-                var length = 'length';
-                var cCost = maxValue;
-                var cDuration = Number($('#duration-'+index+' option:selected').val());
-               
-            break;
-            case 'duration-'+index:
-                var selectID1 = $(this).closest('td').prev('td');
-	            var prevSelectName = selectID1.find( ".change-cart" ).attr( "name" );
-                if(prevSelectName == 'length'){
-                    var cCost = Number($('#length-'+index).val());
-                }else{
-                    var cCost = Number($('#quantity-'+index).val());
-                }
-                var cDuration = maxValue;
-              
-            break;
+            switch(id){
+                case 'quantity-'+index:
+                    var length = 'quantity';
+                    var cCost = maxValue;
+                    var cDuration = Number($('#duration-'+index+' option:selected').val());
+                    var dbValue = $("#quantity-hidden-" + index).val();
+                    if (maxValue > dbValue) {
+                        $(".quantity-error-" + index).show();
+                        $(".loader").hide();
+                        return;
+                    }
+                break;
+                case 'length-'+index:
+                    var length = 'length';
+                    var cCost = maxValue;
+                    var cDuration = Number($('#duration-'+index+' option:selected').val());                
+                break;
+                case 'duration-'+index:
+                    var selectID1 = $(this).closest('td').prev('td');
+                    var prevSelectName = selectID1.find( ".change-cart" ).attr( "name" );
+                    if(prevSelectName == 'length'){
+                        var cCost = Number($('#length-'+index).val());
+                    }else{
+                        var cCost = Number($('#quantity-'+index).val());
+                    }
+                    var cDuration = maxValue;
+                break;
+            }
+            
+            if(isNaN(cDuration)){
+                cDuration = 1;
+            }
+            if(isNaN(cCost)){
+                cCost = 1;
+            }
+            
+        let working = false;
+        if (working) {
+                xhr.abort();
+            }
+            working = true;
 
-
-
-        }
-        
-        if(isNaN(cDuration)){
-            cDuration = 1;
-        }
-        if(isNaN(cCost)){
-            cCost = 1;
-        }
-        
-       let working = false;
-            if (working) {
-                    xhr.abort();
-                }
-                working = true;
-
-                xhr= $.ajax({
-                method: 'GET',
-                url: updateCartUrl,
+            xhr= $.ajax({method: 'GET',url: updateCartUrl,
                 data: {
                     item: itemTD,
                     count: cCost,
                     duration: cDuration,
                 }
-            })
-            .done(function(response) {
+            }).done(function(response) {
                 var subtotalOutput = "<h4>Rs. " + response.subtotal + "</h4>";
                 var grandTotal = "Rs. " + response.total;
                 $('.subtotal-' + index).html(subtotalOutput);
                 $('.cart-total').text(grandTotal);
+                $('.cartTotal').text(grandTotal);
                 $(".loader").hide();
                 working = false;
+        });
 
-            });
-
-        
+            
     });
 
     $("#adl-cart-table").on("change", ".change-cart-newspaper", function() {
@@ -112,52 +102,47 @@ $(function() {
             break;
             case 'width-'+index:
                 var cWidth = maxValue;
-                var cCost = Number($('#quantity-'+index+' option:selected').val());
+                var cCost = Number($('#quantity-'+index).val());
                 var cHeight = Number($('#height-'+index+' option:selected').val());
-               
             break;
             case 'height-'+index:
                 var cHeight = maxValue;
-                var cCost = Number($('#width-'+index+' option:selected').val());
-                var cWidth = Number($('#height-'+index+' option:selected').val());
+                var cCost = Number($('#quantity-'+index).val());
+                var cWidth = Number($('#width-'+index+' option:selected').val());
             break;
+        }           
 
-
-
-        }
-        
         if(isNaN(cWidth) ||  isNaN(cHeight) || isNaN(cCost)){
             cHeight = 4;
             cWidth = 4;
             cCost = 1;
         }
-      
-       let working = false;
+
+        let working = false;
         if (working) {
             xhr.abort();
         }
         working = true;
 
         xhr= $.ajax({
-        method: 'GET',
-        url: updateCartUrl,
-        data: {
-            item: itemTD,
-            count: cCost,
-            duration: cDuration,
-        }
-        })
-            .done(function(response) {
-                var subtotalOutput = "<h4>Rs. " + response.subtotal + "</h4>";
-                var grandTotal = "Rs. " + response.total;
-                $('.subtotal-' + index).html(subtotalOutput);
-                $('.cart-total').text(grandTotal);
-                $(".loader").hide();
-                working = false;
+            method: 'GET',
+            url: updateCartUrl,
+            data: {
+                item: itemTD,
+                count: cCost,
+                width: cWidth,
+                height: cHeight,
+            }
+        }).done(function(response) {
+            var subtotalOutput = "<h4>Rs. " + response.subtotal + "</h4>";
+            var grandTotal = "Rs. " + response.total;
+            $('.subtotal-' + index).html(subtotalOutput);
+            $('.cart-total').text(grandTotal);
+            $('.cartTotal').text(grandTotal);
+            $(".loader").hide();
+            working = false;
 
             });
-
-        
     });
 
     $("#addClass").click(function() {

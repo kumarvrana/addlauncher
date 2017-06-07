@@ -35,15 +35,13 @@
                         <div class="loader" style="display:none"></div>
                         <div class="data-box" > <!-- row repeater starts here -->
                     <div class="row" id="table-results">
-
                     @foreach($metro_line as $key => $value)
-                     
                     @PHP
                         $image = $key.".jpg";
                     @ENDPHP
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="owl-item active">
-                        <a href="{{ route('frontend.metrosingle', ['metro_line' => $key]) }}">
+                        <a href="{{ route('frontend.metrosingle', ['metroline' => $key]) }}">
                             <div class="single-product">
                                 <div class="product-img">
                                         <img class="second-img {{$key}}" src="{{asset('images/metros/'.$image)}}" alt="{{$key}}">

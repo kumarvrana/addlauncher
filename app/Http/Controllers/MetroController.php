@@ -44,11 +44,13 @@ class MetroController extends Controller
     }
 
        
-    public function getfrontByLine($metroline)
+    public function getfrontByLine($id)
     {
-        $metros = new Metrosprice();
-        $metros = $metros->getMetroByFilter($metroline);
-        return view('frontend-mediatype.metros.metro-single', ['metros' => $metros,'metro_line' => $this->metro_line]);
+
+        $metros = Metrosprice::where('metros_id', $id)->get();
+        // $metros = $metros->getMetroByFilter($metroline);
+        dd($metros);
+        return view('frontend-mediatype.metros.metro-single', ['metros' => $metros,'metroline' => $metroline]);
     
     }
     

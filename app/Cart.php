@@ -288,10 +288,12 @@ class Cart
         $adPlusId = $printmedia.'_'.$item['price_key'].'_'.$id;
         if($printmedia === 'magazine'){
             $mainprice = $item['price_value'];
+            $storedItem = ['qty' => 0, 'price' => $mainprice, 'duration'=> 0,'item' => $item];
         }else{
             $mainprice = $item['total_price'] * 16;
+            $storedItem = ['qty' => 0, 'price' => $mainprice, 'width' => 4, 'height' => 4,'item' => $item];
         }
-        $storedItem = ['qty' => 0, 'price' => $mainprice, 'width' => 4, 'height' => 4,'item' => $item];
+        
         if($this->items){
             if(array_key_exists($adPlusId, $this->items)){
                     if($printmedia === 'magazine'){
@@ -322,27 +324,37 @@ class Cart
             if(array_key_exists($id, $this->items)){
                 $mediaprice = ($printMedia === 'magazine') ? $this->items[$id]['item']['price_value'] : $mediaprice = $this->items[$id]['item']['total_price'];
                 $this->totalQty--;
-                $this->totalPrice -= $mediaprice * $this->items[$id]['qty'];
                 $this->items[$id]['qty']--;
-                $this->items[$id]['price'] -= $mediaprice;
+                if($printMedia === 'magazine'){
+                    $this->totalPrice -= $mediaprice;
+                    $this->items[$id]['price'] -= $mediaprice;
+                }else{
+                    $this->totalPrice -= $mediaprice * $this->items[$id]['qty'] * $this->items[$id]['width'] * $this->items[$id]['height'];
+                    $this->items[$id]['price'] -= $mediaprice * $this->items[$id]['qty'] * $this->items[$id]['width'] * $this->items[$id]['height'];
+                }
                 unset($this->items[$id]);
-            
             }
         }
     }
 
-        public function UpdatePrintmediaCartQty($item, $itemskey, $count, $duration, $printMedia)
+        public function UpdatePrintmediaCartQty($item, $itemskey, $parameter, $printMedia)
         {
+            $count = $parameter['count'];
             if($printMedia === 'magazine'){
+                $duration = $parameter['duration'];
                 $mediaprice = $this->items[$itemskey]['item']['price_value'];
+                $this->items[$itemskey]['duration'] = $duration;
+                $this->items[$itemskey]['price'] = $mediaprice * $count;
             }else{
+                $width = $parameter['width'];
+                $height = $parameter['height'];
                 $mediaprice = $this->items[$itemskey]['item']['total_price'];
+                $this->items[$itemskey]['width'] = $width;
+                $this->items[$itemskey]['height'] = $height;
+                $this->items[$itemskey]['price'] = $mediaprice * $count * $width * $height;
             }
-            $price = 0;
             $this->items[$itemskey]['qty'] = $count;
-            $this->items[$itemskey]['duration'] = $duration;
-            $this->items[$itemskey]['price'] = $mediaprice * $count;
-
+            $price = 0;
             foreach($this->items as $itm){
                 $price += $itm['price'];
             }

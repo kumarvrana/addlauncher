@@ -46,36 +46,37 @@
 							@PHP
 								$key = array_search($product, $products);
 								$imagefolder = explode('_', $key);
-								
+								$model = $imagefolder[0];
 								if($imagefolder[1] == 'tricycle'){
 									$priceValue = $product['item']['price'];
 									$subTitle = ucfirst($imagefolder[1]);
 
-								}elseif($imagefolder[0] == 'airports'){
+								}elseif($model == 'airports'){
 									$priceValue = $product['item']['optionprice'];
 									$subTitle = ucfirst($imagefolder[1]);
 
-								}elseif($imagefolder[0] == 'metros'){
+								}elseif($model == 'metros'){
 									$priceValue = $product['item']['totalprice'];
 									$subTitle = ucfirst($imagefolder[1]);
-								}elseif($imagefolder[0] == 'newspaper'){
+								}elseif($model == 'newspaper'){
 									$priceValue = $product['item']['total_price'];
 									$subTitle = ucfirst(str_replace('_', ' ', substr($product['item']['price_key'], 6)));
-								}elseif($imagefolder[0] == 'magazine'){
+								}elseif($model == 'magazine'){
 									$priceValue = $product['item']['price_value'];
 									$subTitle = ucfirst(str_replace('_', ' ', substr($product['item']['price_key'], 6)));
 								}else{
-									$priceKey = ($imagefolder[0] == 'televisions') ? $product['item']['rate_key'] : $product['item']['price_key'];
-									$priceValue = ($imagefolder[0] == 'televisions') ? $product['item']['rate_value'] : $product['item']['price_value'];
-									$substrNumber = ($imagefolder[0] == 'televisions') ? 5 : 6;
+									$priceKey = ($model == 'televisions') ? $product['item']['rate_key'] : $product['item']['price_key'];
+									$priceValue = ($model == 'televisions') ? $product['item']['rate_value'] : $product['item']['price_value'];
+									$substrNumber = ($model == 'televisions') ? 5 : 6;
 									$subTitle = ucwords(str_replace('_', ' ', substr($priceKey, $substrNumber)));
-									if($imagefolder[0] == 'billboards') $imagefolder[0] = 'outdooradvertising';
+									if($model == 'billboards') $model = 'outdooradvertising';
 								}
-
-							
+								$newpaperUnits = ($model == 'newspaper') ? 'cm sq' : '';
+								$newpaperAreaUnits = ($model == 'newspaper') ? '4 X 4 cm sq' : '';
+								$folder = ($model == 'newspaper' || $model == 'magazine') ? 'newspapers' : $model;
 							@ENDPHP
 							<td data-th="Image" class="im">
-									<img src="{{asset('images/'.$imagefolder[0].'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{$subTitle}}" class="img-responsive"/>
+									<img src="{{asset('images/'.$folder.'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{$subTitle}}" class="img-responsive"/>
 							</td>
 							
                         	<td data-th="Product" class="pn">
@@ -88,9 +89,9 @@
 									</div>
 								</div>
 							</td>
-							<td data-th="Price" class="pr">Rs.{{$priceValue}}</td>
+							<td data-th="Price" class="pr">Rs.{{$priceValue}} {{$newpaperUnits}}</td>
 							
-							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}}</h4></td>
+							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}} <br>{{$newpaperAreaUnits}}</h4></td>
 							<td class="actions rm" data-th="">
 							
 								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								

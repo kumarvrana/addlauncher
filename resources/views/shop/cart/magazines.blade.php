@@ -9,8 +9,8 @@
     </td>
     <td data-th="Quantity" class="qt">
         <label> Number of Inserts </label>
-        <input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="{{$product['item']['number_value']}}" value="{{$product['qty']}}"><span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is {{$product['item']['number_value']}}</span>
-        <input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="{{$product['item']['number_value']}}">
+        <input type="number" id="quantity-{{$j}}" data-index="{{$j}}" data-itemkey="{{$key}}" name="quantity" class="form-control text-center change-cart" min="1" max="12" value="{{$product['qty']}}"><span class="error quantity-error-{{$j}}" style="display:none;color:red;">Max Limit Is 12</span>
+        <input type="hidden" id="quantity-hidden-{{$j}}" name="quantity-hidden" value="12">
     </td>
     <td data-th="duration" class="duration-hidden-">
         <label> Edition For Month </label>
@@ -18,18 +18,12 @@
             <option value="" disabled>--Edition Month--</option>
             @PHP
            
-                for($i=1,$j=0;$i<=12;$i++,$j++) {
-                    if($i==1)
-                       echo "<option value=".date('n').">".date('F')."</option>"; 
-                    else{
-                        if($i==$product['duration']){
-                            echo "<option  Selected value=".date('n', strtotime("+$j month")).">".date('F', strtotime("+$j month"))."</option>";
-                        }else{
-                            echo "<option value=".date('n', strtotime("+$j month")).">".date('F', strtotime("+$j month"))."</option>";
-                        } 
-                        
-                    }
-                    
+                for($i=1,$ym=1;$i<=12,$ym<=12;$i++,$ym++) {
+                    if($i==$product['duration']){
+                        echo "<option  Selected value=".date('n', strtotime("+$ym month")).">".date('Y F', strtotime("+$ym month"))."</option>";
+                    }else{
+                        echo "<option value=".date('n', strtotime("+$ym month")).">".date('Y F', strtotime("+$ym month"))."</option>";
+                    } 
                 }
 
             @ENDPHP

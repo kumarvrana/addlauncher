@@ -969,7 +969,7 @@ Route::get('/media/metros', [
 'uses' => 'MetroController@getfrontendAllMetroads',
 'as' => 'frontend.getallmetros'
 ]);
-Route::get('/media/metro/{metroline}', [
+Route::get('/media/metro/{id}', [
 'uses' => 'MetroController@getfrontByLine',
 'as' => 'frontend.metrosingle'
 ]);

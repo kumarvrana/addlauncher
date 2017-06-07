@@ -13,6 +13,7 @@ use Image;
 use Illuminate\Support\Facades\File;
 use App\cart;
 use App\Order;
+use Sentinel;
 
 
 class NewspaperController extends Controller
