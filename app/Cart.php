@@ -361,4 +361,65 @@ class Cart
             $this->totalPrice = $price;
             
        }
+
+       public function addorRemoveMetro($item, $id, $model)
+    {   
+            
+        $adPlusId = $model.'_'.$item['price_key'].'_'.$id;
+        $storedItem = ['qty' => 0, 'price' => $item['totalprice'], 'duration' => 0, 'item' => $item];
+        if($this->items){
+            if(array_key_exists($adPlusId, $this->items)){
+                    $this->items[$adPlusId]['qty']--;
+                    $this->items[$adPlusId]['price'] -= $this->items[$adPlusId]['item']['totalprice'];
+                    $this->totalQty--;
+                    $this->totalPrice -= $this->items[$adPlusId]['item']['totalprice'];
+                    unset($this->items[$adPlusId]);
+                return 'removed';
+            }
+        }
+        $storedItem['qty']++;
+        $storedItem['price'] = $item['totalprice'] * $storedItem['qty'];
+        $this->items[$adPlusId] = $storedItem;
+        $this->totalQty++;
+        $this->totalPrice += $item['totalprice'];
+        
+        return 'added';  
+    }
+
+    public function removeMetroCartItem($id)
+        {
+            if($this->items){
+                if(array_key_exists($id, $this->items)){
+                    $checkKey = explode('_', $id);
+                    $this->totalQty--;
+                    if($this->items[$id]['duration'] > 0){
+                        $this->totalPrice -= $this->items[$id]['item']['totalprice'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];    
+                    }else{
+                        $this->totalPrice -= $this->items[$id]['item']['totalprice'] * $this->items[$id]['qty'];
+                    }
+
+                    $this->items[$id]['qty']--;
+                    $this->items[$id]['price'] -= $this->items[$id]['item']['totalprice'];
+                    unset($this->items[$id]);
+                
+                }
+            }
+        }
+
+    public function UpdateMetroCartQty($item, $itemskey, $count, $duration)
+    {
+        $checkKey = explode('_', $itemskey);
+            
+           $price = 0;
+            $this->items[$itemskey]['qty'] = $count;
+            $this->items[$itemskey]['duration'] = $duration;
+            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['totalprice'] * $count * $duration;
+
+            foreach($this->items as $itm){
+                $price += $itm['price'];
+            
+            }
+            $this->totalPrice = $price;
+       
+   }    
 }

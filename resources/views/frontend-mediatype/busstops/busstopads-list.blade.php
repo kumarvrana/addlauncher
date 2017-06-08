@@ -29,8 +29,9 @@
                 <div class="ad-sec">  
                 <div class="loader" style="display:none"></div>
                 <div class="data-box" > <!-- row repeater starts here -->
-                <div class="row" id="table-results">    
-             @foreach( $products->chunk(3) as $productchunk)
+                <div class="row" id="table-results">
+
+             @foreach( $products->chunk(3) as $productchunk) 
                 @foreach( $productchunk as $product)
                        @PHP
                        $status = $product->status;

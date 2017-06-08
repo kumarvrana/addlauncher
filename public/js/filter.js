@@ -54,6 +54,17 @@ app.controller('MainCtrl', function ($scope, $attrs, $rootScope, $timeout, $moda
                 }
             };
         break;
+        case 'metro-nng':
+            $scope.minRangeSlider = {
+                minValue: 0,
+                maxValue: 50000,
+                options: {
+                    floor: 0,
+                    ceil: 50000,
+                    step: 1000
+                }
+            };
+        break;
 
     }
     
@@ -108,7 +119,7 @@ app.controller('MainCtrl', function ($scope, $attrs, $rootScope, $timeout, $moda
                 filterURL = cinemaFilterURL;
                 dataFilter = '#'+checkModel;
             break;
-            case 'metro':
+            case 'metro-filter':
                 filterURL = metroFilterURL;
                 dataFilter = '#'+checkModel;
             break;

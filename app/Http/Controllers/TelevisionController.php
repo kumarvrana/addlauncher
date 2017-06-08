@@ -298,7 +298,7 @@ public function __construct()
                                     ['rate_key', '=', $ratekey],
                                 ])->count();
         if($count < 1){
-            $this->addTelevisionPrice($id, $timekey, $timevalue, $ratekey, $ratevalue, $exposurekey, $exposurevalue, $type);
+            $this->addTelevisionPrice($id, $ratekey, $ratevalue, $timekey, $timevalue, $exposurekey, $exposurevalue, $type);
         }else{
             $update = Televisionsprice::where([
                                     ['television_id', '=', $id],

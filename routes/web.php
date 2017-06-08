@@ -969,7 +969,7 @@ Route::get('/media/metros', [
 'uses' => 'MetroController@getfrontendAllMetroads',
 'as' => 'frontend.getallmetros'
 ]);
-Route::get('/media/metro/{id}', [
+Route::get('/media/metro/{line}', [
 'uses' => 'MetroController@getfrontByLine',
 'as' => 'frontend.metrosingle'
 ]);
@@ -984,9 +984,19 @@ Route::get('/media/metro/add-to-cart/{id}/{variation}', [
 'uses' => 'MetroController@getAddToCart',
 'as' => 'metro.addtocart'
 ]);
+
+Route::get('/media/metro/add-to-cartBySearch/{id}/{variation}/{fileroption}', [
+'uses' => 'MetroController@getAddToCartBySearch',
+'as' => 'metro.addtocartAfterSearch'
+]);
+
 Route::get('/media/metro/remove-from-cart/{id}/{variation}', [
 'uses' => 'MetroController@getRemoveFromCart',
 'as' => 'metro.removefromcart'
+]);
+Route::get('/metro/filter/',[
+'uses' => 'MetroController@getFilterMetroAds',
+'as' => 'frontend.getFilterMetroAds'
 ]);
 
 // metro frontend ends

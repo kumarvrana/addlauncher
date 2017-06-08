@@ -40,6 +40,7 @@ class Televisionsprice extends Model
     {
         $minpriceFilter = (!empty($filterOption['minpricerange'])) ? $filterOption['minpricerange'] : 0;
         $maxpriceFilter = (!empty($filterOption['maxpricerange'])) ? $filterOption['maxpricerange'] : 500000;
+        $locationFilter = (!empty($filterOption['locationFilter'])) ? $filterOption['locationFilter'] : null;
         $categoryFilter = (!empty($filterOption['category'])) ? $filterOption['category'] : null;
         $whereVariables = array();
         $whereID = array();

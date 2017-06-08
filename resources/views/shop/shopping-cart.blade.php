@@ -29,7 +29,6 @@
 							<th class="sr">#</th>
 							<th class="im">Image</th>
 							<th class="pn">Product Name</th>
-							
                             <th class="pr">Price</th>
 							<th class="tl">Total</th>
 							<th class="rm">Remove</th>
@@ -56,7 +55,7 @@
 									$subTitle = ucfirst($imagefolder[1]);
 
 								}elseif($model == 'metros'){
-									$priceValue = $product['item']['totalprice'];
+									$priceValue = $product['item']['base_price'];
 									$subTitle = ucfirst($imagefolder[1]);
 								}elseif($model == 'newspaper'){
 									$priceValue = $product['item']['total_price'];
@@ -82,7 +81,7 @@
                         	<td data-th="Product" class="pn">
 								<div class="row">
 									<div class="col-sm-12 c-title">
-										<h4 class="nomargin">{{ $product['item']['title'] }} | {{$subTitle}}</h4>
+										<h4 class="nomargin">{{ $product['item']['title'] }} | {{$product['item']['location']}}</h4>
 									</div>
 									<div class="col-sm-12 c-detail">
 										<h5>Product Details : <small> {{substr (strip_tags($product['item']['description']), 0,100)}}</small></h5>
@@ -170,7 +169,6 @@
 						<tr>
 							<th class="sr">#</th>
 							<th class="pn">Product Name</th>
-							
 							<th class="qt">Quantity</th>
                             <th class="pr">Duration/Area/Length</th>
 							<th class="tl">Total</th>
@@ -240,6 +238,11 @@
 							case 'magazine':
 							@ENDPHP
 								@include('shop.cart.magazines')
+							@PHP
+							break;
+							case 'metros':
+							@ENDPHP
+								@include('shop.cart.metros')
 							@PHP
 							break;
 

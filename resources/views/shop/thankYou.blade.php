@@ -152,6 +152,8 @@
                                     <td>Rs. {{$item['item']['rate_value']}}</td>
                                     @elseif($imagefolder[0] == 'airports')
                                     <td>Rs. {{$item['item']['optionprice']}}</td>
+                                    @elseif($imagefolder[0] == 'metros')
+                                    <td>Rs. {{$item['item']['totalprice']}}</td>
                                     @else
                                     <td>Rs. {{$item['item']['price_value']}}</td>
                                     @endif

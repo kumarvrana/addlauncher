@@ -135,8 +135,26 @@
                                 You have check the Light Options in ads. So, Please fill the Price including light charges in different the Ad display Size!
                         </div>
                     <div id="pricing-options-step">
-                       
+                        <input type="hidden" name="modelname" id="modelname" value="Metro">
+                        <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
+                        <input type="hidden" id="display_options" value="{{json_encode(unserialize($generalOptions))}}">
+                        <input type="hidden" id="uncheckID" value="{{$metro->id}}">
+                        <input type="hidden" id="tablename" value="metros">
+
+                        @foreach($metro->metrosprice as $metroprice)
+                            <div id="p{{$metroprice->price_key}}" class="form-group">
+                                    <label for="{{$metroprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
+                                    <input class="form-control" type="text" name="{{$metroprice->price_key}}" value="{{$metroprice->totalprice}}" required>
+                                </div>
+                                <div id="p{{$metroprice->duration_key}}" class="form-group">
+                                    <label for="{{$metroprice->duration_key}}">Ad duration/period for {{ucfirst(substr(str_replace("_", " ", $metroprice->duration_key), 9))}} Metro Ad:</label>
+                                    <input class="form-control" type="text" name="{{$metroprice->duration_key}}" value="{{$metroprice->duration_value}}" required>
+                                </div>
+                            
+                        @endforeach
                     </div>
+
+            </div>
 
             </div>
         

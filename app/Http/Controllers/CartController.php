@@ -51,6 +51,8 @@ class CartController extends Controller
             $cart->removeTelevisionCartItem($id);
         elseif($model[0] == 'airports')
             $cart->removeAirportCartItem($id);
+        elseif($model[0] == 'metros')
+            $cart->removeMetroCartItem($id);
          elseif ($model[0] == 'magazine' ||  $model[0] == 'newspaper')
             $cart->removePrintmediaCartItem($id, $model[0]);
         else
@@ -105,6 +107,8 @@ class CartController extends Controller
             $cart->UpdateAirportCartQty((array)$cart, $itemId, $count, $duration);
         }elseif ($model[0] == 'magazine' ||  $model[0] == 'newspaper'){
             $cart->UpdatePrintmediaCartQty((array)$cart, $itemId, $_REQUEST, $model[0]);
+        }elseif ($model[0] == 'metros'){
+            $cart->UpdateMetroCartQty((array)$cart, $itemId, $count, $duration);
         }else{
             $cart->UpdateCartQty((array)$cart, $itemId, $count, $duration);
         }

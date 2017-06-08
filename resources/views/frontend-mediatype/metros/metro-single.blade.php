@@ -51,13 +51,14 @@
 									</div>
 								</div>
 								@PHP
-								$session_key = 'metros'.'_'.$metro->id.'_'.$metro->metro->id;
+								$options = $metro->totalprice.'+'.$metro->price_key;
+								$session_key = 'metros'.'_'.$metro->price_key.'_'.$metro->metro->id;
 								$printsession = (array)
 								Session::get('cart');
 								@ENDPHP
 								
 								<div class="clearfix"> 
-									<a class="glass" href="{{route('metro.addtocart', ['id' => $metro->metro->id, 'variation' => $metro->id])}}">
+									<a class="glass" href="{{route('metro.addtocart', ['id' => $metro->metro->id, 'variation' => $options])}}">
 									@if(count($printsession) > 0)
 										@if(array_key_exists($session_key, $printsession['items'])) 
 											<span class="fa fa-minus-circle"></span> Remove From Cart 

@@ -53,7 +53,12 @@
                  </ul></td>
                  <td><ul>
                  @foreach( $order->cart->items as $item)
-                    <li>Rs.{{$item['item']['optionprice']}}</li>
+                    @if($category[0] == 'metros')
+                        <li>Rs.{{$item['item']['totalprice']}}</li>
+                    @elseif($category[0] == 'televisions')
+                        <li>Rs.{{$item['item']['optionprice']}}</li>
+                    
+                    @endif
                  @endforeach
                  </ul></td>
                  <td>{{$order->cart->totalPrice}}</td>

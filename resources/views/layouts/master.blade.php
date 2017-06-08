@@ -67,6 +67,7 @@
         var shoppingmallFilterURL = "{{ route('frontend.getFilterShoppingmallAds')}}";
         var cinemaFilterURL = "{{ route('frontend.getFilterCinemaAds')}}";
         var televisionFilterURL = "{{ route('frontend.getFilterTelevisionAds')}}";
+        var metroFilterURL = "{{ route('frontend.getFilterMetroAds')}}";
         
 
        

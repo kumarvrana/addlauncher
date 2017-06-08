@@ -1514,7 +1514,7 @@ function removeItemNewspaper(name, genre) {
     deleteColor.remove();    
 }
 
-function addDomToPriceOptionsMetro(name, metro_options){
+function addDomToPriceOptionsMetro(name){
    
     var chkExist = fieldData.indexOf(name);
    
@@ -1678,7 +1678,7 @@ function addDomToPriceOptionsMetro(name, metro_options){
     }
 }
 
-function removeItemMetro(name, genre) {
+function removeItemMetro(name, metro_line) {
 
     var iname = name.toLowerCase();
     var res = iname.split(' ').join('_');
@@ -1710,8 +1710,7 @@ function removeItemMetro(name, genre) {
                 data: {
                     id: id,
                     price_key: inputname,
-                    printmedia_type: genre,
-                    number_key: numberTimeMagezinePrints,
+                    metro_line: metro_line,
                     displayoptions: JSON.stringify(fieldData)
                 }
             })

@@ -122,11 +122,13 @@
                                             
                                         @if($imagefolder[0] == 'televisions')    
                                             <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['rate_key'], 5)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['rate_value']}}</span></li>
-                                            @elseif($imagefolder[0] == 'airports')
-                                                <li><strong>{{ $product['item']['title'] }} | {{ $product['item']['displayoption']}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['optionprice']}}</span></li>
-                                            @else
-                                                <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
-                                            @endif
+                                        @elseif($imagefolder[0] == 'airports')
+                                            <li><strong>{{ $product['item']['title'] }} | {{ $product['item']['displayoption']}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['optionprice']}}</span></li>
+                                        @elseif($imagefolder[0] == 'metros')
+                                            <li><strong>{{ $product['item']['title'] }} | {{ $product['item']['price_key']}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['totalprice']}}</span></li>
+                                        @else
+                                            <li><strong>{{ $product['item']['title'] }} | {{ ucwords(str_replace('_', ' ', substr($product['item']['price_key'], 6)))}}</strong> <span><i class="fa fa-inr"></i> {{$product['item']['price_value']}}</span></li>
+                                        @endif
                                         @endif
                                     @endforeach
                                     <li class="total">TOTAL <span class="bold"><i class="fa fa-inr"></i> {{ $total }}</span></li>
