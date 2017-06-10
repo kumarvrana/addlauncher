@@ -318,8 +318,17 @@
                                         <td>Rs. {{number_format($item['price'], 2)}}</td>
                                         <td>Rs. {{number_format($item['price'],2)}}</td>
                                     </tr>
+                                    @elseif($imagefolder[0] == 'metros')
+                                    <tr>
+                                        <td></td>
+                                        <td>{{$i}}</td>
+                                        <td>{{$item['item']['title']}} | {{$item['item']['location']}} | {{ucwords(substr( $item['item']['price_key'],6))}} | {{ucwords(str_replace('_', ' / ',$item['item']['media']))}}</td>
+                                        <td>{{$order['order_status']}}</td>
+                                        <td>{{$item['qty']}} Units For {{$item['duration']}} Months </td>
+                                        <td>Rs. {{number_format($item['item']['totalprice'], 2)}}</td>
+                                        <td>Rs. {{number_format($item['price'],2)}}</td>
+                                    </tr>
                                     @else
-                                    
                                     <tr>
                                    
                                         <td></td>
@@ -331,8 +340,6 @@
                                         <td>Rs. {{number_format($item['item']['rate_value'], 2)}}</td>
                                         @elseif($imagefolder[0] == 'airports')
                                         <td>Rs. {{number_format($item['item']['optionprice'], 2)}}</td>
-                                        @elseif($imagefolder[0] == 'metros')
-                                        <td>Rs. {{number_format($item['item']['totalprice'], 2)}}</td>
                                         @else
                                         <td>Rs. {{number_format($item['item']['price_value'], 2)}}</td>
                                         @endif

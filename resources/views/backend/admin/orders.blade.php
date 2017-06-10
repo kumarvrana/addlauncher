@@ -72,6 +72,8 @@
                       @else
                           @if($category[0] == 'televisions')
                             <b>{{ucwords(str_replace('_', ' ', substr($item['item']['rate_key'],5)))}}</b>
+                            @elseif($category[0] == 'airports')
+                           <b>{{ucwords(str_replace('_', ' ', $item['item']['displayoption']))}}</b>
                           @else
                             <b>{{ucwords(str_replace('_', ' ', substr($item['item']['price_key'],6)))}}</b>
                          @endif
@@ -79,14 +81,27 @@
                     </a></li>
                  @endforeach
                  </ul></td>
-                <td>{{$item['qty']}}</td>
-
+                <td><ul>
+                @foreach( $order->cart->items as $item)
+                    @if($category[1] == 'tricycle')
+                            <li><b>{{$item['qty']}} unit for {{$item['duration']}} month</b></li>
+                        @else
+                            @if($category[0] == 'televisions')
+                                <li><b>{{$item['length'] * 10 }} secs for {{$item['duration']}} month</b></li>
+                            @elseif($category[0] == 'airports')
+                                <li><b>{{$item['qty']}} unit for {{$item['duration']}} month</b></li>
+                            @else
+                                <li><b>{{$item['qty']}} unit for {{$item['duration']}} month</b></li>
+                            @endif
+                        @endif
+                     @endforeach
+                </ul></td>
                  <td><ul>
                  @foreach( $order->cart->items as $item)
                     <li>Rs.{{$item['price']}}</li>
                  @endforeach
                  </ul></td>
-                 <td>{{$order->cart->totalPrice}}</td>
+                 <td><b>{{$order->cart->totalPrice}}</b></td>
                   
                 <td><ul>
                  @foreach( $order->cart->items as $item)

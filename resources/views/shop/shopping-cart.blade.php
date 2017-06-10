@@ -57,6 +57,7 @@
 								}elseif($model == 'metros'){
 									$priceValue = $product['item']['base_price'];
 									$subTitle = ucfirst($imagefolder[1]);
+									$PrintingPrice = $product['item']['printing_charge'];
 								}elseif($model == 'newspaper'){
 									$priceValue = $product['item']['total_price'];
 									$subTitle = ucfirst(str_replace('_', ' ', substr($product['item']['price_key'], 6)));
@@ -88,8 +89,11 @@
 									</div>
 								</div>
 							</td>
-							<td data-th="Price" class="pr">Rs.{{$priceValue}} {{$newpaperUnits}}</td>
-							
+							@if($model == 'metros')
+							<td data-th="Price" class="pr">Rs.{{$priceValue}} <br><br>Printing Charge: Rs.{{$PrintingPrice}} </td>
+							@else
+							<td data-th="Price" class="pr">Rs.{{$priceValue}} {{$newpaperUnits}} </td>
+							@endif
 							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}} <br>{{$newpaperAreaUnits}}</h4></td>
 							<td class="actions rm" data-th="">
 							

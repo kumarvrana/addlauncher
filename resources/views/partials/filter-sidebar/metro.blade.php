@@ -64,8 +64,8 @@
           <div id="collapse3" class="panel-collapse collapse in">
             <div class="panel-body ">
               <ul class="list-group">
-                <li class="list-group-item"><label class="metro"><input type="radio" class="adfilter" data-value="full" value="full" name="category"> &ensp;Backlit</label></li>
-                <li class="list-group-item"><label class="metro"><input type="radio" class="adfilter" data-value="roof_front" value="roof_front" name="category"> &ensp;Ambilit</label></li>
+                <li class="list-group-item"><label class="metro"><input type="radio" class="adfilter" data-value="backlit" value="backlit" name="category"> &ensp;Backlit</label></li>
+                <li class="list-group-item"><label class="metro"><input type="radio" class="adfilter" data-value="ambilit" value="ambilit" name="category"> &ensp;Ambilit</label></li>
               </ul>
             </div>
           </div>

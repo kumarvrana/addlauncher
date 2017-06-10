@@ -25,7 +25,7 @@
                     <p>{{Session::get('message')}}</p>
                 </div>
             @endif
-  <form class="form" action="{{route('dashboard.postMetroForm')}}" method="post" enctype="multipart/form-data">
+  <form class="form" action="{{route('dashboard.editmetrosad',['ID' => $metro->id])}}" method="post" enctype="multipart/form-data">
         <div class="step">
             <div class="step-header">General Options</div>
             <div class="form-group">
@@ -137,24 +137,42 @@
                     <div id="pricing-options-step">
                         <input type="hidden" name="modelname" id="modelname" value="Metro">
                         <input type="hidden" id="priceData" value="{{json_encode(unserialize($fieldData))}}">
-                        <input type="hidden" id="display_options" value="{{json_encode(unserialize($generalOptions))}}">
                         <input type="hidden" id="uncheckID" value="{{$metro->id}}">
                         <input type="hidden" id="tablename" value="metros">
 
-                        @foreach($metro->metrosprice as $metroprice)
-                            <div id="p{{$metroprice->price_key}}" class="form-group">
-                                    <label for="{{$metroprice->price_key}}">Price for {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
-                                    <input class="form-control" type="text" name="{{$metroprice->price_key}}" value="{{$metroprice->totalprice}}" required>
-                                </div>
-                                <div id="p{{$metroprice->duration_key}}" class="form-group">
-                                    <label for="{{$metroprice->duration_key}}">Ad duration/period for {{ucfirst(substr(str_replace("_", " ", $metroprice->duration_key), 9))}} Metro Ad:</label>
-                                    <input class="form-control" type="text" name="{{$metroprice->duration_key}}" value="{{$metroprice->duration_value}}" required>
-                                </div>
+                        @foreach($metropricemeta as $metroprice)
+                            @PHP 
+                                 $mainKey = substr($metroprice->price_key, 6);
+                            @ENDPHP
+                             <div id="punit_{{$mainKey}}" class="form-group">
+                                <label for="unit_{{$mainKey}}">Unit of {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="unit_{{$mainKey}}" value="{{$metroprice->unit}}" required>
+                            </div>
+                            <div id="pnumber_of_face_{{$mainKey}}" class="form-group">
+                                <label for="number_of_face_{{$mainKey}}">Number of {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Face:</label>
+                                <input class="form-control" type="text" name="number_of_face_{{$mainKey}}" value="{{$metroprice->number_face}}" required>
+                            </div>
+                            <div id="pdimension_{{$mainKey}}" class="form-group">
+                                <label for="dimension_{{$mainKey}}">Dimension of {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="dimension_{{$mainKey}}" value="{{$metroprice->dimension}}" required>
+                            </div>
+                            <div id="pprice_{{$mainKey}}" class="form-group">
+                                <label for="price_{{$mainKey}}">Base Price of {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="price_{{$mainKey}}" value="{{$metroprice->base_price}}" required>
+                            </div>
+                            <div id="pprinting_price_{{$mainKey}}" class="form-group">
+                                <label for="printing_price_{{$mainKey}}">Printing Charge of {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="printing_price_{{$mainKey}}" value="{{$metroprice->printing_charge}}" required>
+                            </div>
+                            <div id="ptotal_price_{{$mainKey}}" class="form-group">
+                                <label for="total_price_{{$mainKey}}">Total Price of {{ucfirst(substr(str_replace("_", " ", $metroprice->price_key), 6))}} Metro Ad:</label>
+                                <input class="form-control" type="text" name="total_price_{{$mainKey}}" value="{{$metroprice->totalprice}}" required>
+                            </div>
+
                             
                         @endforeach
+                       
                     </div>
-
-            </div>
 
             </div>
         
@@ -166,11 +184,11 @@
             </div>
             <div class="form-group">
                 <label for="reference_mail">Reference mail:</label>
-                <input type="email" id="reference_mail" name="reference_mail" value="{{old('reference_mail')}}" class="form-control" required>
+                <input type="email" id="reference_mail" name="reference_mail" value="{{$metro->reference_mail}}" class="form-control" required>
             </div>
             <div class="form-group">
                     <label for="reference">Other Reference:</label>
-                    <textarea id="reference" name="reference" class="form-control">{{old('reference')}}</textarea>
+                    <textarea id="reference" name="reference" class="form-control">{{$metro->references}}</textarea>
                 </div>
         </div>
         {{csrf_field()}}
@@ -184,5 +202,8 @@
 @endsection
 
 @section('scripts')
+<script>
+    var uncheckDeleteURL = "{{route('dashboard.deleteUncheckPriceMetro')}}";
+</script>
 <script src={{URL::to('js/multistep-form.js')}}></script>
 @endsection

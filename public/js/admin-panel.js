@@ -1517,14 +1517,15 @@ function removeItemNewspaper(name, genre) {
 function addDomToPriceOptionsMetro(name){
    
     var chkExist = fieldData.indexOf(name);
+
    
     if (chkExist == -1) {
-        var labelUnittext = " Units : ";
+        var labelUnittext = " Units of "+ name +" Metro Ad: ";
         var labelnumberoffacetext = " Number of " + name + " Face : ";
-        var labelDimensiontext = " Dimension : ";
-        var labelpricetext = " Price Per Month For "+ name +" Ad : ";
-        var labelPrintingPricetext = "Printing Charge For " + name + " Ad : ";
-        var labelTotalPricetext = "Total Price For " + name + " Ad : ";
+        var labelDimensiontext = " Dimension of " + name + "Metro Ad:";
+        var labelpricetext = " Base Price For "+ name +" Metro Ad : ";
+        var labelPrintingPricetext = "Printing Charge For " + name + "Metro Ad : ";
+        var labelTotalPricetext = "Total Price For " + name + "Metro Ad : ";
         
         var iname = name.toLowerCase();
         var res = iname.split(' ').join('_');
@@ -1674,7 +1675,8 @@ function addDomToPriceOptionsMetro(name){
         priceElement.appendChild(divrowTotalPrice);
         
     } else {
-        removeItemMetro(name, metro_options);
+
+        removeItemMetro(name, metro_line);
     }
 }
 
@@ -1699,18 +1701,18 @@ function removeItemMetro(name, metro_line) {
 
     fieldData.splice(fieldData.indexOf(name), 1);
     if (fieldisi) {
-        editfieldData.splice(editfieldData.indexOf(name), 1);
+        // editfieldData.splice(editfieldData.indexOf(name), 1);
         var id = document.getElementById("uncheckID").value;
         var tableName = document.getElementById("tablename").value;
         var update_options = '';
+
         fieldisi.value = JSON.stringify(fieldData);
         $.ajax({
                 method: 'GET',
                 url: uncheckDeleteURL,
                 data: {
                     id: id,
-                    price_key: inputname,
-                    metro_line: metro_line,
+                    price_key: inputPricename,
                     displayoptions: JSON.stringify(fieldData)
                 }
             })

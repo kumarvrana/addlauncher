@@ -97,7 +97,7 @@ class CartController extends Controller
         
         $itemId = $_REQUEST['item'];
         $count = $_REQUEST['count'];
-        $duration = $_REQUEST['duration'];
+        $duration = (isset($_REQUEST['duration'])) ? $_REQUEST['duration'] : 0;
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $model = explode('_', $itemId);

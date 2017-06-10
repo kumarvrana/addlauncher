@@ -42,11 +42,11 @@
                         <div class="row">
                             <div class="col-lg-6" style="padding-left:0px;">
                                 <label>First Name <span>*</span></label>
-                                <input type="text" placeholder="First Name" value="{{old('first-name')}}" name="first-name" required>
+                                <input type="text" placeholder="First Name" value="{{$user->first_name}}" name="first-name" required>
                             </div>
                             <div class="col-lg-6 left_position_fix">
                                 <label>Last Name <span>*</span></label>
-                                <input type="text" placeholder="Last Name" value="{{old('last-name')}}" name="last-name" required>
+                                <input type="text" placeholder="Last Name" value="{{$user->last_name}}" name="last-name" required>
                             </div>
                         </div>
                         <div class="row">
@@ -81,11 +81,11 @@
                         <div class="row">
                             <div class="col-lg-6" style="padding-left:0px;">
                                 <label>Email Address <span>*</span></label>
-                                <input type="email" placeholder="Email Address" name="email" required>
+                                <input type="email" placeholder="Email Address" value="{{$user->email}}" name="email" required>
                             </div>
                             <div class="col-lg-6 left_position_fix">
                                 <label>Phone <span>*</span></label>
-                                <input type="text" placeholder="Phone" name="phone" required>
+                                <input type="text" placeholder="Phone" value="{{$user->phone_number}}" name="phone" required>
                             </div>
                         </div>
                         

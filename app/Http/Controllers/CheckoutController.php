@@ -33,11 +33,12 @@ class CheckoutController extends Controller
         if(count($CheckoldCart->items) < 1){
             return redirect()->route('cart.shoppingCart');
         }
+        $user = Sentinel::check();
         $oldcart = Session::get('cart');
         $cart = new Cart($oldcart);
         $totalPrice = $cart->totalPrice;
-
-        return view('shop.checkout', ['products' => $cart->items, 'total' => $totalPrice]);
+        
+        return view('shop.checkout', ['products' => $cart->items, 'total' => $totalPrice, 'user' => $user]);
  
     }
 

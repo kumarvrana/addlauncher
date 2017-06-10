@@ -80,9 +80,7 @@
 
         </div>
         <div class="step">
-
-               
-                
+     
             <div class="step-header">Metro Shelter Ad Display Options</div>
                 <input type="hidden" name="modelname" id="modelname" value="Metro">
                 
