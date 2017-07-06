@@ -33,7 +33,7 @@ class Newspapers extends Model
         return $this->hasMany('App\Language');
     }
 
-     public function getIDFromSlug($slug)
+    public function getIDFromSlug($slug)
     {
         $printmedia = Newspapers::Where('slug', '=', $slug)->first();
         return $printmedia->id;

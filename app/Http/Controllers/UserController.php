@@ -94,4 +94,18 @@ class UserController extends Controller
         Auth::logout();
         return view('user.signin');
     }
+
+     /**
+     * Show the profile for the given user.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function show(Request $request, $id)
+    {
+        $value = $request->session()->get('key', 'cart');
+
+        //
+    }
 }

@@ -265,7 +265,12 @@ class AutoController extends Controller
     public function getDeleteAutoad($autoadID)
     {
         $delele_autoad = Autos::where('id', $autoadID)->first();
+        $delImage = $delele_autoad->image;
         $delele_autoad->delete();
+        $path = public_path();
+        $fullPath = $path."\images\autos\\";
+        $image_path = $fullPath.$delImage;
+        @unlink($image_path);
         $delete_autoadprice = Autosprice::where('autos_id', $autoadID);
         $delete_autoadprice->delete();
         

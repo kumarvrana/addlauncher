@@ -61,7 +61,7 @@
 										@ENDPHP
 										<div class="clearfix"> 
 											<a class="glass" href="{{route('airport.addtocart', ['id' => $airport->airport->id, 'variation' => $airport->id])}}">
-
+										
 										 @if(count($printsession) > 0)
 											 @if(array_key_exists($session_key, $printsession['items'])) 
 												<span class="fa fa-minus-circle"></span> Remove From Cart 

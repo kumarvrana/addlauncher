@@ -46,8 +46,12 @@
 									<div class="col-md-6">
 										<p class="font-3"> {{ucwords(str_replace('_', ' ',$metro->metro->metro_line))}} Ads<br> for <br> 1 months</p>
 									</div>
+									<?php $var = $metro->totalprice;
+                                    $price = $var + $var * 0.1;
+                                    
+                                    ?>
 									<div class="col-md-6">
-										<p class="font-4"><del class="lighter">Rs {{$metro->totalprice}} <br></del>Rs {{$metro->totalprice}} </p>
+										<p class="font-4"><del class="lighter">Rs {{$price}} <br></del>Rs {{$price}} </p>
 									</div>
 								</div>
 								@PHP

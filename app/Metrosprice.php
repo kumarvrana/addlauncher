@@ -51,12 +51,14 @@ class Metrosprice extends Model
         }
 
         if(isset($locationFilter)){
-            $locationFilter = "%$locationFilter%";
+
+            //$locationFilter = "%$locationFilter%";
             
             $metros = $this->getLocationfilter($locationFilter);
+            
             if(count($metros)){
                 foreach($metros as $metro){
-                     $whereID[] = $metro->id;
+                    $whereID[] = $metro->id;
                 }
            
             }
@@ -76,6 +78,6 @@ class Metrosprice extends Model
 
     public function getLocationfilter($location)
     {
-        return Metros::where('location', 'LIKE', $location)->orWhere('city', 'LIKE', $location)->get();
+        return Metros::whereIn('location', $location)->get();
     }
 }

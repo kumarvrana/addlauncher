@@ -4,20 +4,31 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Session;
-class Cart
-{
+use Sentinel;
+use \App\CartModel;
+
+class Cart extends Model{
     public $items = null;
     public $totalQty = 0;
     public $totalPrice = 0;
    
     public function __construct($oldCart){
+        if($user = Sentinel::check()){
+            $db_cart = new CartModel;
+            $db_cart_value = $db_cart->get_value_by_user_id($user->id);
+            if($db_cart_value !== false){
+                $this->items = $db_cart_value->items;
+                $this->totalQty = $db_cart_value->totalQty;
+                $this->totalPrice = $db_cart_value->totalPrice;
+            }
+        }
         if($oldCart){
             $this->items = $oldCart->items;
             $this->totalQty = $oldCart->totalQty;
             $this->totalPrice = $oldCart->totalPrice;
-            
         }
     }
+
     // add product to cart
     public function addorRemove($item, $id, $model, $flag){
 
@@ -27,11 +38,11 @@ class Cart
             $storedItem = ['qty' => 0, 'price' => $item['price_value'], 'duration' => 1, 'item' => $item];
             if($this->items){
                 if(array_key_exists($adPlusId, $this->items)){
-                     $this->items[$adPlusId]['qty']--;
-                     $this->items[$adPlusId]['price'] -= $this->items[$adPlusId]['item']['price_value'];
-                     $this->totalQty--;
-                     $this->totalPrice -= $this->items[$adPlusId]['item']['price_value'];
-                     unset($this->items[$adPlusId]);
+                    $this->items[$adPlusId]['qty']--;
+                    $this->items[$adPlusId]['price'] -= $this->items[$adPlusId]['item']['price_value'];
+                    $this->totalQty--;
+                    $this->totalPrice -= $this->items[$adPlusId]['item']['price_value'];
+                    unset($this->items[$adPlusId]);
                     return 'removed';
                 }
             }
@@ -43,7 +54,7 @@ class Cart
         }else{
            
             $adPlusId = $model.'_'.'tricycle'.'_'.$id;
-            $storedItem = ['qty' => 0, 'price' => $item['price'], 'duration' => 1, 'item' => $item];
+            $storedItem = ['qty' => 0, 'price' => $item['price'], 'duration' => 1 , 'item' => $item];
             if($this->items){
                 if(array_key_exists($adPlusId, $this->items)){
                      $this->items[$adPlusId]['qty']--;
@@ -70,7 +81,7 @@ class Cart
             $price = 0;
             $this->items[$itemskey]['qty'] = $count;
             $this->items[$itemskey]['duration'] = $duration;
-            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['price'] * $count  * $duration;
+            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['price'] * $count * $duration;
 
             foreach($this->items as $itm){
                 $price += $itm['price'];
@@ -92,9 +103,8 @@ class Cart
         }
        
    }
-  
-    public function removeCartItem($id)
-    {
+
+    public function removeCartItem($id){
         if($this->items){
             if(array_key_exists($id, $this->items)){
                 $checkKey = explode('_', $id);
@@ -198,7 +208,8 @@ class Cart
 
 
         public function addorRemoveCinema($item, $id, $model, $flag)
-        {        
+        {  
+        dd($item, $id, $model);         
           $adPlusId = $model.'_'.$item['price_key'].'_'.$id;
             $storedItem = ['qty' => 0, 'length'=>1, 'price' => $item['price_value'], 'duration' => 1, 'item' => $item];
             if($this->items){
@@ -223,6 +234,7 @@ class Cart
 
     public function addorRemoveAirport($item, $id, $model)
     { 
+
         $adPlusId = $model.'_'.$item['variation_id'].'_'.$id;
         $storedItem = ['qty' => 0, 'price' => $item['optionprice'], 'duration' => 1, 'item' => $item];
         if($this->items){
@@ -241,27 +253,28 @@ class Cart
         $this->totalQty++;
         $this->totalPrice += $item['optionprice'];
         
-        return 'added';  
+        return 'added';
     }
 
     public function removeAirportCartItem($id)
-    {
-        if($this->items){
-            if(array_key_exists($id, $this->items)){
-                $checkKey = explode('_', $id);
-                $this->totalQty--;
-                if($this->items[$id]['duration'] > 0){
-                    $this->totalPrice -= $this->items[$id]['item']['optionprice'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];    
-                }else{
-                    $this->totalPrice -= $this->items[$id]['item']['optionprice'] * $this->items[$id]['qty'];
-                }
+        {
+            if($this->items){
+                if(array_key_exists($id, $this->items)){
+                    $checkKey = explode('_', $id);
+                    $this->totalQty--;
+                    if($this->items[$id]['duration'] > 0){
+                        $this->totalPrice -= $this->items[$id]['item']['optionprice'] * $this->items[$id]['qty'] * $this->items[$id]['duration'];    
+                    }else{
+                        $this->totalPrice -= $this->items[$id]['item']['optionprice'] * $this->items[$id]['qty'];
+                    }
 
-                $this->items[$id]['qty']--;
-                $this->items[$id]['price'] -= $this->items[$id]['item']['optionprice'];
-                unset($this->items[$id]);
+                    $this->items[$id]['qty']--;
+                    $this->items[$id]['price'] -= $this->items[$id]['item']['optionprice'];
+                    unset($this->items[$id]);
+                
+                }
             }
         }
-    }
 
         public function UpdateAirportCartQty($item, $itemskey, $count, $duration)
         {
@@ -410,11 +423,10 @@ class Cart
            $price = 0;
             $this->items[$itemskey]['qty'] = $count;
             $this->items[$itemskey]['duration'] = $duration;
-            $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['printing_charge'] * $count  + $this->items[$itemskey]['item']['base_price'] * $duration * $count ;
+             $this->items[$itemskey]['price'] = $this->items[$itemskey]['item']['totalprice'] * $count * $duration;
 
             foreach($this->items as $itm){
                 $price += $itm['price'];
-            
             }
             $this->totalPrice = $price;
 

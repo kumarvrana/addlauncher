@@ -46,7 +46,7 @@
               <ul class="list-group">
                 @foreach ($filter_location as $f_location) 
                 <?php $loc_class= strtolower(str_replace(' ','_',$f_location->location)); ?>
-                  <li class="list-group-item"><label class="metro"><input type="radio" class="adfilter" data-value="{{$loc_class}}" value="{{$f_location->location}}" name="locationFilter"> &ensp;{{$f_location->location}}</label></li>
+                  <li class="list-group-item"><label class="metro"><input type="checkbox" class="adfilter" data-value="{{$loc_class}}" value="{{$f_location->location}}" name="locationFilter[]"> &ensp;{{$f_location->location}}</label></li>
                 @endforeach
               </ul>
             </div>

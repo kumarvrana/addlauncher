@@ -11,21 +11,21 @@ use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
 use Socialite;
 use Illuminate\Http\Request;
+use Session;
+use App\CartModel;
+use Cart;
 //use App\AuthUserListenerInterface;
 
-class LoginController extends Controller
-{
+class LoginController extends Controller{
 
-     public function getSignin()
-     {
+     public function getSignin(){
         if(Sentinel::check())
              return redirect()->back();
 
          return view('shop.user.signin');
      }
 
-     public function postSignin(Request $request)
-     {
+     public function postSignin(Request $request){
        
         if(Sentinel::check())
              return redirect()->back();
@@ -39,10 +39,18 @@ class LoginController extends Controller
             $rememberMe = false;
             if(isset($request->remember_me))
                 $rememberMe = true;
-            if(Sentinel::authenticate($request->all(), $rememberMe))
-            {
+            if($user = Sentinel::authenticate($request->all(), $rememberMe)){
                 $slug = Sentinel::getUser()->roles()->first()->slug;
-
+                
+                $cart_model = new CartModel;
+                if(Session::has('cart')){
+                    // If user have something in cart before login
+                    $cart_model->login_update_db_from_cart($user->id);
+                }else{
+                    // If user doesn't have anything in the cart
+                    $cart_model->login_update_cart_from_db($user->id);
+                }
+                
                 if($slug == 'admin')
                     return redirect('/dashboard');//return response()->json(['redirect' => '/dashboard']);
                 elseif($slug == 'site-user')
@@ -67,6 +75,7 @@ class LoginController extends Controller
      public function postLogout(Request $request)
      {
          Sentinel::logout();
+         Session::forget('cart');
          return redirect()->route('user.signin');
      }
 

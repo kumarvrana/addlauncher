@@ -813,7 +813,7 @@ Route::get('/media/outdoor-advertisings', [
 // 'as' => 'frontend.billboardsingle'
 // ]);
 
-Route::get('/media/outdoor-advertising/add-to-cart/{id}/{variation}', [
+Route::get('/media/outdoor-advertising/add-to-cart/{id}', [
 'uses' => 'BillboardController@getAddToCart',
 'as' => 'billboard.addtocart'
 ]);
@@ -1186,6 +1186,10 @@ Route::get('/shop/thank-you/{order}', [
 
 ]);
 //});
+
+Route::get('/chat', 'ChatsController@index');
+Route::get('/chat/messages', 'ChatsController@fetchMessages');
+Route::post('/chat/messages', 'ChatsController@sendMessage');
 
 Route::get('login/{loginWith}', ['uses' => 'SocialAuthController@redirect', 'as' => 'socicalLogin']);
 Route::get('login/{loginWith}/callback', ['uses' => 'SocialAuthController@callback', 'as' => 'socialLoginCallback']);
