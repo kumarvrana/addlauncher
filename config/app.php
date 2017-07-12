@@ -170,6 +170,7 @@ return [
         App\Providers\ComposerMagazineProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+		Laravel\Scout\ScoutServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -239,6 +240,7 @@ return [
         'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class,
         'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+		
 
     ],
 

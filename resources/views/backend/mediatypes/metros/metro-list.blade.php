@@ -14,6 +14,18 @@
         </div>
     </div>
     <hr>
+    <div classs="col-md-6">
+    <form method='GET' action ='http://192.168.0.5/myshop/public/dashboard/cat/metro-list' class = 'navbar-form navbar-left pull-right' role='search'>
+        <div class="input-group custom-search-form">
+            <input type="text" name="search" class="form-control">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-default-sm">
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+   </form>
+    </div>
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading"><strong>Metro Ad List</strong></div>
@@ -47,11 +59,11 @@
             <tr class="row-details">
             
                 <td>{{$loop->iteration}}</td>
-                <td>{{$metroad->title}}</td>
-                <td>{{substr(strip_tags($metroad->description), 0, 100)}}
+                <td>{{$metroad->metroline->label}}</td>
+                <td>{{$metroad->station_name}}
                 <td>{{$metroad->location}}</td>
                 <td>{{$metroad->city}}</td>
-                <td>{{$metroad->state}}</td>
+                <td>{{$metroad->media}}</td>
                 <td>
                
                     <img src="{{asset('images/metros/'.$metroad->image)}}" alt="{{$metroad->title}}" width="50px" height="50px" class="img-responsive">
@@ -89,6 +101,7 @@
         </table>
         
     </div>
+    {{$metro_ads->links()}}
     </div>
     
 @endsection

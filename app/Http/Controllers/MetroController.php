@@ -8,6 +8,7 @@ use Session;
 use App\Metros;
 use App\Metrosprice;
 use App\Mainaddtype;
+use App\Metroline;
 use Image;
 use App\Product;
 use Illuminate\Support\Facades\File;
@@ -17,15 +18,12 @@ use App\Order;
 
 class MetroController extends Controller
 { 
-    protected $metro_line;
+    protected $metro_zone;
     protected $metro_options;
     protected $media;
     public function __construct()
     {
         $this->middleware('admin', ['only' => ['getDashboardMetroList', 'getDashboardMetroForm', 'postDashboardMetroForm', 'addMetroPrice', 'getDeleteMetroad', 'getUpdateeMetroad', 'getuncheckMetroadOptions']]);
-
-        $this->metro_line = array('blue_line' => 'Blue line', 'red_line' => 'Red line', 'yellow_line' => 'Yellow line', 'green_line' => 'Green line', 'violet_line' => 'Violet line', 'orange_line' => 'Orange line');
-
 
         $this->metro_options = array('backlit' => 'Backlit', 'ambilit' => 'Ambilit');
 
@@ -70,15 +68,20 @@ class MetroController extends Controller
 
     // get list of all the products in metro stop media type
     public function getDashboardMetroList(){
-        $metro_ads = Metros::all();
+        
+        $search = \Request::get('search');
+        $metro_ads = Metros::where('location', 'LIKE', '%'.$search.'%')->paginate(2);
+        
         return view('backend.mediatypes.metros.metro-list', ['metro_ads' => $metro_ads]);
     }
     
     // get form of metro stop media type
      public function getDashboardMetroForm()
     {
+        $metro_line = Metroline::all();
+        
         return view('backend.mediatypes.metros.metro-addform', [
-                                                                'metro_line' => $this->metro_line,
+                                                                'metro_line' => $metro_line,
                                                                 'metro_options' => $this->metro_options,
                                                                 'media' => $this->media]);
     }
@@ -87,19 +90,24 @@ class MetroController extends Controller
 
     public function postDashboardMetroForm(Request $request)
     {
-         // dd($request->all());
+        $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
         $this->validate( $request, [
-           'title' => 'required',
-           'price' => 'numeric',
+           'metroline_id' => 'required',
+           'station_name' => 'required',
            'image' => 'required|image',
            'location' => 'required',
-           'state' => 'required',
+           'media' => 'required',
            'city' => 'required',
-           'rank' => 'numeric',
+           'units' => 'required|numeric',
+           'faces' => 'numeric',
+           'width' => 'required|numeric',
+           'height' => 'required|numeric',
+           'area' => 'required|numeric',
            'description' => 'required',
-           'status' => 'required'
-           
-
+           'status' => 'required',
+           'ad_code' => 'required',
+           'price' => array('required','regex:'.$regex),
+           'discount_price' => array('required','regex:'.$regex)
         ]);
 
         if($request->hasFile('image')){
@@ -110,73 +118,41 @@ class MetroController extends Controller
         }
 
         $metro = new Metros([
-                'title' => $request->input('title'),
+                'metroline_id' => $request->input('metroline_id'),
+                'station_name' => $request->input('station_name'),
+                'media' => $request->input('media'),
                 'price' => $request->input('price'),
                 'image' => $filename,
                 'location' => $request->input('location'),
-                'state' =>  $request->input('state'),
                 'city' => $request->input('city'),
-                'rank' => $request->input('rank'),
-                'landmark' => $request->input('landmark'),
+                'units' => $request->input('units'),
+                'faces' => $request->input('faces'),
+                'width' => $request->input('width'),
+                'height' => $request->input('height'),
+                'area' => $request->input('area'),
+                'discount_price' => $request->input('discount_price'),
                 'description' => $request->input('description'),
                 'references' => $request->input('reference'),
                 'status' => $request->input('status'),
-                'display_options' => serialize($request->input('metrodisplay')),
-                'light_option' => $request->input('light_option'),
-                'discount' => $request->input('metrodiscount'),
-                'media' => $request->input('media'),
-                'metro_line' => $request->input('metro_line'),
+                'ad_code' => $request->input('ad_code'),
+                'source' => $request->input('source'),
                 'reference_mail' => $request->input('reference_mail')
         ]);
 
         $metro->save();
-
-        $lastinsert_ID = $metro->id;
-
-
-
-        //metro display prices insertion
-        if($request->has('price_backlit')){
-            $this->addMetroPrice($lastinsert_ID,'price_backlit', $request->input('unit_backlit'), $request->input('number_of_face_backlit'), $request->input('dimension_backlit'), $request->input('price_backlit'), $request->input('printing_price_backlit'), $request->input('total_price_backlit'));
-        }
-      
-       
-        if($request->has('price_ambilit')){
-            $this->addMetroPrice($lastinsert_ID,'price_ambilit', $request->input('unit_ambilit'), $request->input('number_of_face_ambilit'), $request->input('dimension_ambilit'), $request->input('price_ambilit'), $request->input('printing_price_ambilit'), $request->input('total_price_ambilit'));
-        }
        
         //return to metro product list
        return redirect()->route('dashboard.getMetroList')->with('message', 'Successfully Added!');
     }
 
-    //insert price data to metro price table
-    public function addMetroPrice($id,$price_key, $unit, $facenumber, $dimension, $baseprice, $printingcharge, $totalprice)
-    {
-
-        $insert = new Metrosprice();
-
-        $insert->metros_id = $id;
-        $insert->price_key = $price_key;
-        $insert->unit = $unit;
-        $insert->number_face = $facenumber;
-        $insert->dimension = $dimension;
-        $insert->base_price = $baseprice;
-        $insert->printing_charge = $printingcharge;
-        $insert->totalprice = $totalprice;
-       
-        $insert->save();
-
-    }
-
+    
     // delete metro product and price form db tables
 
     public function getDeleteMetroad($metroadID)
     {
         $delele_metroad = Metros::where('id', $metroadID)->first();
         $delele_metroad->delete();
-        $delete_metroadprice = Metrosprice::where('metros_id', $metroadID);
-        $delete_metroadprice->delete();
-       
+
         return redirect()->route('dashboard.getMetroList')->with(['message' => "Successfully Deleted From the List!"]);
     }
 
@@ -184,75 +160,53 @@ class MetroController extends Controller
     public function getUpdateeMetroad($ID)
     {
         $metroData = Metros::find($ID);
-        $metropriceData = Metrosprice::where('metros_id', $ID)->get();
-        $fieldData = array();
-        foreach($metropriceData as $pricemetro){
-           $fieldData[] = ucwords(str_replace('_', ' ', substr($pricemetro->price_key, 6)));
-        }
-        
-       $fieldDatas = serialize($fieldData);
-        return view('backend.mediatypes.metros.metro-editform', ['metro' => $metroData,'metro_line' => $this->metro_line,'metro_options' => $this->metro_options,'media' => $this->media, 'metropricemeta' => $metropriceData, 'fieldData' => $fieldDatas]);
-    }
-    //check and uncheck options remove
-    public function getuncheckMetroadOptions(Request $request)
-    {
 
-        $displayoptions = json_decode($request['displayoptions']);
-        $datta = array();
-        foreach($displayoptions as $options){
-            $datta[] = strtolower(str_replace(' ', '_', $options));
-        
-        }
-        
-        $count = Metrosprice::where([
-                                    ['metros_id', '=', $request['id']],
-                                    ['price_key', '=', $request['price_key']],
-                                ])->count();
-        if($count > 0){
-            Metros::where('id', $request['id'])->update(['display_options' => serialize($datta)]);
-            $metros = Metrosprice::where([
-                                    ['metros_id', '=', $request['id']],
-                                    ['price_key', '=', $request['price_key']],
-                                ])->first();
-            $metros->delete();
-            
-            return response(['msg' => 'price deleted'], 200);
-        }else{
-            return response(['msg' => 'Value not present in db!'], 500);
-        }
-        
-    }
+        $metro_line = Metroline::all();
 
+        return view('backend.mediatypes.metros.metro-editform', ['metro' => $metroData,'metro_line' => $metro_line]);
+    }
+   
     public function postUpdateeMetroad(Request $request, $ID)
     {
-       $this->validate( $request, [
-           'title' => 'required',
-           'price' => 'numeric',
-           //'image' => 'required|image',
+        $regex = "/^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$/";
+        $this->validate( $request, [
+           'metroline_id' => 'required',
+           'station_name' => 'required',
+           'price' => array('required','regex:'.$regex),
+           'discount_price' => array('required','regex:'.$regex),
            'location' => 'required',
-           'state' => 'required',
+           'media' => 'required',
            'city' => 'required',
-           'rank' => 'numeric',
+           'units' => 'required|numeric',
+           'faces' => 'numeric',
+           'width' => 'required|numeric',
+           'height' => 'required|numeric',
+           'area' => 'required|numeric',
            'description' => 'required',
-           'status' => 'required'
+           'status' => 'required',
+           'ad_code' => 'required',
         ]);
-
+        
         $editmetro = Metros::find($ID);
 
-         $editmetro->title = $request->input('title');
-         $editmetro->price = $request->input('price');
-         $editmetro->location = $request->input('location');
-         $editmetro->state = $request->input('state');
-         $editmetro->city = $request->input('city');
-         $editmetro->rank = $request->input('rank');
-         $editmetro->description = $request->input('description');
-         $editmetro->status = $request->input('status');
-         $editmetro->references = $request->input('reference');
-         $editmetro->display_options = serialize($request->input('metrodisplay'));
-         $editmetro->light_option = $request->input('light_option');
-         $editmetro->media = $request->input('media');
-         $editmetro->discount = $request->input('metrodiscount');
-         $editmetro->reference_mail = $request->input('reference_mail');
+        $editmetro->metroline_id = $request->input('metroline_id');
+        $editmetro->price = $request->input('price');
+        $editmetro->discount_price = $request->input('discount_price');
+        $editmetro->location = $request->input('location');
+        $editmetro->city = $request->input('city');
+        $editmetro->media = $request->input('media');
+        $editmetro->units = $request->input('units');
+        $editmetro->faces = $request->input('faces');
+        $editmetro->width = $request->input('width');
+        $editmetro->height = $request->input('height');
+        $editmetro->area = $request->input('area');
+        $editmetro->reference_mail = $request->input('reference_mail');
+        $editmetro->description = $request->input('description');
+        $editmetro->status = $request->input('status');
+        $editmetro->references = $request->input('reference');
+        $editmetro->source = $request->input('source');
+        $editmetro->ad_code = $request->input('ad_code');
+        $editmetro->reference_mail = $request->input('reference_mail');
 
         if($request->hasFile('image')){
             $file = $request->file('image');
@@ -263,50 +217,15 @@ class MetroController extends Controller
             $editmetro->image = $filename;
         }
 
-       $editmetro->update();
-
-        //metro display prices insertion
-
-        if($request->has('price_backlit')){
-            $this->updateMetroPrice($ID,'price_backlit', $request->input('unit_backlit'), $request->input('number_of_face_backlit'), $request->input('dimension_backlit'), $request->input('price_backlit'), $request->input('printing_price_backlit'), $request->input('total_price_backlit'));
-        }
-      
-       
-        if($request->has('price_ambilit')){
-            $this->updateMetroPrice($ID,'price_ambilit', $request->input('unit_ambilit'), $request->input('number_of_face_ambilit'), $request->input('dimension_ambilit'), $request->input('price_ambilit'), $request->input('printing_price_ambilit'), $request->input('total_price_ambilit'));
-        }
-      
-       
+        $editmetro->update();
 
         //return to metro product list
-       return redirect()->route('dashboard.getMetroList')->with('message', 'Successfully Edited!');
+        return redirect()->route('dashboard.getMetroList')->with('message', 'Successfully Edited!');
     }
 
-    public function updateMetroPrice($id,$price_key, $unit, $facenumber, $dimension, $baseprice, $printingcharge, $totalprice){
-        $count = Metrosprice::where([
-                                    ['metros_id', '=', $id],
-                                    ['price_key', '=', $price_key],
-                                ])->count();
-        if($count < 1){
-            $this->addMetroPrice($id,$price_key, $unit, $facenumber, $dimension, $baseprice, $printingcharge, $totalprice);
-        }else{
-            $update = Metrosprice::where([
-                                    ['metros_id', '=', $id],
-                                    ['price_key', '=', $price_key]
-                                ])->update(['price_key' => $price_key,
-                                            'unit' => $unit,
-                                            'number_face' => $facenumber,
-                                            'dimension' => $dimension,
-                                            'base_price' => $baseprice,
-                                            'printing_charge' => $printingcharge,
-                                            'totalprice' => $totalprice
-                                            ]);
-        }
-        
-   }
 
    //Fliter Functions
-   public function getFilterMetroAds(Request $request){
+    public function getFilterMetroAds(Request $request){
        $metroPrice = new Metrosprice();
         
         $filterResults = $metroPrice->FilterMetrosAds($request->all());
@@ -323,12 +242,13 @@ class MetroController extends Controller
 
         $content = ob_get_contents();
         ob_get_clean();
-        return $content;
+        return response('', 200);
        
        
-   }
-   public function metro_ads($searchMetro, $fileroptions)
-   { 
+    }
+
+    public function metro_ads($searchMetro, $fileroptions)
+    { 
          ?>
        
        <div class="col-md-3 col-sm-3 "> 
@@ -378,18 +298,11 @@ class MetroController extends Controller
    {
         $metro_ad = Metros::where('id', $id)->first()->toArray();
        
-        $metroPrice = new Metrosprice();
-
-        $metro_price = $metroPrice->getMetrosPriceCart($id, $variation);
-
-        
-        $metro_Ad = array_merge($metro_ad, $metro_price);
-       
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
                 
         $cart = new Cart($oldCart);
 
-        $status = $cart->addorRemoveMetro($metro_Ad, $metro_ad['id'], 'metros'); //pass full metro details, id and model name like "metros"
+        $status = $cart->addorRemoveMetro($metro_ad, $metro_ad['id'], 'metros'); //pass full metro details, id and model name like "metros"
         
         $request->session()->put('cart', $cart);
         //Session::forget('cart');

@@ -49,11 +49,9 @@
 								if($imagefolder[1] == 'tricycle'){
 									$priceValue = $product['item']['price'];
 									$subTitle = ucfirst($imagefolder[1]);
-
 								}elseif($model == 'airports'){
 									$priceValue = $product['item']['optionprice'];
 									$subTitle = ucfirst($imagefolder[1]);
-
 								}elseif($model == 'metros'){
 									$priceValue = $product['item']['base_price'];
 									$subTitle = ucfirst($imagefolder[1]);
@@ -76,7 +74,7 @@
 								$folder = ($model == 'newspaper' || $model == 'magazine') ? 'newspapers' : $model;
 							@ENDPHP
 							<td data-th="Image" class="im">
-									<img src="{{asset('images/'.$folder.'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{$subTitle}}" class="img-responsive"/>
+								<img src="{{asset('images/'.$folder.'/'.$product['item']['image'])}}" alt="{{ $product['item']['title'] }} | {{$subTitle}}" class="img-responsive"/>
 							</td>
 							
                         	<td data-th="Product" class="pn">
@@ -96,11 +94,9 @@
 							@endif
 							<td data-th="Subtotal" class="text-center subtotal-{{$i}}  tl" data-subtotal="{{$product['price']}}"><h4>Rs. {{$product['price']}} <br>{{$newpaperAreaUnits}}</h4></td>
 							<td class="actions rm" data-th="">
-							
-								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>								
+								<a href="{{route('Cart.removeItemCart', ['id' => $key])}}"><img src="{{asset('images/trash.png')}}" class="img-responsive trash-img"></i></a>
 							</td>
 						</tr>
-						
 						@PHP
 							$i++;
 						@ENDPHP
@@ -124,8 +120,6 @@
 										</div>
 										<div class="col-md-12">
                             				<button type="button" class="btn btn-info btn-block btn-cart btn-next ">Next <i class="fa fa-angle-right"></i></button>
-
-											
 										</div>
 									</div>
 								</div>

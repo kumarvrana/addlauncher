@@ -417,7 +417,7 @@ class AirportController extends Controller
 		
 		$cart = new Cart($oldCart);
 
-		$status = $cart->addorRemoveAirport($airport_Ad, $id, 'airports'); 
+		$status = $cart->addorRemoveAirport($airport_Ad, $id, 'airports');
 		
 		$request->session()->put('cart', $cart);
 		//Session::forget('cart');

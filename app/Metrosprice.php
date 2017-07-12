@@ -1,12 +1,15 @@
 <?php
 
 namespace App;
-
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 
 class Metrosprice extends Model
 {
-    protected $fillable = [
+    
+	use Searchable;
+	
+	protected $fillable = [
         'metros_id', 'unit', 'number_face', 'dimension', 'base_price', 'printing_charge', 'totalvalue','price_key','ad_code'
     ];
 

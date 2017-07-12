@@ -44,10 +44,10 @@ class LoginController extends Controller{
                 
                 $cart_model = new CartModel;
                 if(Session::has('cart')){
-                    // If user have something in cart before login
+                    // If user have something in cart before login (SESSION)
                     $cart_model->login_update_db_from_cart($user->id);
                 }else{
-                    // If user doesn't have anything in the cart
+                    // If user doesn't have anything in the cart (NO SESSION)
                     $cart_model->login_update_cart_from_db($user->id);
                 }
                 

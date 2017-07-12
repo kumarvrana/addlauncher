@@ -1,18 +1,18 @@
 <?php
 
 namespace App;
-
 use Illuminate\Database\Eloquent\Model;
 
 class Metros extends Model
 {
-     protected $fillable = [
-        'title', 'price', 'location', 'city', 'state', 'rank', 'landmark', 'description', 'image', 'references', 'status', 'display_options', 'light_option', 'media','metro_line','discount','slug','reference_mail'
+    
+	protected $fillable = [
+        'metroline_id', 'station_name', 'location', 'city', 'units', 'faces', 'width', 'height', 'area', 'price', 'discount_price', 'description', 'image', 'references', 'status', 'media','reference_mail', 'ad_code', 'source'
     ];
 
-    public function metrosprice()
+    public function metroline()
     {
-        return $this->hasMany('App\Metrosprice', 'metros_id');
+        return $this->belongsTo('App\Metroline', 'metroline_id', 'id');
     }
 
 }
